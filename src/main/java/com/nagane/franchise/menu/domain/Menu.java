@@ -49,7 +49,7 @@ public class Menu {
 	@Column(name="description", length=500)
 	private String description;
 	
-	/* 카테고리 번호 */
+	/* 카테고리 번호(fk) */
 	@ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_no", insertable = false, updatable = false)
 	private Long categoryNo;
@@ -60,12 +60,10 @@ public class Menu {
 	
 	/* 상태(0=단종, 1=판매) */
 	@Column(name="state", nullable=false)
-	private Integer state;
+	private Integer state = 1;
 	
-	@PrePersist
-    protected void onCreate() {
-        if (this.state == null) {
-            this.state = 1; // 기본 값 1로 설정
-        }
-    }
+	/*
+	 * @PrePersist protected void onCreate() { if (this.state == null) { this.state
+	 * = 1; // 기본 값 1로 설정 } }
+	 */
 }
