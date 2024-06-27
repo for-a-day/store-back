@@ -63,3 +63,84 @@
 [2024-06-27 15:58:04.730] [INFO ] [RMI TCP Connection(29)-127.0.0.1] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
 [2024-06-27 15:58:04.730] [INFO ] [RMI TCP Connection(29)-127.0.0.1] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Shutdown initiated...
 [2024-06-27 15:58:04.734] [INFO ] [RMI TCP Connection(29)-127.0.0.1] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Shutdown completed.
+[2024-06-27 16:25:37.659] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Starting FranchiseBackApplication using Java 17.0.7 with PID 9452 (C:\Users\kcci\git\store-back\target\classes started by kcci in C:\Users\kcci\git\store-back)
+[2024-06-27 16:25:37.661] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication No active profile set, falling back to 1 default profile: "default"
+[2024-06-27 16:25:37.701] [INFO ] [restartedMain] org.springframework.boot.devtools.restart.ChangeableUrls The Class-Path manifest attribute in C:\Users\kcci\.m2\repository\com\oracle\database\jdbc\ojdbc11\21.9.0.0\ojdbc11-21.9.0.0.jar referenced one or more files that do not exist: file:/C:/Users/kcci/.m2/repository/com/oracle/database/jdbc/ojdbc11/21.9.0.0/oraclepki.jar
+[2024-06-27 16:25:37.702] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2024-06-27 16:25:37.702] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[2024-06-27 16:25:38.193] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2024-06-27 16:25:38.250] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 51 ms. Found 1 JPA repository interface.
+[2024-06-27 16:25:38.683] [INFO ] [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer Tomcat initialized with port 9001 (http)
+[2024-06-27 16:25:38.691] [INFO ] [restartedMain] org.apache.coyote.http11.Http11NioProtocol Initializing ProtocolHandler ["http-nio-9001"]
+[2024-06-27 16:25:38.693] [INFO ] [restartedMain] org.apache.catalina.core.StandardService Starting service [Tomcat]
+[2024-06-27 16:25:38.693] [INFO ] [restartedMain] org.apache.catalina.core.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.25]
+[2024-06-27 16:25:38.731] [INFO ] [restartedMain] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] Initializing Spring embedded WebApplicationContext
+[2024-06-27 16:25:38.731] [INFO ] [restartedMain] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 1029 ms
+[2024-06-27 16:25:38.869] [INFO ] [restartedMain] org.hibernate.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+[2024-06-27 16:25:38.920] [INFO ] [restartedMain] org.hibernate.Version HHH000412: Hibernate ORM core version 6.5.2.Final
+[2024-06-27 16:25:38.947] [INFO ] [restartedMain] org.hibernate.cache.internal.RegionFactoryInitiator HHH000026: Second-level cache disabled
+[2024-06-27 16:25:39.198] [INFO ] [restartedMain] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+[2024-06-27 16:25:39.222] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Starting...
+[2024-06-27 16:25:39.403] [INFO ] [restartedMain] com.zaxxer.hikari.pool.HikariPool HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@592ba7fb
+[2024-06-27 16:25:39.405] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Start completed.
+[2024-06-27 16:25:39.486] [WARN ] [restartedMain] org.hibernate.dialect.Dialect HHH000511: The 11.2.0 version for [org.hibernate.dialect.OracleDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 19.0.0. Check the community dialects project for available legacy versions.
+[2024-06-27 16:25:39.858] [INFO ] [restartedMain] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[2024-06-27 16:25:39.864] [INFO ] [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 16:25:39.902] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2024-06-27 16:25:40.104] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[2024-06-27 16:25:40.226] [WARN ] [restartedMain] org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'storeRepository' defined in com.nagane.franchise.store.dao.StoreRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Not a managed type: class com.nagane.franchise.store.domain.Store
+[2024-06-27 16:25:40.227] [INFO ] [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 16:25:40.229] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
+[2024-06-27 16:25:40.235] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
+[2024-06-27 16:25:40.236] [INFO ] [restartedMain] org.apache.catalina.core.StandardService Stopping service [Tomcat]
+[2024-06-27 16:25:40.245] [INFO ] [restartedMain] org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[2024-06-27 16:25:40.262] [ERROR] [restartedMain] org.springframework.boot.SpringApplication Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'storeRepository' defined in com.nagane.franchise.store.dao.StoreRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Not a managed type: class com.nagane.franchise.store.domain.Store
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:969)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.nagane.franchise.FranchiseBackApplication.main(FranchiseBackApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.lang.IllegalArgumentException: Not a managed type: class com.nagane.franchise.store.domain.Store
+	at org.hibernate.metamodel.model.domain.internal.JpaMetamodelImpl.managedType(JpaMetamodelImpl.java:194)
+	at org.hibernate.metamodel.model.domain.internal.MappingMetamodelImpl.managedType(MappingMetamodelImpl.java:469)
+	at org.hibernate.metamodel.model.domain.internal.MappingMetamodelImpl.managedType(MappingMetamodelImpl.java:99)
+	at org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation.<init>(JpaMetamodelEntityInformation.java:82)
+	at org.springframework.data.jpa.repository.support.JpaEntityInformationSupport.getEntityInformation(JpaEntityInformationSupport.java:69)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getEntityInformation(JpaRepositoryFactory.java:249)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getTargetRepository(JpaRepositoryFactory.java:214)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getTargetRepository(JpaRepositoryFactory.java:197)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactory.getTargetRepository(JpaRepositoryFactory.java:1)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport.getRepository(RepositoryFactorySupport.java:317)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.lambda$afterPropertiesSet$5(RepositoryFactoryBeanSupport.java:286)
+	at org.springframework.data.util.Lazy.getNullable(Lazy.java:135)
+	at org.springframework.data.util.Lazy.get(Lazy.java:113)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.afterPropertiesSet(RepositoryFactoryBeanSupport.java:292)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean.afterPropertiesSet(JpaRepositoryFactoryBean.java:132)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
+	... 21 common frames omitted
+[2024-06-27 16:25:46.085] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Starting FranchiseBackApplication using Java 17.0.7 with PID 1616 (C:\Users\kcci\git\store-back\target\classes started by kcci in C:\Users\kcci\git\store-back)
+[2024-06-27 16:25:46.087] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication No active profile set, falling back to 1 default profile: "default"
+[2024-06-27 16:25:46.128] [INFO ] [restartedMain] org.springframework.boot.devtools.restart.ChangeableUrls The Class-Path manifest attribute in C:\Users\kcci\.m2\repository\com\oracle\database\jdbc\ojdbc11\21.9.0.0\ojdbc11-21.9.0.0.jar referenced one or more files that do not exist: file:/C:/Users/kcci/.m2/repository/com/oracle/database/jdbc/ojdbc11/21.9.0.0/oraclepki.jar
+[2024-06-27 16:25:46.128] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2024-06-27 16:25:46.128] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
