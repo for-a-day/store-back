@@ -1,0 +1,65 @@
+[2024-06-27 15:40:13.987] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Starting FranchiseBackApplication using Java 17.0.7 with PID 13384 (C:\Users\kcci\git\store-back\target\classes started by kcci in C:\Users\kcci\git\store-back)
+[2024-06-27 15:40:13.990] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication No active profile set, falling back to 1 default profile: "default"
+[2024-06-27 15:40:14.030] [INFO ] [restartedMain] org.springframework.boot.devtools.restart.ChangeableUrls The Class-Path manifest attribute in C:\Users\kcci\.m2\repository\com\oracle\database\jdbc\ojdbc11\21.9.0.0\ojdbc11-21.9.0.0.jar referenced one or more files that do not exist: file:/C:/Users/kcci/.m2/repository/com/oracle/database/jdbc/ojdbc11/21.9.0.0/oraclepki.jar
+[2024-06-27 15:40:14.030] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2024-06-27 15:40:14.031] [INFO ] [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[2024-06-27 15:40:14.494] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2024-06-27 15:40:14.511] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 12 ms. Found 0 JPA repository interfaces.
+[2024-06-27 15:40:14.931] [INFO ] [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer Tomcat initialized with port 9001 (http)
+[2024-06-27 15:40:14.938] [INFO ] [restartedMain] org.apache.coyote.http11.Http11NioProtocol Initializing ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:40:14.940] [INFO ] [restartedMain] org.apache.catalina.core.StandardService Starting service [Tomcat]
+[2024-06-27 15:40:14.940] [INFO ] [restartedMain] org.apache.catalina.core.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.25]
+[2024-06-27 15:40:14.980] [INFO ] [restartedMain] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] Initializing Spring embedded WebApplicationContext
+[2024-06-27 15:40:14.980] [INFO ] [restartedMain] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 949 ms
+[2024-06-27 15:40:15.108] [INFO ] [restartedMain] org.hibernate.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+[2024-06-27 15:40:15.156] [INFO ] [restartedMain] org.hibernate.Version HHH000412: Hibernate ORM core version 6.5.2.Final
+[2024-06-27 15:40:15.182] [INFO ] [restartedMain] org.hibernate.cache.internal.RegionFactoryInitiator HHH000026: Second-level cache disabled
+[2024-06-27 15:40:15.418] [INFO ] [restartedMain] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+[2024-06-27 15:40:15.441] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Starting...
+[2024-06-27 15:40:15.614] [INFO ] [restartedMain] com.zaxxer.hikari.pool.HikariPool HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@1725b3c
+[2024-06-27 15:40:15.616] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Start completed.
+[2024-06-27 15:40:15.701] [WARN ] [restartedMain] org.hibernate.dialect.Dialect HHH000511: The 11.2.0 version for [org.hibernate.dialect.OracleDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 19.0.0. Check the community dialects project for available legacy versions.
+[2024-06-27 15:40:16.066] [INFO ] [restartedMain] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[2024-06-27 15:40:16.070] [INFO ] [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 15:40:16.106] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2024-06-27 15:40:16.311] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[2024-06-27 15:40:16.397] [INFO ] [restartedMain] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer LiveReload server is running on port 35729
+[2024-06-27 15:40:16.410] [INFO ] [restartedMain] org.apache.coyote.http11.Http11NioProtocol Starting ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:40:16.424] [INFO ] [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer Tomcat started on port 9001 (http) with context path '/'
+[2024-06-27 15:40:16.431] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Started FranchiseBackApplication in 2.818 seconds (process running for 3.526)
+[2024-06-27 15:58:00.986] [INFO ] [File Watcher] org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+[2024-06-27 15:58:00.989] [INFO ] [Thread-7] org.apache.coyote.http11.Http11NioProtocol Stopping ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:58:01.022] [INFO ] [Thread-7] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 15:58:01.025] [INFO ] [Thread-7] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown initiated...
+[2024-06-27 15:58:01.030] [INFO ] [Thread-7] com.zaxxer.hikari.HikariDataSource HikariPool-1 - Shutdown completed.
+[2024-06-27 15:58:01.103] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Starting FranchiseBackApplication using Java 17.0.7 with PID 13384 (C:\Users\kcci\git\store-back\target\classes started by kcci in C:\Users\kcci\git\store-back)
+[2024-06-27 15:58:01.103] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication No active profile set, falling back to 1 default profile: "default"
+[2024-06-27 15:58:01.248] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2024-06-27 15:58:01.252] [INFO ] [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate Finished Spring Data repository scanning in 4 ms. Found 0 JPA repository interfaces.
+[2024-06-27 15:58:01.323] [INFO ] [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer Tomcat initialized with port 9001 (http)
+[2024-06-27 15:58:01.324] [INFO ] [restartedMain] org.apache.coyote.http11.Http11NioProtocol Initializing ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:58:01.324] [INFO ] [restartedMain] org.apache.catalina.core.StandardService Starting service [Tomcat]
+[2024-06-27 15:58:01.324] [INFO ] [restartedMain] org.apache.catalina.core.StandardEngine Starting Servlet engine: [Apache Tomcat/10.1.25]
+[2024-06-27 15:58:01.336] [INFO ] [restartedMain] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] Initializing Spring embedded WebApplicationContext
+[2024-06-27 15:58:01.336] [INFO ] [restartedMain] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext Root WebApplicationContext: initialization completed in 231 ms
+[2024-06-27 15:58:01.360] [INFO ] [restartedMain] org.hibernate.jpa.internal.util.LogHelper HHH000204: Processing PersistenceUnitInfo [name: default]
+[2024-06-27 15:58:01.363] [INFO ] [restartedMain] org.hibernate.cache.internal.RegionFactoryInitiator HHH000026: Second-level cache disabled
+[2024-06-27 15:58:01.370] [INFO ] [restartedMain] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo No LoadTimeWeaver setup: ignoring JPA class transformer
+[2024-06-27 15:58:01.371] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Starting...
+[2024-06-27 15:58:01.384] [INFO ] [restartedMain] com.zaxxer.hikari.pool.HikariPool HikariPool-2 - Added connection oracle.jdbc.driver.T4CConnection@6843e7d0
+[2024-06-27 15:58:01.384] [INFO ] [restartedMain] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Start completed.
+[2024-06-27 15:58:01.386] [WARN ] [restartedMain] org.hibernate.dialect.Dialect HHH000511: The 11.2.0 version for [org.hibernate.dialect.OracleDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 19.0.0. Check the community dialects project for available legacy versions.
+[2024-06-27 15:58:01.404] [INFO ] [restartedMain] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[2024-06-27 15:58:01.404] [INFO ] [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 15:58:01.418] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2024-06-27 15:58:01.467] [WARN ] [restartedMain] org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[2024-06-27 15:58:01.499] [INFO ] [restartedMain] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer LiveReload server is running on port 35729
+[2024-06-27 15:58:01.506] [INFO ] [restartedMain] org.apache.coyote.http11.Http11NioProtocol Starting ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:58:01.508] [INFO ] [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer Tomcat started on port 9001 (http) with context path '/'
+[2024-06-27 15:58:01.513] [INFO ] [restartedMain] com.nagane.franchise.FranchiseBackApplication Started FranchiseBackApplication in 0.435 seconds (process running for 1068.607)
+[2024-06-27 15:58:01.515] [INFO ] [restartedMain] org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener Condition evaluation unchanged
+[2024-06-27 15:58:04.702] [INFO ] [RMI TCP Connection(29)-127.0.0.1] org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin Application shutdown requested.
+[2024-06-27 15:58:04.702] [INFO ] [RMI TCP Connection(29)-127.0.0.1] org.apache.coyote.http11.Http11NioProtocol Stopping ProtocolHandler ["http-nio-9001"]
+[2024-06-27 15:58:04.730] [INFO ] [RMI TCP Connection(29)-127.0.0.1] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean Closing JPA EntityManagerFactory for persistence unit 'default'
+[2024-06-27 15:58:04.730] [INFO ] [RMI TCP Connection(29)-127.0.0.1] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Shutdown initiated...
+[2024-06-27 15:58:04.734] [INFO ] [RMI TCP Connection(29)-127.0.0.1] com.zaxxer.hikari.HikariDataSource HikariPool-2 - Shutdown completed.
