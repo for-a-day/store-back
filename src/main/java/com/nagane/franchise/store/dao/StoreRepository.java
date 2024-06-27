@@ -5,4 +5,5 @@ import com.nagane.franchise.store.domain.Store;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
+	
 }
