@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -37,18 +36,15 @@ public class Category {
 	
 	/* 상태(0=단종, 1=판매) */
 	@Column(name="state", nullable=false)
-	private Integer state;
-	
+	private Integer state = 1;
 	
 	/* menu 엔티티와 OneToMany 매핑 */
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_no")
 	private List<Menu> menuList = new ArrayList<>();
 	
-	@PrePersist
-    protected void onCreate() {
-        if (this.state == null) {
-            this.state = 1; // 기본 값 1로 설정
-        }
-    }
+	/*
+	 * @PrePersist protected void onCreate() { if (this.state == null) { this.state
+	 * = 1; // 기본 값 1로 설정 } }
+	 */
 }
