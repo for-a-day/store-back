@@ -32,6 +32,30 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 	
+	/** 관리자 생성 */
+	@PostMapping("/admin")
+	public ResponseEntity<String> createAdmin(
+			@RequestParam("admin_id") String adminId, 
+			@RequestParam("admin_password") String adminPassword) {
+		
+		// dto 생성
+		AdminDto adminDto = AdminDto
+				.builder()
+				.adminId(adminId.trim())
+				.adminPassword(adminPassword.trim())
+				.build();
+		
+		// 로그인
+		int result = this.adminService.createAdmin(adminDto);
+		
+		if (result == 1) {
+			return ResponseEntity.ok("Create Success!");
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed create");
+		}
+	}
+	
+	
 	/** 관리자 로그인 */
 	@PostMapping("/admin/login")
 	public ResponseEntity<String> loginAdmin(

@@ -5,6 +5,7 @@ package com.nagane.franchise.store.domain;
  * 가맹점 엔티티
  */
 import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +16,14 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Table(name = "store")
 @SequenceGenerator(name = "store_seq", sequenceName = "store_seq", allocationSize = 1)
 @Data
+@Builder
 public class Store {
 
 	/* 지점 번호 (PK) */
