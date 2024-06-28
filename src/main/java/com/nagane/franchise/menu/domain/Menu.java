@@ -40,8 +40,8 @@ public class Menu {
 	private String menuName;
 	
 	/* 메뉴 코드 */
-	@Column(name = "menu_id", nullable = false, length = 100, unique=true)
-	private String menuId;
+	@Column(name = "menu_code", nullable = false, length = 100, unique=true)
+	private String menuCode;
 	
 	/* 판매가격 */
 	@Column(name = "price", nullable = false)

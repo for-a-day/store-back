@@ -14,7 +14,7 @@ import com.nagane.franchise.table.domain.StoreTable;
 public interface StoreTableRepository extends JpaRepository<StoreTable, Long>{
 	
 	/* 지점 번호로 해당하는 테이블 리스트 반환 */
-	List<StoreTable> findByStoreNo(Long storeNo);
+	List<StoreTable> findByStore_StoreNo(Long storeNo);
 	
 	/* 테이블 코드 기준으로 레코드 존재 여부 조회 */
 	StoreTable findByTableCode(String tableCode);
