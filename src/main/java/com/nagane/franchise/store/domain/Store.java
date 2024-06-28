@@ -16,12 +16,16 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "store")
 @SequenceGenerator(name = "store_seq", sequenceName = "store_seq", allocationSize = 1)
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class Store {

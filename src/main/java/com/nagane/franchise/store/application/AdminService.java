@@ -1,6 +1,6 @@
 package com.nagane.franchise.store.application;
 
-import com.nagane.franchise.store.dto.AdminDto;
+import com.nagane.franchise.store.dto.admin.AdminCreateDto;
 
 /**
  * @author ljy
@@ -11,9 +11,9 @@ import com.nagane.franchise.store.dto.AdminDto;
 public interface AdminService {
 	
 	/** 관리자 로그인 */
-	int loginAdmin(AdminDto adminDto);
+	void loginAdmin(AdminCreateDto adminLoginDto);
 	
 	/** 관리자 생성 */
-	int createAdmin(AdminDto adminDto);
+	void createAdmin(AdminCreateDto adminCreateDto);
 	
 }

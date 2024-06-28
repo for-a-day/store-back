@@ -1,4 +1,4 @@
-package com.nagane.franchise.store.dto;
+package com.nagane.franchise.store.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +17,9 @@ import lombok.ToString;
 @ToString
 @Builder
 public class AdminDto {
+	
+	/** 관리자 번호 */
+	private Long adminNo;
 	
 	/** 관리자 id */
 	private String adminId;
