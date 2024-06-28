@@ -1,7 +1,5 @@
 package com.nagane.franchise.store.application;
 
-import org.springframework.stereotype.Service;
-
 import com.nagane.franchise.store.dto.AdminDto;
 
 /**
@@ -14,5 +12,8 @@ public interface AdminService {
 	
 	/** 관리자 로그인 */
 	int loginAdmin(AdminDto adminDto);
+	
+	/** 관리자 생성 */
+	int createAdmin(AdminDto adminDto);
 	
 }

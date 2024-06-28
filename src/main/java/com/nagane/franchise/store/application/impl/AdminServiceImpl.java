@@ -47,5 +47,29 @@ public class AdminServiceImpl implements AdminService {
 		
 		return 1;
 	}
+
+	/** 관리자 생성 */
+	@Override
+	public int createAdmin(AdminDto adminDto) {
+		LOGGER.info("[createAdmin] input adminDto : {}", adminDto);
+		
+		// 결과 int로 return
+		int result = 1;
+		
+		// 새로 등록할 admin 계정 엔티티 객체 생성
+		Admin createAdmin = Admin.builder()
+				.adminId(adminDto.getAdminId())
+				.adminPassword(adminDto.getAdminPassword())
+				.build();
+		
+		// admin db에 신규 등록
+		Admin savedAdmin = this.adminRepository.save(createAdmin);
+		
+		if (savedAdmin.getAdminId() == null) {
+			result = 0;
+		}
+		
+		return result;
+	}
 		
 }
