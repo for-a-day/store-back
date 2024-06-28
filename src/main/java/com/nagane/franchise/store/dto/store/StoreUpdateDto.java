@@ -11,15 +11,15 @@ import lombok.ToString;
 /**
  * @author ljy
  * @since 2024.06.28
- * StoreResponse dto 코드
- * 지점 조회 시 return용 dto
+ * Store Update dto 코드
+ * 지점 정보 수정용dto
  * **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Builder
-public class StoreDto {
+public class StoreUpdateDto {
 	
 	/* 지점 번호 (PK) */
 	private Long storeNo;
@@ -36,9 +36,6 @@ public class StoreDto {
 	/* 연락처 */
 	private String contact;
 
-	/* 가맹계약일 */
-	private Date contractDate;
-
 	/* 만료계약일 */
 	private Date expirationDate;
 
@@ -46,12 +43,12 @@ public class StoreDto {
 	private Integer warningCount;
 
 	/* 점포 코드 */
-	private String storeCode;
+	// private String storeCode;
 
 	/* 지역 코드 */
 	private String areaCode;
 
 	/* 상태 0=폐점, 1=영업 */
-	private Integer state;
+	// private Integer state;
 	
 }

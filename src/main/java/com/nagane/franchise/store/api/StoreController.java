@@ -1,5 +1,9 @@
 package com.nagane.franchise.store.api;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import com.nagane.franchise.store.application.StoreService;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
+import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +45,26 @@ public class StoreController {
 	private StoreService storeService;
 	
 	/** 지점 목록 조회 */
-	@GetMapping("/admin/store")
-	public ResponseEntity<String> getStoreList() {
-		
-		return null;
-		
-	}
+	 @GetMapping("/admin/store")
+    public ResponseEntity<Map<String, List<StoreDto>>> getStoreList() {
+        // 반환할 데이터를 담을 맵 생성
+        Map<String, List<StoreDto>> response = new HashMap<>();
+        
+        try {
+            // StoreDto 리스트를 가져오는 서비스 메서드 호출
+            List<StoreDto> storeList = this.storeService.getStoreList();
+            
+            // 맵에 데이터 삽입
+            response.put("stores", storeList);
+
+            // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            // 예외 발생 시 빈 리스트를 맵에 담아 반환
+            response.put("stores", new ArrayList<>());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	/** 지점 신규 등록(지점장 회원 가입) */
 	@PostMapping("/admin/store")
@@ -65,7 +84,7 @@ public class StoreController {
 	/** 지점 정보 수정 */
 	@PutMapping("/admin/store")
 	public ResponseEntity<String> updateStore(
-			@RequestBody StoreDto storeUpdateDto) {
+			@RequestBody StoreUpdateDto storeUpdateDto) {
 		try {
             this.storeService.updateStore(storeUpdateDto);
             return new ResponseEntity<>("가맹점 정보 수정이 완료되었습니다.", HttpStatus.OK);

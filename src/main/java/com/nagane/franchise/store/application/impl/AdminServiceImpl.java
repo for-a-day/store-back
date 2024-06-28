@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
 		Optional<Admin> optionalAdmin = this.adminRepository
 				.findByAdminIdAndAdminPassword(adminLoginDto.getAdminId(), adminLoginDto.getAdminPassword());
 		
-		Admin admin = optionalAdmin.orElseThrow(() -> new NoSuchElementException("no record"));
+		optionalAdmin.orElseThrow(() -> new NoSuchElementException("no record"));
 	}
 
 	/** 관리자 생성 */
@@ -58,7 +58,7 @@ public class AdminServiceImpl implements AdminService {
 				.build();
 		
 		// admin db에 신규 등록
-		Admin savedAdmin = this.adminRepository.save(createAdmin);
+		this.adminRepository.save(createAdmin);
 		
 	}
 		
