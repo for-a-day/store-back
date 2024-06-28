@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -24,6 +25,7 @@ import lombok.Data;
 @Table(name = "category")
 @SequenceGenerator(name = "category_seq", sequenceName = "category_seq", allocationSize = 1)
 @Data
+@Builder
 public class Category {
 	/* 카테고리 번호(pk) */
 	@Id
