@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -25,6 +26,7 @@ import lombok.Data;
  * @since 2024.06.27
  **/
 @Entity
+@Builder
 @Table(name = "menu")
 @SequenceGenerator(name = "menu_seq", sequenceName = "menu_seq", allocationSize = 1)
 @Data
@@ -40,8 +42,8 @@ public class Menu {
 	private String menuName;
 	
 	/* 메뉴 코드 */
-	@Column(name = "menu_code", nullable = false, length = 100, unique=true)
-	private String menuCode;
+	@Column(name = "menu_id", nullable = false, length = 100, unique=true)
+	private String menuId;
 	
 	/* 판매가격 */
 	@Column(name = "price", nullable = false)
