@@ -1,11 +1,17 @@
 package com.nagane.franchise.store.application.impl;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.store.application.AdminService;
 import com.nagane.franchise.store.dao.AdminRepository;
+import com.nagane.franchise.store.domain.Admin;
+import com.nagane.franchise.store.dto.AdminDto;
 
 /**
  * @author ljy
@@ -13,10 +19,11 @@ import com.nagane.franchise.store.dao.AdminRepository;
  * Admin Service Impl 코드
  * 관리자 관련 service 상속
  * **/
+@Service
 public class AdminServiceImpl implements AdminService {
 	
 	// 로그 설정
-	private final Logger Logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 	
 	// 필요 레포지토리 연결
 	private final AdminRepository adminRepository;
@@ -25,6 +32,20 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	public AdminServiceImpl(AdminRepository adminRepository) {
 		this.adminRepository = adminRepository;
+	}
+
+	/** 관리자 로그인 */
+	@Override
+	public int loginAdmin(AdminDto adminDto) throws NoSuchElementException {
+		LOGGER.info("[loginAdmin] input adminDto : {}", adminDto);
+		
+		// 해당 admin 존재하는지 검증
+		Optional<Admin> optionalAdmin = this.adminRepository
+				.findByAdminIdAndAdminPassword(adminDto.getAdminId(), adminDto.getAdminPassword());
+		
+		Admin admin = optionalAdmin.orElseThrow(() -> new NoSuchElementException("no record"));
+		
+		return 1;
 	}
 		
 }
