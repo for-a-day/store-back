@@ -36,7 +36,7 @@ public class StoreTable {
 	private Long tableNo;
 
 	/* 테이블 코드 */
-	@Column(name = "table_code", nullable = false, length = 100)
+	@Column(name = "table_code", nullable = false, length = 100, unique=true)
 	private String tableCode;
 
 	/* 등록날짜 */
@@ -44,7 +44,7 @@ public class StoreTable {
 	private LocalDateTime registerDate;
 
 	/* 지점 내 테이블 번호 */
-	@Column(name = "table_number")
+	@Column(name = "table_number", unique=true)
 	private Integer tableNumber;
 
 	/* 테이블명 */

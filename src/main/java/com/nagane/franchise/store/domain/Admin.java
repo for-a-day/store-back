@@ -26,7 +26,7 @@ public class Admin {
     private Long adminNo;
 	
 	/* 관리자 아이디 */
-	@Column(name = "admin_id", nullable = false, length = 50)
+	@Column(name = "admin_id", nullable = false, length = 50, unique=true)
     private String adminId;
 	
 	/* 관리자 비밀번호 */

@@ -59,7 +59,7 @@ public class Store {
 	private Integer warningCount;
 
 	/* 점포 코드 */
-	@Column(name = "store_code", nullable = false, length = 20)
+	@Column(name = "store_code", nullable = false, length = 20, unique=true)
 	private String storeCode;
 
 	/* 지역 코드 */
