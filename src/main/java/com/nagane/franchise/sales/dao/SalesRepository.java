@@ -14,7 +14,7 @@ import com.nagane.franchise.sales.domain.Sales;
 public interface SalesRepository extends JpaRepository<Sales, Long>{
 	
 	/* 가맹점 번호, 년도, 월로 해당하는 매출 레코드 반환 */
-	List<Sales> findByStoreAndYearAndMonth(Long storeNo, Integer year, Integer month);
+	List<Sales> findByStore_StoreNoAndYearAndMonth(Long storeNo, Integer year, Integer month);
 	
 	/* 년도, 월로 해당하는 매출 레코드 반환 */
 	List<Sales> findByYearAndMonth(Integer year, Integer month);
