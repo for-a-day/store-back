@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.store.application.AdminService;
 import com.nagane.franchise.store.dto.admin.AdminCreateDto;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -33,9 +33,7 @@ public class AdminController {
 	@PostMapping("/admin")
 	public ResponseEntity<String> createAdmin(
 			@RequestBody AdminCreateDto adminCreateDto) {
-		
-		System.out.println(adminCreateDto.getAdminId());
-		System.out.println(adminCreateDto.getAdminPassword());
+
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
