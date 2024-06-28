@@ -14,9 +14,9 @@ import com.nagane.franchise.menu.domain.Menu;
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 	
 	/* 카테고리 번호로 메뉴 리스트 반환 */
-	List<Menu> findByCategoryNo(Long categoryNo);
+    List<Menu> findByCategory_CategoryNo(Long categoryNo);
 	
 	/* 카테고리 번호와 상태값(1)로 해당하는 메뉴 리스트 반환 */
-	List<Menu> findByCategoryNoAndState(Long categoryNo, Integer state);
+	List<Menu> findByCategory_CategoryNoAndState(Long categoryNo, Integer state);
 	
 }

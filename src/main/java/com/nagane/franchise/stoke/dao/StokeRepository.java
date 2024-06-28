@@ -14,6 +14,7 @@ import com.nagane.franchise.stoke.domain.Stoke;
 public interface StokeRepository extends JpaRepository<Stoke, Long>{
 	
 	/* 지점 번호 기준으로 재고 리스트 반환 */
-	List<Stoke> findByStore(Long storeNo);
+	List<Stoke> findByStore_StoreNo(Long storeNo);
 	
 }
+
