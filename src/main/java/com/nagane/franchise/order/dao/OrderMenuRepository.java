@@ -13,6 +13,6 @@ import com.nagane.franchise.order.domain.OrderMenu;
 public interface OrderMenuRepository  extends JpaRepository<OrderMenu, Long>{
 	
 	/* 주문 번호 기준으로 일치하는 주문 항목 반환 */
-	List<OrderMenu> findByOrderNo(Long orderNo);
+	List<OrderMenu> findByOrder_OrderNo(Long orderNo);
 	
 }
