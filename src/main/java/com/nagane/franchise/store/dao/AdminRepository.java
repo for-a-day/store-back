@@ -1,5 +1,7 @@
 package com.nagane.franchise.store.dao;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nagane.franchise.store.domain.Admin;
@@ -12,6 +14,6 @@ import com.nagane.franchise.store.domain.Admin;
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 	
 	/* 관리자 아이디와 비밀번호로 해당하는 레코드 반환 */
-	Admin findByAdminIdAndAdminPassword(String adminId, String adminPassword);
+	Optional<Admin> findByAdminIdAndAdminPassword(String adminId, String adminPassword);
 	
 }

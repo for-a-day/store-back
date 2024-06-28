@@ -1,7 +1,9 @@
 
 package com.nagane.franchise.store.dao; 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-  
+
 import com.nagane.franchise.store.domain.Store;
 
 /**
@@ -12,9 +14,9 @@ import com.nagane.franchise.store.domain.Store;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 	
 	/* 지점 코드로 해당하는 점포 있는지 조회 */
-	Store findByStoreCode(String storeCode);
+	Optional<Store> findByStoreCode(String storeCode);
 	
 	/* 지점 코드와 대표자명으로 해당하는 레코드 반환 */
-	Store findByStoreCodeAndRprName(String storeCode, String rprName);
+	Optional<Store> findByStoreCodeAndRprName(String storeCode, String rprName);
 	
 }
