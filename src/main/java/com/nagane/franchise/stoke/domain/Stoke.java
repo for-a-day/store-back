@@ -53,8 +53,8 @@ public class Stoke {
     private Store store;
 
 
-	/* 점포 */
-//	@ManyToOne
-//    @JoinColumn(name = "menu_no")
-//    private Menu menu;
+	/* 점포 (FK) */
+	@ManyToOne
+    @JoinColumn(name = "menu_no")
+    private Menu menu;
 }
