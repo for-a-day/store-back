@@ -63,7 +63,8 @@ public class Store {
 
 	/* 경고 횟수 */
 	@Column(name = "warning_count", nullable = false)
-	private Integer warningCount;
+	@Builder.Default
+	private Integer warningCount = 0;
 
 	/* 점포 코드 */
 	@Column(name = "store_code", nullable = false, length = 20, unique=true)
@@ -75,9 +76,9 @@ public class Store {
 
 	/* 상태 0=폐점, 1=영업 */
 	@Column(name = "state", nullable = false)
-	private boolean state;
+	@Builder.Default
+	private Integer state = 1;
 	
-
 	@PrePersist
 	protected void onCreate() {
 		contractDate = new Date();
