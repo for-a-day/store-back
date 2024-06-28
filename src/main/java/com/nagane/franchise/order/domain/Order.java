@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.domain.StoreTable;
 
 import jakarta.persistence.Column;
@@ -58,9 +59,9 @@ public class Order {
 	private LocalDateTime updatedDate;
 	
 	/* 점포 번호(fk) */
-	// @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
-    // @JoinColumn(name = "store_no", nullable = false)
-	// private Store store;
+	 @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+     @JoinColumn(name = "store_no", nullable = false)
+	 private Store store;
 	
 	/* 테이블 번호(fk) */
 	@ManyToOne(targetEntity = StoreTable.class, fetch = FetchType.LAZY)
