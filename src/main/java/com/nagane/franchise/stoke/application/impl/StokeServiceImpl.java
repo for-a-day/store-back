@@ -1,7 +1,7 @@
 package com.nagane.franchise.stoke.application.impl;
 
-import com.nagane.franchise.store.application.StoreService;
+import com.nagane.franchise.stoke.application.StokeService;
 
-public class StokeServiceImpl implements StoreService {
+public class StokeServiceImpl implements StokeService {
 
 }

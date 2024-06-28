@@ -7,7 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author ljy
@@ -17,7 +20,10 @@ import lombok.Data;
 @Entity
 @Table(name = "admin")
 @SequenceGenerator(name = "admin_seq", sequenceName = "admin_seq", allocationSize = 1)
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class Admin {
 	
 	/* 관리자 번호(pk) */

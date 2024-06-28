@@ -5,6 +5,7 @@ package com.nagane.franchise.store.domain;
  * 가맹점 엔티티
  */
 import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +16,18 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "store")
 @SequenceGenerator(name = "store_seq", sequenceName = "store_seq", allocationSize = 1)
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class Store {
 
 	/* 지점 번호 (PK) */
@@ -56,7 +63,8 @@ public class Store {
 
 	/* 경고 횟수 */
 	@Column(name = "warning_count", nullable = false)
-	private Integer warningCount;
+	@Builder.Default
+	private Integer warningCount = 0;
 
 	/* 점포 코드 */
 	@Column(name = "store_code", nullable = false, length = 20, unique=true)
@@ -68,9 +76,9 @@ public class Store {
 
 	/* 상태 0=폐점, 1=영업 */
 	@Column(name = "state", nullable = false)
-	private boolean state;
+	@Builder.Default
+	private Integer state = 1;
 	
-
 	@PrePersist
 	protected void onCreate() {
 		contractDate = new Date();
