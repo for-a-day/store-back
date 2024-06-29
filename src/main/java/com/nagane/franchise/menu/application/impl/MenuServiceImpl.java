@@ -11,8 +11,12 @@ import com.nagane.franchise.menu.dao.CategoryRepository;
 import com.nagane.franchise.menu.dao.MenuRepository;
 import com.nagane.franchise.menu.domain.Category;
 import com.nagane.franchise.menu.domain.Menu;
-import com.nagane.franchise.menu.dto.CategoryDto;
-import com.nagane.franchise.menu.dto.MenuDto;
+import com.nagane.franchise.menu.dto.menu.MenuForToDto;
+import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
+import com.nagane.franchise.menu.dto.menu.MenuCreateDto;
+import com.nagane.franchise.menu.dto.menu.MenuListDto;
+import com.nagane.franchise.menu.dto.menu.MenuReadDto;
+import com.nagane.franchise.menu.dto.menu.MenuUpdateDto;
 
 /**
  * @author nsr
@@ -27,92 +31,35 @@ public class MenuServiceImpl implements MenuService {
 	@Autowired
 	CategoryRepository categoryRepository;
 	
-	/**
-	 * 카테고리별 메뉴 목록 조회
-	 * @param Long 카테고리 No
-	 * @return List<MenuDto> 조회된 Menu 목록
-	 */
-	public List<MenuDto> getMenuList(Long categoryNo) {
-		
-		List<Menu> menuList = menuRepository.findByCategory_CategoryNo(categoryNo);
-		
-		// Menu를 MenuDto로 변환
-        List<MenuDto> menuDtoList = menuList.stream()
-                .map(this::convertToDto) // 메소드 참조를 이용한 변환
-                .collect(Collectors.toList());
-
-        return menuDtoList;
-	}
-	
-	// Menu를 MenuDto로 변환하는 메소드
-    private MenuDto convertToDto(Menu menu) {
-    	
-    	CategoryDto category = new CategoryDto();
-    	category.setCategoryName(menu.getCategory().getCategoryName());
-    	category.setCategoryState(menu.getCategory().getState());
-    	
-    	
-        MenuDto menuDto = new MenuDto();
-        menuDto.setMenuNo(menu.getMenuNo());
-        menuDto.setMenuName(menu.getMenuName());
-        menuDto.setMenuId(menu.getMenuId());
-        menuDto.setPrice(menu.getPrice());
-        menuDto.setMenuImage(menu.getMenuImage());
-        menuDto.setDescription(menu.getDescription());
-        menuDto.setCategory(category);
-        menuDto.setSupplyPrice(menu.getSupplyPrice());
-        menuDto.setState(menu.getState());
-
-        return menuDto;
-    }
-	
+	// Admin
 	/**
 	 * 메뉴 신규 등록
 	 * @param menuDto 메뉴 정보를 담고 있는 DTO 객체
 	 * @return Long 등록된 메뉴의 No
 	 */
-	public Long createMenu(MenuDto menuDto) {
-		System.out.println(menuDto.toString());
+	@Override
+	public Long createMenu(MenuCreateDto menuCreateDto) {
+		System.out.println(menuCreateDto.toString());
 		 
 		// 메뉴 코드 중복 확인
-//		 Optional<Menu> existingMenu = menuRepository.findByMenuCode(menuDto.getMenuId());
-		Optional<Menu> existingMenu = null;
+		 Optional<Menu> existingMenu = menuRepository.findByMenuCode(menuCreateDto.getMenuId());
 		if (existingMenu.isPresent()) {
 	        throw new IllegalArgumentException("중복된 메뉴 코드가 있습니다.");
 	    }
 
-        return saveMenu(menuDto);
-	}
-	
-	/**
-	 * 메뉴 수정
-	 * @param menuDto 메뉴 정보를 담고 있는 DTO 객체
-	 * @return Long 등록된 메뉴의 No
-	 */
-	public Long updateMenu(MenuDto menuDto) {
-		System.out.println(menuDto.toString());
-		
-		Long savedMenuNo =saveMenu(menuDto);
-		
-        return savedMenuNo;
-	}
-	
-	private Long saveMenu(MenuDto menuDto) {
-
 		// 1. 카테고리 정보 가져오기
-		 Category category = categoryRepository.findById(menuDto.getCategory().getCategoryNo())
+		 Category category = categoryRepository.findById(menuCreateDto.getCategoryNo())
 	                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리 No를 찾을 수 없습니다."));
 		
 		 // 2. 메뉴 엔티티 생성
 		Menu menu = Menu.builder()
-				.menuName(menuDto.getMenuName())
-				.menuId(menuDto.getMenuId())
-				.price(menuDto.getPrice())
-				.menuImage(menuDto.getMenuImage())
-				.description(menuDto.getDescription())
+				.menuName(menuCreateDto.getMenuName())
+				.menuId(menuCreateDto.getMenuId())
+				.price(menuCreateDto.getPrice())
+				.menuImage(menuCreateDto.getMenuImage())
+				.description(menuCreateDto.getDescription())
 				.category(category)
-				.supplyPrice(menuDto.getSupplyPrice())
-				.state(menuDto.getState())
+				.supplyPrice(menuCreateDto.getSupplyPrice())
 				.build();
 
 		// 3. 메뉴 레코드 생성
@@ -122,12 +69,106 @@ public class MenuServiceImpl implements MenuService {
 
         return saved.getMenuNo();
 	}
+
+	/**
+	 * 카테고리별 메뉴 목록 조회
+	 * @param Long 카테고리 No
+	 * @return List<MenuDto> 조회된 Menu 목록
+	 */
+	@Override
+	public List<MenuListDto> getMenuList(Long categoryNo) {
+
+	    List<Menu> menuList = menuRepository.findByCategory_CategoryNo(categoryNo);
+
+	    // Menu를 MenuDto로 변환
+	    List<MenuListDto> menuDtoList = menuList.stream()
+	            .map(menu -> {
+	                MenuListDto menuDto = new MenuListDto();
+	                menuDto.setMenuNo(menu.getMenuNo());
+	                menuDto.setMenuName(menu.getMenuName());
+	                menuDto.setMenuImage(menu.getMenuImage());
+	                return menuDto;
+	            })
+	            .collect(Collectors.toList());
+
+	    return menuDtoList;
+	}
+
+    /**
+     * 메뉴 상세 보기
+     * @param Long 메뉴의 No
+     * @return MenuDto 메뉴 정보
+     */
+    @Override
+    public MenuReadDto getMenu(Long menuNo) {
+        
+        Optional<Menu> menuOptional = menuRepository.findById(menuNo);
+        
+        if(menuOptional.isPresent()) {
+            Menu menu = menuOptional.get();
+            
+            MenuReadDto menuDto = new MenuReadDto();
+            menuDto.setMenuNo(menu.getMenuNo());
+            menuDto.setMenuName(menu.getMenuName());
+            menuDto.setMenuId(menu.getMenuId());
+            menuDto.setPrice(menu.getPrice());
+            menuDto.setMenuImage(menu.getMenuImage());
+            menuDto.setDescription(menu.getDescription());
+            menuDto.setSupplyPrice(menu.getSupplyPrice());
+            menuDto.setState(menu.getState());
+            
+            return menuDto;
+        }
+
+        return null;
+    }
+
+	/**
+	 * 메뉴 수정
+	 * @param menuDto 메뉴 정보를 담고 있는 DTO 객체
+	 * @return Long 등록된 메뉴의 No
+	 */
+	@Override
+	public Long updateMenu(MenuUpdateDto menuUpdateDto) {
+		System.out.println(menuUpdateDto.toString());
+			 Category category = categoryRepository.findById(menuUpdateDto.getCategoryNo())
+		                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
+			
+			 
+		// 1. 메뉴를 다시 판매중으로 수정 한 경우, 해당 카테고리도 판매중으로 수정
+		if(menuUpdateDto.getState() == 1) {
+			 category.setState(1);
+		}
+		 
+		 
+		// 2. 기존 메뉴 정보 가져오기
+		Menu menu = menuRepository.findById(menuUpdateDto.getMenuNo())
+		.orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다."));
+
+
+		// 3. 메뉴 정보 업데이트
+		menu.setMenuName(menuUpdateDto.getMenuName());
+		menu.setPrice(menuUpdateDto.getPrice());
+		menu.setMenuImage(menuUpdateDto.getMenuImage());
+		menu.setDescription(menuUpdateDto.getDescription());
+		menu.setCategory(category);
+		menu.setSupplyPrice(menuUpdateDto.getSupplyPrice());
+		menu.setState(menuUpdateDto.getState());
+
+		// 4. 메뉴 레코드 업데이트
+		Menu saved = menuRepository.save(menu);
+		
+		System.out.println(saved.toString());
+
+       return saved.getMenuNo();
+	}
 	
 	/**
 	 * 메뉴 단종
 	 * @param Long 단종 상태로 변경할 메뉴의 No
 	 * @return boolean 단종 상태로 수정 성공 여부
 	 */
+	@Override
 	public boolean deleteMenu(Long menuNo) {
 		Optional<Menu> menuOptional = menuRepository.findById(menuNo);
 		
@@ -142,42 +183,58 @@ public class MenuServiceImpl implements MenuService {
 		
 		return false;
 	}
-	
-	
 
-	
+	//  TO
 	/**
-	 * 카테고리별 판매중인 메뉴 목록
+	 * 카테고리별 판매중인 메뉴 목록 조회
 	 * @param Long 카테고리의 No, Integer 메뉴의 상태 (0 : 판매중)
 	 * @return boolean 단종 상태로 수정 성공 여부
 	 */
-	public List<MenuDto> getAvailableMenuList(Long categoryNo) {
+	@Override
+	public List<MenuListForToDto> getAvailableMenuList(Long categoryNo) {
 		// 1. 메뉴 테이블에서 카테고리 번호로 상태가 1(판매)인 레코드 리스트 return
 		List<Menu> menuList = menuRepository.findByCategory_CategoryNoAndState(categoryNo, 1);
 		// 2. 선택한 카테고리 메뉴 리스트 return
 		// Menu를 MenuDto로 변환
-        List<MenuDto> menuDtoList = menuList.stream()
-                .map(this::convertToDto) // 메소드 참조를 이용한 변환
+        List<MenuListForToDto> menuDtoList = menuList.stream()
+                .map(menu ->{
+
+                	MenuListForToDto menuDto = new MenuListForToDto();
+                    menuDto.setMenuNo(menu.getMenuNo());
+                    menuDto.setMenuName(menu.getMenuName());
+                    menuDto.setPrice(menu.getPrice());
+
+                    return menuDto;
+                }) // 메소드 참조를 이용한 변환
                 .collect(Collectors.toList());			
 
         return menuDtoList;
 	}
 	
-	/**
-	 * 메뉴 상세 보기
-	 * @param Long 메뉴의 No
-	 * @return MenuDto 메뉴 정보
-	 */
-	public MenuDto getMenu(Long menuNo) {
-		
-		Optional<Menu> menuOptional = menuRepository.findById(menuNo);
-		
-		if(menuOptional.isPresent()) {
-			Menu menu = menuOptional.get();
-			MenuDto menuDto = convertToDto(menu);
-			return menuDto;
-		}
+    /**
+     * TO용 판매가능한 메뉴 상세 보기
+     * @param Long 메뉴의 No
+     * @return MenuDto 메뉴 정보
+     */
+    @Override
+    public MenuForToDto getAvailableMenu(Long menuNo) {
+        
+        Optional<Menu> menuOptional = menuRepository.findById(menuNo);
+        
+        if(menuOptional.isPresent()) {
+            Menu menu = menuOptional.get();
+            
+            MenuForToDto menuDto = new MenuForToDto();
+            menuDto.setMenuNo(menu.getMenuNo());
+            menuDto.setMenuName(menu.getMenuName());
+            menuDto.setPrice(menu.getPrice());
+            menuDto.setMenuImage(menu.getMenuImage());
+            menuDto.setDescription(menu.getDescription());
+            
+            return menuDto;
+        }
 
-		return null;
-	}
+        return null;
+    }
+
 }
