@@ -1,4 +1,4 @@
-package com.nagane.franchise.menu.dto;
+package com.nagane.franchise.menu.dto.menu;
 
 import com.nagane.franchise.menu.dto.category.CategoryListForToDto;
 
@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDto {
+public class MenuCreateDto {
 
-	/* 메뉴 번호(pk) */
-	private Long menuNo;
-	
 	/* 메뉴명 */
 	private String menuName;
 	
@@ -33,17 +30,6 @@ public class MenuDto {
 	/* 재료 공급가 */
 	private Integer supplyPrice;
 	
-	/* 상태(0=단종, 1=판매) */
-	private Integer state;
-	
-//	/* 카테고리 번호(fk) */
-//	private Long categoryNo;
-//	
-//	// 카테고리 정보
-//	private String categoryName;
-//	private Integer categoryState;
-//	
-	CategoryListForToDto category;
-	
-	
+	/* 카테고리 번호(fk) */
+	private Long categoryNo;
 }
