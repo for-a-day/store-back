@@ -13,6 +13,7 @@ public interface CategoryService {
 	public Long createCategory(CategoryCreateDto categoryCreateDto);
 	public List<CategoryListDto> getCategoryList();
 	public Long updateCategory(CategoryUpdateDto categoryUpdateDto);
+	public boolean updateCategoryState(Long categoryNo);
 	public boolean deleteCategory(Long categoryNo);
 	
 	// TO 조회

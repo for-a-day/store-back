@@ -25,7 +25,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     
     
     /* 메뉴 코드로 메뉴 존재하는지 여부 조회 */
-    Optional<Menu> findByMenuCode(String menuCode);
+    Optional<Menu> findByMenuId(String menuId);
 	
 	/* 카테고리 번호와 상태값(1)로 해당하는 메뉴 리스트 반환 */
 	List<Menu> findByCategory_CategoryNoAndState(Long categoryNo, Integer state);

@@ -39,9 +39,10 @@ public class CategoryServiceImpl implements CategoryService{
 	 */
 	@Override
 	public Long createCategory(CategoryCreateDto categoryCreateDto) {
-		// 2. 카테고리 엔티티 생성
+		// 카테고리 엔티티 생성
 		Category category = Category.builder()
 				.categoryName(categoryCreateDto.getCategoryName())
+				.state(1)
 				.build();
 		
 		// 카테고리 저장
@@ -99,12 +100,12 @@ public class CategoryServiceImpl implements CategoryService{
 	}
 	
 	/**
-	 * 카테고리 삭제
-	 * @param Integer 카테고리 상태 
+	 * 카테고리 단종 처리
+	 * @param Integer 카테고리 번호 
 	 * @return 
 	 */
 	@Override
-	public boolean deleteCategory(Long categoryNo) {
+	public boolean updateCategoryState(Long categoryNo) {
 		
 		// 안에 메뉴가 있는지 없는지 확인 하고 삭제
 		Long menuCount = menuRepository.countByCategory_CategoryNo(categoryNo);
@@ -124,6 +125,27 @@ public class CategoryServiceImpl implements CategoryService{
 		}
 		
 		return false;
+	}
+	
+	
+
+	/**
+	 * 카테고리 삭제
+	 * @param Long 카테고리 번호 
+	 * @return boolean
+	 */
+	@Override
+	public boolean deleteCategory(Long categoryNo) {
+		
+		// 안에 메뉴가 있는지 없는지 확인 하고 삭제
+		Long menuCount = menuRepository.countByCategory_CategoryNo(categoryNo);
+		if(menuCount > 0) {
+			return false;
+		}
+		
+		categoryRepository.deleteById(categoryNo);
+		
+			return true;
 	}
 	
 	//TO

@@ -2,6 +2,8 @@ package com.nagane.franchise.menu.api;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,23 +11,23 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.menu.application.CategoryService;
 import com.nagane.franchise.menu.application.MenuService;
-import com.nagane.franchise.menu.dto.category.CategoryListForToDto;
 import com.nagane.franchise.menu.dto.category.CategoryCreateDto;
 import com.nagane.franchise.menu.dto.category.CategoryListDto;
+import com.nagane.franchise.menu.dto.category.CategoryListForToDto;
 import com.nagane.franchise.menu.dto.category.CategoryUpdateDto;
-import com.nagane.franchise.menu.dto.menu.MenuForToDto;
-import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuCreateDto;
+import com.nagane.franchise.menu.dto.menu.MenuForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuListDto;
+import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuReadDto;
 import com.nagane.franchise.menu.dto.menu.MenuUpdateDto;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +47,7 @@ public class MenuController {
 	@Autowired
 	private CategoryService categoryService;
 	
+	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
 	/**
 	 * 카테고리 등록
@@ -54,17 +57,20 @@ public class MenuController {
 	@PostMapping("/admin/category")
 	public ResponseEntity<String> createCategory(
 			@RequestBody CategoryCreateDto categoryCreateDto) {
-
+		
+		System.out.println("받음 : " + categoryCreateDto.toString());
+		logger.info("받음 : {}", categoryCreateDto.toString());
+		
 		// 신규 관리자 계정 생성
 		try {
 			this.categoryService.createCategory(categoryCreateDto);
 			return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>("카테고리 등록에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
 
 	/**
 	 * 카테고리 수정
@@ -82,20 +88,55 @@ public class MenuController {
         }
 	}
 	
-
-
     /**
      * 카테고리 목록 조회
      * @param
      * @return
      */
 	 @GetMapping("/admin/category")
-	    public ResponseEntity<List<CategoryListDto>> getCategoryList() {
-	        try {
-	            List<CategoryListDto> categoryList = this.categoryService.getCategoryList();
-	            return new ResponseEntity<>(categoryList, HttpStatus.OK);
+	 public ResponseEntity<List<CategoryListDto>> getCategoryList() {
+		 try {
+			 List<CategoryListDto> categoryList = this.categoryService.getCategoryList();
+			 System.out.println(categoryList.toString());
+			 return new ResponseEntity<>(categoryList, HttpStatus.OK);
+		 } catch (Exception e) {
+			 System.out.println(e.getMessage());
+			 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		 }
+	 }
+	 
+//	 
+//	 /**
+//	  * 카테고리 단종 처리
+//	  * @param
+//	  * @return
+//	  */
+//	 @PostMapping("admin/categoryState")
+//	 public ResponseEntity<String> updateCategory(@RequestParam Long categoryNo){
+//		 try {
+//	            this.categoryService.updateCategoryState(categoryNo);
+//	            return new ResponseEntity<>("카테고리가 성공적으로 삭제되었습니다.", HttpStatus.OK);
+//	        } catch (Exception e) {
+//	            return new ResponseEntity<>("카테고리 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+//	        }
+//	 }
+//	 
+//	 
+	 /**
+	  * 카테고리 영구 삭제
+	  * @param
+	  * @return
+	  */
+	 @DeleteMapping("admin/category")
+	 public ResponseEntity<String> deleteCategory(@RequestParam Long categoryNo){
+		 try {
+	            boolean success = this.categoryService.deleteCategory(categoryNo);
+	            if(success)
+	            return new ResponseEntity<>("카테고리가 성공적으로 삭제되었습니다.", HttpStatus.OK);
+	            else
+	            	return new ResponseEntity<>("해당 카테고리의 메뉴가 있습니다.", HttpStatus.OK);
 	        } catch (Exception e) {
-	            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	            return new ResponseEntity<>("카테고리 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	        }
 	 }
 	 
@@ -125,12 +166,14 @@ public class MenuController {
 	public ResponseEntity<String> createMenu(
 			@RequestBody MenuCreateDto menuCreateDto) {
 
+		System.out.println("메뉴 : " + menuCreateDto.toString());
 		// 신규 관리자 계정 생성
 		try {
 			this.menuService.createMenu(menuCreateDto);
 			return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>("메뉴 등록에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -147,16 +190,17 @@ public class MenuController {
 		// 메뉴 수정
 		try {
 			this.menuService.updateMenu(menuUpdateDto);
-			return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
+			return new ResponseEntity<>("성공적으로 수정되었습니다.", HttpStatus.OK);
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>("메뉴 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 
 	  /**
-     * 메뉴 삭제
+     * 메뉴 영구 삭제
      * @param menuId
      * @return
      */
@@ -178,7 +222,7 @@ public class MenuController {
      * @param categoryId
      * @return
      */
-    @GetMapping("/to/menu")
+    @GetMapping("/to/menuList")
     public ResponseEntity<List<MenuListForToDto>> getAvailableMenuList(
     		@RequestParam Long categoryNo) {
         try {
@@ -214,7 +258,7 @@ public class MenuController {
      * @param categoryId
      * @return
      */
-    @GetMapping("/admin/menu")
+    @GetMapping("/admin/menuList")
     public ResponseEntity<List<MenuListDto>> getMenuList(@RequestParam Long categoryId) {
         try {
             List<MenuListDto> menuList = this.menuService.getMenuList(categoryId);

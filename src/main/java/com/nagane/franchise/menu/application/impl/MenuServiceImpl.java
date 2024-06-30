@@ -42,7 +42,7 @@ public class MenuServiceImpl implements MenuService {
 		System.out.println(menuCreateDto.toString());
 		 
 		// 메뉴 코드 중복 확인
-		 Optional<Menu> existingMenu = menuRepository.findByMenuCode(menuCreateDto.getMenuId());
+		 Optional<Menu> existingMenu = menuRepository.findByMenuId(menuCreateDto.getMenuId());
 		if (existingMenu.isPresent()) {
 	        throw new IllegalArgumentException("중복된 메뉴 코드가 있습니다.");
 	    }
@@ -60,6 +60,7 @@ public class MenuServiceImpl implements MenuService {
 				.description(menuCreateDto.getDescription())
 				.category(category)
 				.supplyPrice(menuCreateDto.getSupplyPrice())
+				.state(1)
 				.build();
 
 		// 3. 메뉴 레코드 생성
@@ -163,25 +164,39 @@ public class MenuServiceImpl implements MenuService {
        return saved.getMenuNo();
 	}
 	
+//	/**
+//	 * 메뉴 단종
+//	 * @param Long 단종 상태로 변경할 메뉴의 No
+//	 * @return boolean 단종 상태로 수정 성공 여부
+//	 */
+//	@Override
+//	public boolean deleteMenu(Long menuNo) {
+//		Optional<Menu> menuOptional = menuRepository.findById(menuNo);
+//		
+//		if(menuOptional.isPresent()) {
+//			Menu menu = menuOptional.get();
+//			menu.setState(0);
+//			
+//			menuRepository.save(menu);
+//			
+//			return true;
+//		}
+//		
+//		return false;
+//	}
+//	
+	
 	/**
-	 * 메뉴 단종
+	 * 메뉴 영구 삭제
 	 * @param Long 단종 상태로 변경할 메뉴의 No
 	 * @return boolean 단종 상태로 수정 성공 여부
 	 */
 	@Override
 	public boolean deleteMenu(Long menuNo) {
-		Optional<Menu> menuOptional = menuRepository.findById(menuNo);
 		
-		if(menuOptional.isPresent()) {
-			Menu menu = menuOptional.get();
-			menu.setState(0);
-			
-			menuRepository.save(menu);
+			menuRepository.deleteById(menuNo);
 			
 			return true;
-		}
-		
-		return false;
 	}
 
 	//  TO
