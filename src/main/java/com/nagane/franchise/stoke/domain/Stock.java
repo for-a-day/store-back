@@ -16,6 +16,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -27,7 +28,8 @@ import lombok.Data;
 @Table(name = "stoke")
 @SequenceGenerator(name = "stoke_seq", sequenceName = "stoke_seq", allocationSize = 1)
 @Data
-public class Stoke {
+@Builder
+public class Stock {
 
 
 	/* 재고 번호 (PK) */
@@ -38,11 +40,11 @@ public class Stoke {
 	
 	/* 재고량 */
 	@Column(name = "quantity", nullable = false)
-	private Integer quantity = 1;
+	private Integer quantity = 0;
 
 	
 	/* 최근 입고 날짜 */
-	@Column(name = "last_stock_date", nullable = false)
+	@Column(name = "last_stock_date")
 	@Temporal(TemporalType.DATE)
 	private Date lastStockDate;
 	

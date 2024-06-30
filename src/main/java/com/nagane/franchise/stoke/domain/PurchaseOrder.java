@@ -59,5 +59,5 @@ public class PurchaseOrder {
 	/* 재고 */
 	@ManyToOne
     @JoinColumn(name = "stoke_no")
-    private Stoke stoke;
+    private Stock stoke;
 }
