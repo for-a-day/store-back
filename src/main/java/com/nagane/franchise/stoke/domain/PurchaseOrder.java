@@ -2,8 +2,6 @@ package com.nagane.franchise.stoke.domain;
 
 import java.util.Date;
 
-import com.nagane.franchise.store.domain.Store;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +13,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -26,6 +25,7 @@ import lombok.Data;
 @Table(name = "purchase_order")
 @SequenceGenerator(name = "p_order_seq", sequenceName = "p_order_seq", allocationSize = 1)
 @Data
+@Builder
 public class PurchaseOrder {
 
 
@@ -49,7 +49,7 @@ public class PurchaseOrder {
 
 	/* 발주상태 */
 	@Column(name = "state", nullable = false)
-	private Integer state;
+	private Integer state = 0;
 
 	/* 가격 */
 	@Column(name = "price", nullable = false)
@@ -58,6 +58,6 @@ public class PurchaseOrder {
 
 	/* 재고 */
 	@ManyToOne
-    @JoinColumn(name = "stoke_no")
-    private Stock stoke;
+    @JoinColumn(name = "stock_no")
+    private Stock stock;
 }
