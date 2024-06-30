@@ -1,15 +1,17 @@
 package com.nagane.franchise.menu.dto.menu;
 
-import com.nagane.franchise.menu.dto.category.CategoryCreateDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @author nsr
+ * @since 2024.06.29
+ * Menu Create dto 코드
+ * 메뉴 생성 시 dto
+ * **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

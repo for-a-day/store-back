@@ -3,7 +3,12 @@ package com.nagane.franchise.menu.dto.menu;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * @author nsr
+ * @since 2024.06.29
+ * Table Order 용 Menu dto 코드
+ * 테이블오더용 메뉴 dto
+ * **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

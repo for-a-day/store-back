@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService{
 	/**
 	 * 카테고리 등록
 	 * @param CategoryCreateDto 생성할 카테고리 정보
-	 * @return Long 카테고리 No
+	 * @return Long 카테고리 번호
 	 */
 	@Override
 	public Long createCategory(CategoryCreateDto categoryCreateDto) {
@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 	/**
 	 * 카테고리 수정
-	 * @param CategoryListForToDto 수정할 카테고리 정보
+	 * @param categoryUpdateDto 수정할 카테고리 정보
 	 * @return Long 카테고리 번호
 	 */
 	@Override
@@ -76,8 +76,8 @@ public class CategoryServiceImpl implements CategoryService{
 	
 	/**
 	 * 카테고리 목록
-	 * @param Integer 카테고리 상태 
-	 * @return 
+	 * @param 
+	 * @return List<CategoryListDto>
 	 */
 	@Override
 	public List<CategoryListDto> getCategoryList(){
@@ -101,8 +101,8 @@ public class CategoryServiceImpl implements CategoryService{
 	
 	/**
 	 * 카테고리 단종 처리
-	 * @param Integer 카테고리 번호 
-	 * @return 
+	 * @param Long 카테고리 번호 
+	 * @return boolean
 	 */
 	@Override
 	public boolean updateCategoryState(Long categoryNo) {

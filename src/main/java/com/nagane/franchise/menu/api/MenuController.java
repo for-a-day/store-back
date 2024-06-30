@@ -51,8 +51,8 @@ public class MenuController {
 
 	/**
 	 * 카테고리 등록
-	 * @param categoryCreateDto
-	 * @return
+	 * @param CategoryCreateDto
+	 * @return String
 	 */
 	@PostMapping("/admin/category")
 	public ResponseEntity<String> createCategory(
@@ -75,7 +75,7 @@ public class MenuController {
 	/**
 	 * 카테고리 수정
 	 * @param categoryUpdateDto
-	 * @return
+	 * @return String
 	 */
 	@PutMapping("/admin/category")
 	public ResponseEntity<String> updateCategory(
@@ -91,7 +91,7 @@ public class MenuController {
     /**
      * 카테고리 목록 조회
      * @param
-     * @return
+     * @return List<CategoryListDto>
      */
 	 @GetMapping("/admin/category")
 	 public ResponseEntity<List<CategoryListDto>> getCategoryList() {
@@ -108,8 +108,8 @@ public class MenuController {
 //	 
 //	 /**
 //	  * 카테고리 단종 처리
-//	  * @param
-//	  * @return
+//	  * @param Long 카테고리 번호
+//	  * @return String
 //	  */
 //	 @PostMapping("admin/categoryState")
 //	 public ResponseEntity<String> updateCategory(@RequestParam Long categoryNo){
@@ -124,8 +124,8 @@ public class MenuController {
 //	 
 	 /**
 	  * 카테고리 영구 삭제
-	  * @param
-	  * @return
+	  * @param Long 카테고리 번호
+	  * @return String
 	  */
 	 @DeleteMapping("admin/category")
 	 public ResponseEntity<String> deleteCategory(@RequestParam Long categoryNo){
@@ -145,7 +145,7 @@ public class MenuController {
 	/**
 	* TO 용 판매중인 카테고리 목록 조회
 	* @param
-	* @return
+	* @return List<CategoryListForToDto>
 	*/
 	@GetMapping("/to/category")
 	public ResponseEntity<List<CategoryListForToDto>> getAvailableCategoryList() {
@@ -159,8 +159,8 @@ public class MenuController {
 
 	/**
 	 * 메뉴 등록
-	 * @param menuCreateDto
-	 * @return
+	 * @param MenuCreateDto
+	 * @return String
 	 */
 	@PostMapping("/admin/menu")
 	public ResponseEntity<String> createMenu(
@@ -180,8 +180,8 @@ public class MenuController {
 
 	/**
 	 * 메뉴 수정
-	 * @param menuUpdateDto
-	 * @return
+	 * @param MenuUpdateDto
+	 * @return String
 	 */
 	@PutMapping("/admin/menu")
 	public ResponseEntity<String> updateMenu(
@@ -201,8 +201,8 @@ public class MenuController {
 
 	  /**
      * 메뉴 영구 삭제
-     * @param menuId
-     * @return
+     * @param Long 메뉴 번호
+     * @return String
      */
     @DeleteMapping("/admin/menu")
     public ResponseEntity<String> deleteMenu(
@@ -219,8 +219,8 @@ public class MenuController {
     
     /**
      * 특정 카테고리의 판매중인 메뉴 목록 조회
-     * @param categoryId
-     * @return
+     * @param Long 카테고리 번호
+     * @return List<MenuListForToDto>
      */
     @GetMapping("/to/menuList")
     public ResponseEntity<List<MenuListForToDto>> getAvailableMenuList(
@@ -236,8 +236,8 @@ public class MenuController {
 
     /**
      * TO용 판매가능한 메뉴 상세정보 조회
-     * @param menuId
-     * @return
+     * @param Long 메뉴 번호
+     * @return MenuForToDto
      */
     @GetMapping("/to/menu")
     public ResponseEntity<MenuForToDto> getTOMenuDetail(
@@ -255,8 +255,8 @@ public class MenuController {
 
     /**
      * 특정 카테고리의 메뉴 목록 조회
-     * @param categoryId
-     * @return
+     * @param Long 카테고리 번호
+     * @return List<MenuListDto>
      */
     @GetMapping("/admin/menuList")
     public ResponseEntity<List<MenuListDto>> getMenuList(@RequestParam Long categoryId) {
@@ -271,8 +271,8 @@ public class MenuController {
     
     /**
      * TO용 메뉴 상세정보 조회
-     * @param menuId
-     * @return
+     * @param Long 메뉴 번호
+     * @return MenuReadDto
      */
     @GetMapping("/admin/menu")
     public ResponseEntity<MenuReadDto> getMenuDetail(@RequestParam Long menuNo){

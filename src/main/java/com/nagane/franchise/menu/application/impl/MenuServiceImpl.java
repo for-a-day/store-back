@@ -34,7 +34,7 @@ public class MenuServiceImpl implements MenuService {
 	// Admin
 	/**
 	 * 메뉴 신규 등록
-	 * @param menuDto 메뉴 정보를 담고 있는 DTO 객체
+	 * @param MenuCreateDto 메뉴 정보를 담고 있는 DTO 객체
 	 * @return Long 등록된 메뉴의 No
 	 */
 	@Override
@@ -74,7 +74,7 @@ public class MenuServiceImpl implements MenuService {
 	/**
 	 * 카테고리별 메뉴 목록 조회
 	 * @param Long 카테고리 No
-	 * @return List<MenuDto> 조회된 Menu 목록
+	 * @return List<MenuListDto> 조회된 Menu 목록
 	 */
 	@Override
 	public List<MenuListDto> getMenuList(Long categoryNo) {
@@ -98,7 +98,7 @@ public class MenuServiceImpl implements MenuService {
     /**
      * 메뉴 상세 보기
      * @param Long 메뉴의 No
-     * @return MenuDto 메뉴 정보
+     * @return MenuReadDto 메뉴 정보
      */
     @Override
     public MenuReadDto getMenu(Long menuNo) {
@@ -126,7 +126,7 @@ public class MenuServiceImpl implements MenuService {
 
 	/**
 	 * 메뉴 수정
-	 * @param menuDto 메뉴 정보를 담고 있는 DTO 객체
+	 * @param MenuUpdateDto 메뉴 정보를 담고 있는 DTO 객체
 	 * @return Long 등록된 메뉴의 No
 	 */
 	@Override
@@ -202,8 +202,8 @@ public class MenuServiceImpl implements MenuService {
 	//  TO
 	/**
 	 * 카테고리별 판매중인 메뉴 목록 조회
-	 * @param Long 카테고리의 No, Integer 메뉴의 상태 (0 : 판매중)
-	 * @return boolean 단종 상태로 수정 성공 여부
+	 * @param Long 카테고리의 No
+	 * @return List<MenuListForToDto> 
 	 */
 	@Override
 	public List<MenuListForToDto> getAvailableMenuList(Long categoryNo) {
@@ -229,7 +229,7 @@ public class MenuServiceImpl implements MenuService {
     /**
      * TO용 판매가능한 메뉴 상세 보기
      * @param Long 메뉴의 No
-     * @return MenuDto 메뉴 정보
+     * @return MenuForToDto 메뉴 정보
      */
     @Override
     public MenuForToDto getAvailableMenu(Long menuNo) {
