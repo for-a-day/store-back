@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.menu.dao.MenuRepository;
 import com.nagane.franchise.menu.domain.Menu;
@@ -26,7 +27,7 @@ import com.nagane.franchise.store.domain.Store;
  * @since 2024.06.30
  * 재고 관리 기능
  * **/
-
+@Service
 public class StockServiceImpl implements StockService {
 
 	@Autowired
