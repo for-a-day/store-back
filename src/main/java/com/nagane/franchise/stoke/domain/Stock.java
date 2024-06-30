@@ -49,13 +49,13 @@ public class Stock {
 	private Date lastStockDate;
 	
 
-	/* 점포 */
+	/* 점포 (FK) */
 	@ManyToOne
     @JoinColumn(name = "store_no")
     private Store store;
 
 
-	/* 점포 (FK) */
+	/* 메뉴 (FK) */
 	@ManyToOne
     @JoinColumn(name = "menu_no")
     private Menu menu;
