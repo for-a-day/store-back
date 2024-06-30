@@ -16,8 +16,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Menu entity 코드
@@ -30,6 +33,9 @@ import lombok.Data;
 @Table(name = "menu")
 @SequenceGenerator(name = "menu_seq", sequenceName = "menu_seq", allocationSize = 1)
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Menu {
 	
 	/* 메뉴 번호(pk) */
@@ -71,6 +77,6 @@ public class Menu {
 	private Integer state = 1;
 	
 	/* order_menu 엔티티와 OneToMany 매핑 */
-	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
-	private List<OrderMenu> orderMenuList = new ArrayList<>();
+//	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+//	private List<OrderMenu> orderMenuList = new ArrayList<>();
 }

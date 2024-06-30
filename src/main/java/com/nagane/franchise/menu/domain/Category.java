@@ -13,8 +13,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author ljy
@@ -26,6 +29,9 @@ import lombok.Data;
 @SequenceGenerator(name = "category_seq", sequenceName = "category_seq", allocationSize = 1)
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Category {
 	/* 카테고리 번호(pk) */
 	@Id
@@ -41,9 +47,9 @@ public class Category {
 	private Integer state = 1;
 	
 	/* menu 엔티티와 OneToMany 매핑 */
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_no")
-	private List<Menu> menuList = new ArrayList<>();
+//	@OneToMany(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "category_no")
+//	private List<Menu> menuList = new ArrayList<>();
 	
 	/*
 	 * @PrePersist protected void onCreate() { if (this.state == null) { this.state
