@@ -25,10 +25,13 @@ import com.nagane.franchise.order.dto.order.OrderDetailDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
+import com.nagane.franchise.stoke.dao.StockRepository;
+import com.nagane.franchise.stoke.domain.Stock;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.dao.StoreTableRepository;
 import com.nagane.franchise.table.domain.StoreTable;
+import com.nagane.franchise.util.exceptions.InsufficientStockException;
 
 /**
  * @author ljy
@@ -48,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderMenuRepository orderMenuRepository;
 	private final MenuRepository menuRepository;
+	private final StockRepository stockRepository;
 	
 	// 의존성 주입(di)
 	@Autowired
@@ -56,12 +60,14 @@ public class OrderServiceImpl implements OrderService {
 			StoreTableRepository tableRepository,
 			OrderRepository orderRepository,
 			OrderMenuRepository orderMenuRepository,
-			MenuRepository menuRepository) {
+			MenuRepository menuRepository,
+			StockRepository stockRepository) {
 		this.storeRepository = storeRepository;
 		this.tableRepository = tableRepository;
 		this.orderRepository = orderRepository;
 		this.orderMenuRepository = orderMenuRepository;
 		this.menuRepository = menuRepository;
+		this.stockRepository = stockRepository;
 	}
 		
 	/**
@@ -199,7 +205,9 @@ public class OrderServiceImpl implements OrderService {
 	        	PaymentResponseDto paymentResponseDto = PaymentResponseDto.builder()
 	            		.orderNo(payment.getOrderNo())
 	            		.amount(payment.getAmount())
+	            		.paymentMethod(payment.getPaymentMethod())
 	            		.orderDate(payment.getOrderDate())
+	            		.updatedDate(payment.getUpdatedDate())
 	            		.state(payment.getState())
 	            		.tableNo(payment.getTable().getTableNo())
 	            		.tableNumber(payment.getTable().getTableNumber())
@@ -343,7 +351,25 @@ public class OrderServiceImpl implements OrderService {
 	        StoreTable nowTable = this.tableRepository.findByTableCode(orderCreateDto.getTableCode())
 	        		.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 	        
-	        // 주문 생성
+	        // 재고 상태 변경 위한 리스트, 만약 재고 부족할 시 바로 return
+	        List<Stock> changeStockList = new ArrayList<>();
+	        
+	        // 주문 상세 정보 저장
+        	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
+        		// 해당 menu 단일 조회
+    	        Stock nowStock = this.stockRepository.findByMenu_MenuNo(orderMenu.getMenuNo())
+    	        		.orElseThrow(() -> new NoSuchElementException("해당 재고를 찾을 수 없습니다."));
+        		
+    	        if (nowStock.getQuantity() >= orderMenu.getQuantity()) {
+                    nowStock.setQuantity(nowStock.getQuantity() - orderMenu.getQuantity());
+                    changeStockList.add(nowStock);
+                } else {
+                    throw new InsufficientStockException("재고가 부족합니다. 메뉴 번호: " + orderMenu.getMenuNo());
+                }
+    	        
+        	});
+        	
+	        // 주문 엔티티 신규 생성
 	        Order createOrder = Order.builder()
 	        		.amount(orderCreateDto.getAmount())
 	        		.paymentMethod(orderCreateDto.getPaymentMethod())
@@ -356,7 +382,7 @@ public class OrderServiceImpl implements OrderService {
 	        // 주문 정보 db에 저장
 	        Order savedOrder = this.orderRepository.save(createOrder);
 	        
-        	// 주문 상세 정보 저장
+	        // 주문 상세 정보 저장
         	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
         		// 해당 menu 단일 조회
     	        Menu nowMenu = this.menuRepository.findById(orderMenu.getMenuNo())
@@ -371,6 +397,11 @@ public class OrderServiceImpl implements OrderService {
         		this.orderMenuRepository.save(createOrderMenu);
         	});
 	        
+	        
+        	// 모두 다 통과하면, 재고 변경 사항 반영
+        	changeStockList.forEach(changeStock -> {
+        		this.stockRepository.save(changeStock);
+        	});
 	       
 	    } catch (Exception e) {
 	        LOGGER.error("Error occurred while saving order: ", e);

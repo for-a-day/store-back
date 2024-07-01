@@ -1,6 +1,7 @@
 package com.nagane.franchise.order.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nagane.franchise.order.application.OrderService;
 import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
+import com.nagane.franchise.order.dto.order.OrderDetailDto;
+import com.nagane.franchise.order.dto.order.OrderResponseDto;
+import com.nagane.franchise.order.dto.order.PaymentResponseDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +55,11 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
+            List<OrderResponseDto> orderList = this.orderService.getOrderList(storeNo);
             
             // 맵에 데이터 삽입
             response.put("msg", "주문 데이터를 가져오는 데에 성공했습니다.");
-            response.put("data", null);
+            response.put("data", orderList);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -79,10 +84,10 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-            
+        	OrderDetailDto orderDetailDto = this.orderService.getOrder(orderNo);
             // 맵에 데이터 삽입
             response.put("msg", "주문 상세 정보를 가져오는 데에 성공했습니다.");
-            response.put("data", null);
+            response.put("data", orderDetailDto);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -107,10 +112,10 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-            
+        	List<PaymentResponseDto> paymentList = this.orderService.getPaymentList(storeNo);
             // 맵에 데이터 삽입
             response.put("msg", "영수증 정보를 가져오는 데에 성공했습니다.");
-            response.put("data", null);
+            response.put("data", paymentList);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -135,6 +140,7 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
+            this.orderService.changeOrderState(orderChangeStateDto);
             
             // 맵에 데이터 삽입
             response.put("msg", "해당 주문 상태 변경에 성공했습니다.");
@@ -163,7 +169,7 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-            
+            this.orderService.refundPayment(orderNo);
             // 맵에 데이터 삽입
             response.put("msg", "해당 결제 환불에 성공했습니다.");
             response.put("data", null);
@@ -184,17 +190,17 @@ public class OrderController {
 	 */
 	@GetMapping("/to/order")
     public ResponseEntity<Map<String, Object>> getTableOrder(
-    		@RequestParam("tableNo") Long tableNo) {
+    		@RequestParam("tableCode") String tableCode) {
 		
         // 반환할 데이터를 담을 맵 생성
         Map<String, Object> response = new HashMap<>();
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-            
+        	OrderDetailDto orderDetailDto = this.orderService.getTableOrder(tableCode);
             // 맵에 데이터 삽입
             response.put("msg", "주문 내역을 불러오는 데에 성공했습니다.");
-            response.put("data", null);
+            response.put("data", orderDetailDto);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -219,7 +225,7 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-            
+            this.orderService.createOrder(orderCreateDto);
             // 맵에 데이터 삽입
             response.put("msg", "주문에 성공했습니다.");
             response.put("data", null);
