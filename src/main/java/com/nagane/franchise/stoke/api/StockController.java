@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nagane.franchise.stoke.application.PurchaseOrderService;
 import com.nagane.franchise.stoke.application.StockService;
 import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
 import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
@@ -37,6 +38,8 @@ public class StockController {
 
 	@Autowired
 	private StockService stockService;
+	@Autowired
+	private PurchaseOrderService purchaseOrderService;
 
 	/**
 	 * 재고 등록
@@ -116,7 +119,7 @@ public class StockController {
 	public ResponseEntity<String> createPurchaseOrder(
 			@RequestBody PurchaseOrderCreateDto purchaseOrderCreateDto) {
 		try {
-            this.stockService.createPurchaseOrder(purchaseOrderCreateDto);
+            this.purchaseOrderService.createPurchaseOrder(purchaseOrderCreateDto);
             return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
         	System.out.println(e.getMessage());
@@ -133,7 +136,7 @@ public class StockController {
 	public ResponseEntity<String> updatePurchaseOrder(
 			@RequestBody PurchaseOrderUpdateDto purchaseOrderUpdateDto) {
 		try {
-            this.stockService.updatePurchaseOrder(purchaseOrderUpdateDto);
+            this.purchaseOrderService.updatePurchaseOrder(purchaseOrderUpdateDto);
             return new ResponseEntity<>("성공적으로 수정되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("발주 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -147,10 +150,10 @@ public class StockController {
 	 * @param 
 	 * @return List<PurchaseOrderListDto> 조회된 발주 목록
 	 */
-	@GetMapping("/purchaseOrder")
+	@GetMapping("/api/order")
 	public ResponseEntity<List<PurchaseOrderListDto>> getStockList(){
 		try {
-			List<PurchaseOrderListDto> purchaseOrderList = this.stockService.getPurchaseOrderList();
+			List<PurchaseOrderListDto> purchaseOrderList = this.purchaseOrderService.getPurchaseOrderList();
             return new ResponseEntity<>(purchaseOrderList , HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

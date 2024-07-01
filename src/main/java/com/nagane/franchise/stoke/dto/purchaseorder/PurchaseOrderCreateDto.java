@@ -17,9 +17,6 @@ public class PurchaseOrderCreateDto {
 	/* 수량 */
 	private Integer quantity;
 
-	/* 가격 */
-	private Integer price;
-
 	/* 재고 */
     private Long stockNo;
 }
