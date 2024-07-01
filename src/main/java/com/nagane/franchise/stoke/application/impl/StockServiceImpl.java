@@ -215,7 +215,7 @@ public class StockServiceImpl implements StockService {
 	            	purchaseOrderDto.setOrderDate(purchaseOrder.getOrderDate());
 	            	purchaseOrderDto.setPrice(purchaseOrder.getPrice());
 	            	purchaseOrderDto.setStoreCode(purchaseOrder.getStock().getStore().getStoreCode());
-	            	purchaseOrderDto.setMenuId(purchaseOrder.getStock().getMenu().getMenuCode());
+	            	purchaseOrderDto.setMenuId(purchaseOrder.getStock().getMenu().getMenuId());
 	            	
 	                return purchaseOrderDto;
 	            })

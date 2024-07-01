@@ -20,6 +20,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -31,6 +32,7 @@ import lombok.Data;
 @Table(name = "orders")
 @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
 @Data
+@Builder
 public class Order {
 	
 	/* 주문(결제) 번호(pk) */
@@ -44,7 +46,8 @@ public class Order {
 	
 	/* 주문 일시 */
 	@Column(name = "order_date", nullable = false)
-	private LocalDateTime orderDate;
+	@Builder.Default
+	private LocalDateTime orderDate = LocalDateTime.now();
 	
 	/* 상태 */
 	@Column(name = "state", nullable = false)

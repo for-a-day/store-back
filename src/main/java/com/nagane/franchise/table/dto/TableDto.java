@@ -47,5 +47,5 @@ public class TableDto {
 	private List<Order> orderList;
 
 	/* 점포번호(fk) */
-	private Store store;
+	private Long storeNo;
 }

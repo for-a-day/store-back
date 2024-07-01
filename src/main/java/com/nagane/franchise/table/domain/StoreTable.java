@@ -60,7 +60,7 @@ public class StoreTable {
 	private String tableName;
 
 	/* 상태 */
-	@Column(name = "menu_name", nullable = false)
+	@Column(name = "state", nullable = false)
 	@Builder.Default
 	private Integer state = 1;
 
