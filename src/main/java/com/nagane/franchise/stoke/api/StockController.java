@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.stoke.application.StockService;
+import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
+import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
+import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderUpdateDto;
 import com.nagane.franchise.stoke.dto.stock.StockCreateDto;
 import com.nagane.franchise.stoke.dto.stock.StockListDto;
 import com.nagane.franchise.stoke.dto.stock.StockUpdateDto;
@@ -30,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name= "재고 API")
 @RestController
 @RequiredArgsConstructor
-public class StokeController {
+public class StockController {
 
 	@Autowired
 	private StockService stockService;
@@ -47,6 +50,7 @@ public class StokeController {
             this.stockService.createStock(stockCreateDto);
             return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
+        	System.out.println(e.getMessage());
             return new ResponseEntity<>("재고 등록에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
@@ -54,7 +58,7 @@ public class StokeController {
 	/**
 	 * 재고 수정
 	 * @param StockUpdateDto 수정할 재고 정보
-	 * @return Long 재고 번호
+	 * @return String
 	 */
 	@PutMapping("/stock")
 	public ResponseEntity<String> updateStock(
@@ -63,6 +67,7 @@ public class StokeController {
             this.stockService.updateStock(stockUpdateDto);
             return new ResponseEntity<>("성공적으로 수정되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
+        	System.out.println(e.getMessage());
             return new ResponseEntity<>("재고 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
@@ -97,9 +102,78 @@ public class StokeController {
 			this.stockService.deleteStock(stockNo);
 			return new ResponseEntity<>("재고를 삭제하였습니다.", HttpStatus.OK);
 		} catch(Exception e) {
-			return new ResponseEntity<>("재고를 삭제 살패 하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("재고 삭제 살패 하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
 	}
+
+	/**
+	 * 발주 등록
+	 * @param PurchaseOrderCreateDto 생성할 발주 정보
+	 * @return String
+	 */
+	@PostMapping("/purchaseOrder")
+	public ResponseEntity<String> createPurchaseOrder(
+			@RequestBody PurchaseOrderCreateDto purchaseOrderCreateDto) {
+		try {
+            this.stockService.createPurchaseOrder(purchaseOrderCreateDto);
+            return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+        	System.out.println(e.getMessage());
+            return new ResponseEntity<>("발주 등록에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+
+	/**
+	 * 발주 수정
+	 * @param PurchaseOrderUpdateDto 수정할 발주 정보
+	 * @return String
+	 */	
+	@PutMapping("/purchaseOrder")
+	public ResponseEntity<String> updatePurchaseOrder(
+			@RequestBody PurchaseOrderUpdateDto purchaseOrderUpdateDto) {
+		try {
+            this.stockService.updatePurchaseOrder(purchaseOrderUpdateDto);
+            return new ResponseEntity<>("성공적으로 수정되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("발주 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+	
+
+
+	/**
+	 * 발주 목록 조회
+	 * @param 
+	 * @return List<PurchaseOrderListDto> 조회된 발주 목록
+	 */
+	@GetMapping("/purchaseOrder")
+	public ResponseEntity<List<PurchaseOrderListDto>> getStockList(){
+		try {
+			List<PurchaseOrderListDto> purchaseOrderList = this.stockService.getPurchaseOrderList();
+            return new ResponseEntity<>(purchaseOrderList , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+
+	/**
+	 * 발주 삭제
+	 * @param Long 발주 번호
+	 * @return boolean
+	 */
+	@DeleteMapping("/purchaseOrder")
+	public ResponseEntity<String> deletePurchaseOrder(
+			@RequestParam Long purchaseOrderNo){
+		try {
+			this.stockService.deleteStock(purchaseOrderNo);
+			return new ResponseEntity<>("발주를 삭제하였습니다.", HttpStatus.OK);
+		} catch(Exception e) {
+        	System.out.println(e.getMessage());
+			return new ResponseEntity<>("발주 삭제 살패 하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+	}
+
 	
 }

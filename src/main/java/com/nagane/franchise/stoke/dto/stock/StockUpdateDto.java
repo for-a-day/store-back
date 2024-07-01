@@ -23,6 +23,5 @@ public class StockUpdateDto {
 
     private Integer quantity;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date lastStockDate;
 }

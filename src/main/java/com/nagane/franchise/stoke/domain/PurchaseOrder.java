@@ -2,6 +2,9 @@ package com.nagane.franchise.stoke.domain;
 
 import java.util.Date;
 
+import com.nagane.franchise.menu.domain.Menu;
+import com.nagane.franchise.store.domain.Store;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,12 +12,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author nsr
@@ -26,6 +32,8 @@ import lombok.Data;
 @SequenceGenerator(name = "p_order_seq", sequenceName = "p_order_seq", allocationSize = 1)
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PurchaseOrder {
 
 
@@ -49,7 +57,7 @@ public class PurchaseOrder {
 
 	/* 발주상태 */
 	@Column(name = "state", nullable = false)
-	private Integer state = 0;
+	private Integer state;
 
 	/* 가격 */
 	@Column(name = "price", nullable = false)
@@ -60,4 +68,10 @@ public class PurchaseOrder {
 	@ManyToOne
     @JoinColumn(name = "stock_no")
     private Stock stock;
+	
+	@PrePersist
+	protected void onCreate() {
+		orderDate = new Date();
+		state = 0;
+	}
 }

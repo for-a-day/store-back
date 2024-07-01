@@ -12,12 +12,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author nsr
@@ -25,22 +28,24 @@ import lombok.Data;
  * 지점별 재고 엔티티
  */
 @Entity
-@Table(name = "stoke")
-@SequenceGenerator(name = "stoke_seq", sequenceName = "stoke_seq", allocationSize = 1)
+@Table(name = "stock")
+@SequenceGenerator(name = "stock_seq", sequenceName = "stock_seq", allocationSize = 1)
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Stock {
 
 
 	/* 재고 번호 (PK) */
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stoke_seq")
-	private Long stokeNo;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_seq")
+	private Long stockNo;
 	
 	
 	/* 재고량 */
 	@Column(name = "quantity", nullable = false)
-	private Integer quantity = 0;
+	private Integer quantity;
 
 	
 	/* 최근 입고 날짜 */
@@ -59,4 +64,10 @@ public class Stock {
 	@ManyToOne
     @JoinColumn(name = "menu_no")
     private Menu menu;
+	
+
+	@PrePersist
+	protected void onCreate() {
+		quantity = 0;
+	}
 }
