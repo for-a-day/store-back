@@ -4,25 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.store.application.StoreService;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
+import com.nagane.franchise.store.dto.store.StoreNoDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,7 +47,7 @@ public class StoreController {
 	 * @param 
 	 * @return Map<String, List<StoreDto>>
 	 */
-	 @GetMapping("/admin/store")
+	@GetMapping("/admin/store")
     public ResponseEntity<Map<String, List<StoreDto>>> getStoreList() {
         // 반환할 데이터를 담을 맵 생성
         Map<String, List<StoreDto>> response = new HashMap<>();
@@ -110,9 +108,9 @@ public class StoreController {
 	 */
 	@DeleteMapping("/admin/store")
 	public ResponseEntity<String> deleteStore(
-			@RequestParam("storeNo") Long storeNo) {
+			@RequestBody StoreNoDto storeNoDto) {
 		try {
-            this.storeService.deleteStore(storeNo);
+            this.storeService.deleteStore(storeNoDto.getStoreNo());
             return new ResponseEntity<>("가맹점 삭제가 완료되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("가맹점 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -135,14 +133,4 @@ public class StoreController {
         }
 	}
 	
-	// error 처리
-	private ResponseEntity<String> checkException(String message) {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
-	}
-		
-	// 지점 정보가 존재하지 않을 시
-	@ExceptionHandler(NoSuchElementException.class)
-	public ResponseEntity<String> noSuchElementExceptionHandler(NoSuchElementException ex) {
-		return this.checkException("해당 지점이 존재하지 않습니다.");
-	}
 }
