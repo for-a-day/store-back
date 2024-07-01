@@ -12,16 +12,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nagane.franchise.menu.dao.MenuRepository;
+import com.nagane.franchise.menu.domain.Menu;
 import com.nagane.franchise.order.application.OrderService;
 import com.nagane.franchise.order.dao.OrderMenuRepository;
 import com.nagane.franchise.order.dao.OrderRepository;
 import com.nagane.franchise.order.domain.Order;
+import com.nagane.franchise.order.domain.OrderMenu;
+import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
+import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
+import com.nagane.franchise.table.dao.StoreTableRepository;
+import com.nagane.franchise.table.domain.StoreTable;
 
 /**
  * @author ljy
@@ -37,18 +44,24 @@ public class OrderServiceImpl implements OrderService {
 	
 	// 필요 레포 연결
 	private final StoreRepository storeRepository;
+	private final StoreTableRepository tableRepository;
 	private final OrderRepository orderRepository;
 	private final OrderMenuRepository orderMenuRepository;
+	private final MenuRepository menuRepository;
 	
 	// 의존성 주입(di)
 	@Autowired
 	public OrderServiceImpl(
-			StoreRepository storeRepository, 
+			StoreRepository storeRepository,
+			StoreTableRepository tableRepository,
 			OrderRepository orderRepository,
-			OrderMenuRepository orderMenuRepository) {
+			OrderMenuRepository orderMenuRepository,
+			MenuRepository menuRepository) {
 		this.storeRepository = storeRepository;
+		this.tableRepository = tableRepository;
 		this.orderRepository = orderRepository;
 		this.orderMenuRepository = orderMenuRepository;
+		this.menuRepository = menuRepository;
 	}
 		
 	/**
@@ -65,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 	        
 	        // 모든 order 목록 조회
-	        List<Order> orderList = this.orderRepository.findByStoreNoAndState(storeNo);
+	        List<Order> orderList = this.orderRepository.findByStoreNoAndState(nowStore.getStoreNo());
 	        
 	        // return할 changedOrderList 미리 생성
 	        List<OrderResponseDto> changedOrderList = new ArrayList<>();
@@ -121,6 +134,7 @@ public class OrderServiceImpl implements OrderService {
 	        // 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
         	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
 	        
+        	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
 	        order.getOrderMenuList().forEach(orderMenu -> {
         		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
         				.menuNo(orderMenu.getMenu().getMenuNo())
@@ -131,6 +145,7 @@ public class OrderServiceImpl implements OrderService {
         		orderMenuResponseList.add(orderMenuResponseDto);
         	});
 	        
+	        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
 	        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
             		.orderNo(order.getOrderNo())
             		.amount(order.getAmount())
@@ -170,8 +185,8 @@ public class OrderServiceImpl implements OrderService {
 	        LocalDateTime startDate = today.atStartOfDay(); // 00:00:00
 	        LocalDateTime endDate = today.atTime(LocalTime.MAX); // 23:59:59
 	        
-	        // 모든 order 목록 조회
-	        List<Order> paymentList = this.orderRepository.findByStateAndStoreNoAndOrderDateBetween(
+	        // 오늘 들어온 모든 목록 조회
+	        List<Order> paymentList = this.orderRepository.findByStore_StoreNoAndOrderDateBetween(
 	        		nowStore.getStoreNo(), 
 	        		startDate,
 	        		endDate);
@@ -201,36 +216,167 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * 주문 상태 변경
+	 * @param OrderChangeStateDto orderChangeStateDto
+	 * @return Map<String, Object>>
+	 */
+	@Override
+	public void changeOrderState(OrderChangeStateDto orderChangeStateDto) {
+		LOGGER.info("[changeOrderState] input orderChangeStateDto : {}", orderChangeStateDto);
+		try {
+			// 주문 정보 찾기
+			Order nowOrder = this.orderRepository.findById(orderChangeStateDto.getOrderNo())
+					.orElseThrow(() -> new NoSuchElementException("주문 정보를 찾을 수 없습니다."));
+			
+			// 케이스따라 정보 수정
+			switch (orderChangeStateDto.getOrderStateInstr()) {
+				// 음식 나갔을 때
+				case OUT:
+					nowOrder.setState(1);
+					break;
+				// 손님이 가게 밖으로 나갔을 때(식사 끝)
+				case CLEAR:
+					nowOrder.setState(2);
+					break;
+				// 환불 됐을 때
+				case REFUND:
+					nowOrder.setState(99);
+			}
+			
+			// 수정된 정보 db에 저장
+			this.orderRepository.save(nowOrder);
+			
+		} catch (Exception e) {
+	        LOGGER.error("Error occurred while changing payment State : ", e);
+	        throw e;
+	    }
+	}
+	
+	/**
 	 * 단일 결제 환불
 	 * @param Long orderNo
 	 * @return void
 	 */
 	@Override
 	public void refundPayment(Long orderNo) {
-		// TODO Auto-generated method stub
-		
+		LOGGER.info("[refundPayment] input orderNo : {}", orderNo);
+		try {
+			// 주문 정보 찾기
+			Order nowOrder = this.orderRepository.findById(orderNo)
+					.orElseThrow(() -> new NoSuchElementException("주문 정보를 찾을 수 없습니다."));
+			
+			// 환불로 수정(code: 99)
+			if (nowOrder.getState() == 1) {
+				nowOrder.setState(99);
+			}
+			
+			// 수정된 정보 db에 저장
+			this.orderRepository.save(nowOrder);
+			
+		} catch (Exception e) {
+	        LOGGER.error("Error occurred while payment refund : ", e);
+	        throw e;
+	    }
 	}
 
 	/**
 	 * 해당 테이블 주문 내역 조회
-	 * @param Long  tableNo
+	 * @param String tableCode
 	 * @return List<OrderResponseDto>
 	 */
 	@Override
-	public List<OrderResponseDto> getTableOrder(Long tableNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public OrderDetailDto getTableOrder(String tableCode) {
+		LOGGER.info("[getTableOrder] input tableCode : {}", tableCode);
+	    try {
+	        // 해당 order 단일 조회
+	        Order order = this.orderRepository.findByTableCode(tableCode)
+	        		.orElseThrow(() -> new NoSuchElementException("해당 주문을 찾을 수 없습니다."));
+	        
+	        // 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
+        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
+	        
+        	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
+	        order.getOrderMenuList().forEach(orderMenu -> {
+        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
+        				.menuNo(orderMenu.getMenu().getMenuNo())
+        				.menuName(orderMenu.getMenu().getMenuName())
+        				.quantity(orderMenu.getQuantity())
+        				.build();
+        		
+        		orderMenuResponseList.add(orderMenuResponseDto);
+        	});
+	        
+	        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
+	        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
+            		.orderNo(order.getOrderNo())
+            		.amount(order.getAmount())
+            		.orderDate(order.getOrderDate())
+            		.state(order.getState())
+            		.paymentMethod(order.getPaymentMethod())
+            		.updatedDate(order.getUpdatedDate())
+            		.tableNo(order.getTable().getTableNo())
+            		.tableNumber(order.getTable().getTableNumber())
+            		.orderMenuList(orderMenuResponseList)
+                    .build();
+	        
+	        return orderDetailDto;
+	    } catch (Exception e) {
+	        LOGGER.error("Error occurred while getting order: ", e);
+	        throw e;
+	    }
 	}
 
 	/**
 	 * 주문 신규 등록
-	 * @param OrderCreateDto orderCreateDto
+	 * @param String tableCode
 	 * @return void
 	 */
 	@Override
-	public void createOrder(Long tableNo) {
-		// TODO Auto-generated method stub
-		
+	public void createOrder(OrderCreateDto orderCreateDto) {
+		LOGGER.info("[createOrder] input orderCreateDto : {}", orderCreateDto);
+		try {
+			// 해당 가맹점 받아오기
+	        Store nowStore = this.storeRepository.findByStoreCode(orderCreateDto.getStoreCode())
+	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+			
+	        // 해당 table 단일 조회
+	        StoreTable nowTable = this.tableRepository.findByTableCode(orderCreateDto.getTableCode())
+	        		.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+	        
+	        // 주문 생성
+	        Order createOrder = Order.builder()
+	        		.amount(orderCreateDto.getAmount())
+	        		.paymentMethod(orderCreateDto.getPaymentMethod())
+	        		.store(nowStore)
+	        		.table(nowTable)
+	        		.build();
+	        
+	        LOGGER.info("[createOrder] create createOrder : {}", createOrder);
+	        
+	        // 주문 정보 db에 저장
+	        Order savedOrder = this.orderRepository.save(createOrder);
+	        
+        	// 주문 상세 정보 저장
+        	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
+        		// 해당 menu 단일 조회
+    	        Menu nowMenu = this.menuRepository.findById(orderMenu.getMenuNo())
+    	        		.orElseThrow(() -> new NoSuchElementException("해당 메뉴를 찾을 수 없습니다."));
+        		
+        		OrderMenu createOrderMenu = OrderMenu.builder()
+        				.menu(nowMenu)
+        				.order(savedOrder)
+        				.quantity(orderMenu.getQuantity())
+        				.build();
+        		
+        		this.orderMenuRepository.save(createOrderMenu);
+        	});
+	        
+	       
+	    } catch (Exception e) {
+	        LOGGER.error("Error occurred while saving order: ", e);
+	        throw e;
+	    }
 	}
+
 
 }

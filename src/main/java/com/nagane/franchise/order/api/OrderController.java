@@ -8,10 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.order.application.OrderService;
+import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
+import com.nagane.franchise.order.dto.order.OrderCreateDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -48,13 +53,13 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "주문 데이터를 가져오는 데에 성공했습니다.");
+            response.put("msg", "주문 데이터를 가져오는 데에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "주문 데이터를 가져오는 데에 실패했습니다.");
+        	response.put("msg", "주문 데이터를 가져오는 데에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -76,13 +81,13 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "주문 상세 정보를 가져오는 데에 성공했습니다.");
+            response.put("msg", "주문 상세 정보를 가져오는 데에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "주문 상세 정보를 가져오는 데에 실패했습니다.");
+        	response.put("msg", "주문 상세 정보를 가져오는 데에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -93,6 +98,7 @@ public class OrderController {
 	 * @param Long storeNo
 	 * @return Map<String, Object>>
 	 */
+	@GetMapping("/payment")
     public ResponseEntity<Map<String, Object>> getPaymentList(
     		@RequestParam("storeNo") Long storeNo) {
 		
@@ -103,13 +109,41 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "영수증 정보를 가져오는 데에 성공했습니다.");
+            response.put("msg", "영수증 정보를 가져오는 데에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "영수증 정보를 가져오는 데에 실패했습니다.");
+        	response.put("msg", "영수증 정보를 가져오는 데에 실패했습니다.");
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+	/**
+	 * 주문 상태 변경
+	 * @param OrderChangeStateDto orderChangeStateDto
+	 * @return Map<String, Object>>
+	 */
+	@PutMapping("/order/state")
+    public ResponseEntity<Map<String, Object>> changeOrderState(
+    		@RequestBody OrderChangeStateDto orderChangeStateDto) {
+		
+        // 반환할 데이터를 담을 맵 생성
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // OrderDto 리스트를 가져오는 서비스 메서드 호출
+            
+            // 맵에 데이터 삽입
+            response.put("msg", "해당 주문 상태 변경에 성공했습니다.");
+            response.put("data", null);
+
+            // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", "해당 주문 상태 변경에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -120,6 +154,7 @@ public class OrderController {
 	 * @param Long orderNo
 	 * @return Map<String, Object>>
 	 */
+	@PutMapping("/payment")
     public ResponseEntity<Map<String, Object>> refundPayment(
     		@RequestParam("orderNo") Long orderNo) {
 		
@@ -130,13 +165,13 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "해당 결제 환불에 성공했습니다.");
+            response.put("msg", "해당 결제 환불에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "해당 결제 환불에 실패했습니다.");
+        	response.put("msg", "해당 결제 환불에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -147,6 +182,7 @@ public class OrderController {
 	 * @param Long  tableNo
 	 * @return Map<String, Object>>
 	 */
+	@GetMapping("/to/order")
     public ResponseEntity<Map<String, Object>> getTableOrder(
     		@RequestParam("tableNo") Long tableNo) {
 		
@@ -157,13 +193,13 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "주문 내역을 불러오는 데에 성공했습니다.");
+            response.put("msg", "주문 내역을 불러오는 데에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "주문 내역을 불러오는 데에 실패했습니다.");
+        	response.put("msg", "주문 내역을 불러오는 데에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -174,8 +210,9 @@ public class OrderController {
 	 * @param OrderCreateDto orderCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@PostMapping("/order")
     public ResponseEntity<Map<String, Object>> createOrder(
-    		@RequestParam("tableNo") Long tableNo) {
+    		@RequestBody OrderCreateDto orderCreateDto) {
 		
         // 반환할 데이터를 담을 맵 생성
         Map<String, Object> response = new HashMap<>();
@@ -184,13 +221,13 @@ public class OrderController {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
             
             // 맵에 데이터 삽입
-            response.put("message", "주문에 성공했습니다.");
+            response.put("msg", "주문에 성공했습니다.");
             response.put("data", null);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", "주문에 실패했습니다.");
+        	response.put("msg", "주문에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
