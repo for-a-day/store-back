@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuDto;
+import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,13 +44,13 @@ public class OrderDetailDto {
 	/* 업데이트 날짜 */
 	private LocalDateTime updatedDate;
 	
-	/* 점포 번호(fk) */
-	 private Long storeNo;
-	
 	/* 테이블 번호(fk) */
+	private Long tableNo;
+	
+	/* 매점 내 테이블 번호 */
 	private int tableNumber;
 	
 	/* order_menu 엔티티와 OneToMany 매핑 */
-	private List<OrderMenuDto> orderMenuList = new ArrayList<>();
+	private List<OrderMenuResponseDto> orderMenuList = new ArrayList<>();
 
 }

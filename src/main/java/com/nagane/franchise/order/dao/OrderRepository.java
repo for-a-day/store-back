@@ -20,7 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT o FROM Order o WHERE o.store.storeNo = :storeNo " +
 	           "AND (o.state = 0 OR o.state = 1)")
 	List<Order> findByStoreNoAndState(@Param("storeNo") Long storeNo);
-
+	
 	/* 조회 당일 날짜와 같은 날 들어온 주문 개수를 세는 쿼리(점포 번호 기준) */
 	Long countByStore_StoreNoAndOrderDateBetween(Long storeNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
