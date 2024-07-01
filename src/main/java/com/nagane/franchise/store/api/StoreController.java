@@ -1,6 +1,5 @@
 package com.nagane.franchise.store.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class StoreController {
 	/**
 	 * 지점 목록 조회
 	 * @param 
-	 * @return Map<String, List<StoreDto>>
+	 * @return Map<String, Object>>
 	 */
 	@GetMapping("/admin/store")
     public ResponseEntity<Map<String, Object>> getStoreList() {
@@ -64,6 +63,7 @@ public class StoreController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "가맹점 데이터를 가져오는 데에 실패했습니다.");
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -72,7 +72,7 @@ public class StoreController {
 	 /**
 	 * 지점 신규 등록(지점장 회원 가입)
 	 * @param StoreCreateDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/admin/store")
 	public ResponseEntity<Map<String, Object>> createStore(
@@ -82,9 +82,11 @@ public class StoreController {
 		try {
             this.storeService.createStore(storeCreateDto);
             response.put("message", "가맹점 등록에 성공했습니다.");
+            response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "가맹점 등록에 실패했습니다.");
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
@@ -92,7 +94,7 @@ public class StoreController {
 	 /**
 	 * 지점 정보 수정
 	 * @param StoreUpdateDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PutMapping("/admin/store")
 	public ResponseEntity<Map<String, Object>> updateStore(
@@ -102,9 +104,11 @@ public class StoreController {
 		try {
             this.storeService.updateStore(storeUpdateDto);
             response.put("message", "가맹점 정보 수정이 완료되었습니다.");
+            response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "가맹점 정보 수정에 실패했습니다.");
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
@@ -112,7 +116,7 @@ public class StoreController {
 	 /**
 	 * 지점 삭제
 	 * @param Long
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@DeleteMapping("/admin/store")
 	public ResponseEntity<Map<String, Object>> deleteStore(
@@ -120,11 +124,13 @@ public class StoreController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
+			this.storeService.deleteStore(storeNoDto.getStoreNo());
 			response.put("message", "가맹점 비활성화가 완료되었습니다.");
-            this.storeService.deleteStore(storeNoDto.getStoreNo());
+			response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "가맹점 삭제에 실패했습니다.");
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
@@ -132,7 +138,7 @@ public class StoreController {
 	 /**
 	 * 가맹점 로그인
 	 * @param StoreLoginDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginStore(
@@ -142,9 +148,11 @@ public class StoreController {
 		try {
             this.storeService.loginStore(storeLoginDto);
             response.put("message", "로그인에 성공했습니다.");
+            response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "로그인에 실패했습니다.");
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
