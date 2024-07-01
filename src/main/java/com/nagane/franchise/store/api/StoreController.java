@@ -44,7 +44,11 @@ public class StoreController {
 	@Autowired
 	private StoreService storeService;
 	
-	/** 지점 목록 조회 */
+	/**
+	 * 지점 목록 조회
+	 * @param 
+	 * @return Map<String, List<StoreDto>>
+	 */
 	 @GetMapping("/admin/store")
     public ResponseEntity<Map<String, List<StoreDto>>> getStoreList() {
         // 반환할 데이터를 담을 맵 생성
@@ -66,13 +70,15 @@ public class StoreController {
         }
     }
 	
-	/** 지점 신규 등록(지점장 회원 가입) */
+	 
+	 /**
+	 * 지점 신규 등록(지점장 회원 가입)
+	 * @param StoreCreateDto
+	 * @return String
+	 */
 	@PostMapping("/admin/store")
 	public ResponseEntity<String> createStore(
 			@RequestBody StoreCreateDto storeCreateDto) {
-		System.out.println(storeCreateDto.getAddress());
-		System.out.println(storeCreateDto.getContact());
-		System.out.println(storeCreateDto.getContractDate());
 		try {
             this.storeService.createStore(storeCreateDto);
             return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
@@ -81,7 +87,11 @@ public class StoreController {
         }
 	}
 	
-	/** 지점 정보 수정 */
+	 /**
+	 * 지점 정보 수정
+	 * @param StoreUpdateDto
+	 * @return String
+	 */
 	@PutMapping("/admin/store")
 	public ResponseEntity<String> updateStore(
 			@RequestBody StoreUpdateDto storeUpdateDto) {
@@ -93,11 +103,14 @@ public class StoreController {
         }
 	}
 	
-	/** 지점 삭제 */
+	 /**
+	 * 지점 삭제
+	 * @param Long
+	 * @return String
+	 */
 	@DeleteMapping("/admin/store")
 	public ResponseEntity<String> deleteStore(
 			@RequestParam("storeNo") Long storeNo) {
-		System.out.println(storeNo);
 		try {
             this.storeService.deleteStore(storeNo);
             return new ResponseEntity<>("가맹점 삭제가 완료되었습니다.", HttpStatus.OK);
@@ -106,11 +119,14 @@ public class StoreController {
         }
 	}
 	
-	/** 가맹점 로그인 */
+	 /**
+	 * 가맹점 로그인
+	 * @param StoreLoginDto
+	 * @return String
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<String> loginStore(
 			@RequestBody StoreLoginDto storeLoginDto) {
-		System.out.println(storeLoginDto.getStoreCode());
 		try {
             this.storeService.loginStore(storeLoginDto);
             return new ResponseEntity<>("로그인에 성공했습니다.", HttpStatus.OK);
