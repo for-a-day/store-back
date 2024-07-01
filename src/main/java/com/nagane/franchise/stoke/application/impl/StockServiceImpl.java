@@ -66,7 +66,7 @@ public class StockServiceImpl implements StockService {
 		// 4. 재고 저장
 		Stock saved = stockRepository.save(stock);
 		
-		return saved.getStokeNo();
+		return saved.getStockNo();
 	}
 
 
@@ -92,7 +92,7 @@ public class StockServiceImpl implements StockService {
 		Stock saved = stockRepository.save(stock);
 		System.out.println(saved.toString());
 		
-		return saved.getStokeNo();
+		return saved.getStockNo();
 	}
 
 	/**
@@ -104,14 +104,14 @@ public class StockServiceImpl implements StockService {
 	public List<StockListDto> getStockList(Long storeNo) {
 
 		// 발주 정보 가져오기
-		PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStokeNo(storeNo);
+		PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStockNo(storeNo);
 	    List<Stock> stockList = stockRepository.findByStore_StoreNo(storeNo);
 
 	    // Stock을 StockListDto로 변환
 	    List<StockListDto> stockDtoList = stockList.stream()
 	            .map(stock -> {
 	            	StockListDto stockDto = new StockListDto();
-	            	stockDto.setStockNo(stock.getStokeNo());
+	            	stockDto.setStockNo(stock.getStockNo());
 	            	stockDto.setQuantity(stock.getQuantity());
 	            	stockDto.setLastStockDate(stock.getLastStockDate());
 	            	stockDto.setMenuName(stock.getMenu().getMenuName());
@@ -144,7 +144,7 @@ public class StockServiceImpl implements StockService {
 
 
 	/**
-	 * 재고 등록
+	 * 발주 등록
 	 * @param PurchaseOrderCreateDto 생성할 발주 정보
 	 * @return Long 발주 번호
 	 */
@@ -154,7 +154,9 @@ public class StockServiceImpl implements StockService {
 		// 1. 재고 엔티티 가져오기
 		Stock stock = stockRepository.findById(purchaseOrderCreateDto.getStockNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 재고를 찾을 수 없습니다."));
-
+		
+		System.out.println("재고 번호 : " + stock.getStockNo());
+		
 		// 2. 발주 엔티티 생성
 		PurchaseOrder purchaseOrder = PurchaseOrder.builder()
 				.quantity(purchaseOrderCreateDto.getQuantity())
@@ -162,7 +164,7 @@ public class StockServiceImpl implements StockService {
 				.stock(stock)
 				.build();
 
-		// 4. 재고 저장
+		// 4. 발주 저장
 		PurchaseOrder saved = purchaseOrderRepository.save(purchaseOrder);
 		
 		return saved.getPOrderNo();
