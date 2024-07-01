@@ -43,6 +43,9 @@ public class PaymentResponseDto {
 	/* 업데이트 날짜 */
 	private LocalDateTime updatedDate;
 	
+	/* 테이블 번호(fk) */
+	private Long tableNo;
+	
 	/* 테이블 번호 */
 	private int tableNumber;
 

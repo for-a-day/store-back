@@ -18,7 +18,7 @@ public interface OrderService {
     List<OrderResponseDto> getOrderList(Long storeNo);
 	
 	/** 선택한 주문 상세 정보 조회*/
-    List<OrderDetailDto> getOrder(Long orderNo);
+    OrderDetailDto getOrder(Long orderNo);
 	
 	/** 결제 목록 조회(영수증)*/
     List<PaymentResponseDto> getPaymentList(Long storeNo);

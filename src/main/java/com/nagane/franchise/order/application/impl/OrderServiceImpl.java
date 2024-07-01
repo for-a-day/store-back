@@ -1,5 +1,8 @@
 package com.nagane.franchise.order.application.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -55,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderResponseDto> getOrderList(Long storeNo) {
-	    LOGGER.info("[getTableList] input storeNo : {}", storeNo);
+	    LOGGER.info("[getOrderList] input storeNo : {}", storeNo);
 	    try {
 	        // 해당 가맹점 받아오기
 	        Store nowStore = this.storeRepository.findById(storeNo)
@@ -87,11 +90,8 @@ public class OrderServiceImpl implements OrderService {
 	            OrderResponseDto orderResponseDto = OrderResponseDto.builder()
 	            		.orderNo(order.getOrderNo())
 	            		.amount(order.getAmount())
-	            		.orderDate(order.getOrderDate())
-	            		.state(order.getState())
-	            		.paymentMethod(order.getPaymentMethod())
-	            		.updatedDate(order.getUpdatedDate())
 	            		.tableNo(order.getTable().getTableNo())
+	            		.tableNumber(order.getTable().getTableNumber())
 	            		.orderMenuList(orderMenuResponseList)
 	                    .build();
 	            
@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 	        
 	        return changedOrderList;
 	    } catch (Exception e) {
-	        LOGGER.error("Error occurred while getting table list: ", e);
+	        LOGGER.error("Error occurred while getting order list: ", e);
 	        throw e;
 	    }
 	}
@@ -108,12 +108,46 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * 선택한 주문 상세 정보 조회
 	 * @param Long orderNo
-	 * @return List<OrderDetailDto>
+	 * @return OrderDetailDto
 	 */
 	@Override
-	public List<OrderDetailDto> getOrder(Long orderNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public OrderDetailDto getOrder(Long orderNo) {
+	    LOGGER.info("[getOrder] input orderNo : {}", orderNo);
+	    try {
+	        // 해당 order 단일 조회
+	        Order order = this.orderRepository.findById(orderNo)
+	        		.orElseThrow(() -> new NoSuchElementException("해당 주문을 찾을 수 없습니다."));
+	        
+	        // 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
+        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
+	        
+	        order.getOrderMenuList().forEach(orderMenu -> {
+        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
+        				.menuNo(orderMenu.getMenu().getMenuNo())
+        				.menuName(orderMenu.getMenu().getMenuName())
+        				.quantity(orderMenu.getQuantity())
+        				.build();
+        		
+        		orderMenuResponseList.add(orderMenuResponseDto);
+        	});
+	        
+	        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
+            		.orderNo(order.getOrderNo())
+            		.amount(order.getAmount())
+            		.orderDate(order.getOrderDate())
+            		.state(order.getState())
+            		.paymentMethod(order.getPaymentMethod())
+            		.updatedDate(order.getUpdatedDate())
+            		.tableNo(order.getTable().getTableNo())
+            		.tableNumber(order.getTable().getTableNumber())
+            		.orderMenuList(orderMenuResponseList)
+                    .build();
+	        
+	        return orderDetailDto;
+	    } catch (Exception e) {
+	        LOGGER.error("Error occurred while getting order: ", e);
+	        throw e;
+	    }
 	}
 
 	/**
@@ -123,8 +157,47 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<PaymentResponseDto> getPaymentList(Long storeNo) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.info("[getOrderList] input storeNo : {}", storeNo);
+	    try {
+	        // 해당 가맹점 받아오기
+	        Store nowStore = this.storeRepository.findById(storeNo)
+	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	        
+	        // 오늘 날짜를 가져옴
+	        LocalDate today = LocalDate.now();
+	        
+	        // 오늘의 시작 시간과 끝 시간 계산
+	        LocalDateTime startDate = today.atStartOfDay(); // 00:00:00
+	        LocalDateTime endDate = today.atTime(LocalTime.MAX); // 23:59:59
+	        
+	        // 모든 order 목록 조회
+	        List<Order> paymentList = this.orderRepository.findByStateAndStoreNoAndOrderDateBetween(
+	        		nowStore.getStoreNo(), 
+	        		startDate,
+	        		endDate);
+	        
+	        // return할 changedOrderList 미리 생성
+	        List<PaymentResponseDto> changedPaymentList = new ArrayList<>();
+	        
+	        // 각 order 엔티티 객체 OrderResponseDto로 변경해서 changedOrderList에 추가
+	        paymentList.forEach(payment -> {
+	        	PaymentResponseDto paymentResponseDto = PaymentResponseDto.builder()
+	            		.orderNo(payment.getOrderNo())
+	            		.amount(payment.getAmount())
+	            		.orderDate(payment.getOrderDate())
+	            		.state(payment.getState())
+	            		.tableNo(payment.getTable().getTableNo())
+	            		.tableNumber(payment.getTable().getTableNumber())
+	                    .build();
+	            
+	        	changedPaymentList.add(paymentResponseDto);
+	        });
+	        
+	        return changedPaymentList;
+	    } catch (Exception e) {
+	        LOGGER.error("Error occurred while getting payment list: ", e);
+	        throw e;
+	    }
 	}
 
 	/**

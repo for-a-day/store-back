@@ -1,6 +1,5 @@
 package com.nagane.franchise.order.dto.order;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,18 +29,6 @@ public class OrderResponseDto {
 	
 	/* 금액 */
 	private Integer amount;
-	
-	/* 주문 일시 */
-	private LocalDateTime orderDate;
-	
-	/* 상태 */
-	private int state;
-	
-	/* 결제 방법 */
-	private String paymentMethod;
-	
-	/* 업데이트 날짜 */
-	private LocalDateTime updatedDate;
 	
 	/* 테이블 번호(fk) */
 	private Long tableNo;
