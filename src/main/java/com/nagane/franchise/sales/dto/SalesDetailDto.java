@@ -12,7 +12,7 @@ import lombok.ToString;
 /**
  * @author nsr
  * @since 2024.07.01
- * 매출 Dto
+ * 매출 상세정보 Dto
  * **/
 
 @Data
@@ -21,20 +21,16 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class SalesDto {
+public class SalesDetailDto {
 
-	/* 매출 번호 (PK) */
-	private Long salesNo;
-	
-	/* 월 매출액 */
-	private Long monthlySales;
-	
-	/* 연도 */
-	private Integer year;
-	
-	/* 월 */
-	private Integer month;
-	
-	/* 점포 */
-    private Store store;
+	/* 오늘 매출량 */
+	private Integer todaySalesCnt;
+	/* 이번달 매출량 */
+	private Long thisMonthSalesCnt;
+	/*오늘 결제건수*/
+	private Integer todayPaymentCnt;
+	/* 이번달 결제 건수 */
+	private Integer thisMonthPaymentCnt;
+
+
 }
