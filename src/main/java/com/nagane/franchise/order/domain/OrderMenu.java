@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -24,6 +25,7 @@ import lombok.Data;
 @Table(name = "order_menu")
 @SequenceGenerator(name = "order_menu_seq", sequenceName = "order_menu_seq", allocationSize = 1)
 @Data
+@Builder
 public class OrderMenu {
 	
 	/* 주문 항목 번호(pk) */

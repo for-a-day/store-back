@@ -47,12 +47,12 @@ public class AdminController {
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
-			response.put("message", "성공적으로 등록되었습니다.");
+			response.put("msg", "성공적으로 등록되었습니다.");
 			response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
-        	response.put("message", "관리자 등록에 실패했습니다.");
+        	response.put("msg", "관리자 등록에 실패했습니다.");
         	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -72,12 +72,12 @@ public class AdminController {
 		// 로그인
 		try {
 			this.adminService.loginAdmin(adminLoginDto);
-			response.put("message", "로그인에 성공했습니다.");
+			response.put("msg", "로그인에 성공했습니다.");
 			response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
 		// 예외 발생 시, 로그인 x
 		} catch (Exception e) {
-			response.put("message", "로그인에 실패했습니다.");
+			response.put("msg", "로그인에 실패했습니다.");
 			response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
