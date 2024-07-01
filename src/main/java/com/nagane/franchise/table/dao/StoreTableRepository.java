@@ -1,6 +1,7 @@
 package com.nagane.franchise.table.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,7 +18,7 @@ public interface StoreTableRepository extends JpaRepository<StoreTable, Long>{
 	List<StoreTable> findByStore_StoreNo(Long storeNo);
 	
 	/* 테이블 코드 기준으로 레코드 존재 여부 조회 */
-	StoreTable findByTableCode(String tableCode);
+	Optional<StoreTable> findByTableCode(String tableCode);
 	
 	/* 테이블 코드와 지점 코드로 존재 여부 확인 */
 }
