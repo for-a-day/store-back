@@ -3,6 +3,7 @@ package com.nagane.franchise.store.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,14 +23,18 @@ import lombok.RequiredArgsConstructor;
 @Tag(name= "관리자 API")
 @RestController
 @RequiredArgsConstructor
-// @CrossOrigin(origins = "http://localhost:${pos.port}")
+@CrossOrigin(origins = "http://localhost:${pos.port}")
 public class AdminController {
 	
 	// 의존성 주입(di)
 	@Autowired
 	private AdminService adminService;
 	
-	/** 관리자 생성 */
+	/**
+	 * 관리자 생성
+	 * @param AdminCreateDto
+	 * @return String
+	 */
 	@PostMapping("/admin")
 	public ResponseEntity<String> createAdmin(
 			@RequestBody AdminCreateDto adminCreateDto) {
@@ -45,11 +50,14 @@ public class AdminController {
 	}
 	
 	
-	/** 관리자 로그인 */
+	/**
+	 * 관리자 로그인
+	 * @param AdminCreateDto
+	 * @return String
+	 */
 	@PostMapping("/admin/login")
 	public ResponseEntity<String> loginAdmin(
 			@RequestBody AdminCreateDto adminLoginDto) {
-		System.out.println(adminLoginDto.getAdminId());
 		// 로그인
 		try {
 			this.adminService.loginAdmin(adminLoginDto);

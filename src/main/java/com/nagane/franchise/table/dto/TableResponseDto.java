@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.nagane.franchise.order.domain.Order;
-import com.nagane.franchise.store.domain.Store;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,18 +11,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 /**
  * @author ljy
  * @since 2024.07.01
- * StoreTable 기본 Dto 코드
+ * StoreTable 정보 조회 시 Dto 코드
  **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Builder
-public class TableDto {
+public class TableResponseDto {
 
 	/* 테이블 번호(pk) */
 	private Long tableNo;
@@ -47,5 +45,5 @@ public class TableDto {
 	private List<Order> orderList;
 
 	/* 점포번호(fk) */
-	private Store store;
+	// private Store store;
 }
