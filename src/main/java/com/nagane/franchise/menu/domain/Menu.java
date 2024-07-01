@@ -1,10 +1,5 @@
 package com.nagane.franchise.menu.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.nagane.franchise.order.domain.OrderMenu;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,10 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Menu entity 코드
@@ -25,9 +23,13 @@ import lombok.Data;
  * @since 2024.06.27
  **/
 @Entity
+@Builder
 @Table(name = "menu")
 @SequenceGenerator(name = "menu_seq", sequenceName = "menu_seq", allocationSize = 1)
 @Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Menu {
 	
 	/* 메뉴 번호(pk) */
@@ -40,8 +42,8 @@ public class Menu {
 	private String menuName;
 	
 	/* 메뉴 코드 */
-	@Column(name = "menu_code", nullable = false, length = 100, unique=true)
-	private String menuCode;
+	@Column(name = "menu_id", nullable = false, length = 100, unique=true)
+	private String menuId;
 	
 	/* 판매가격 */
 	@Column(name = "price", nullable = false)
@@ -69,6 +71,6 @@ public class Menu {
 	private Integer state = 1;
 	
 	/* order_menu 엔티티와 OneToMany 매핑 */
-	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
-	private List<OrderMenu> orderMenuList = new ArrayList<>();
+//	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+//	private List<OrderMenu> orderMenuList = new ArrayList<>();
 }
