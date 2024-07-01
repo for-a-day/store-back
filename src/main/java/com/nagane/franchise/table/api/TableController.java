@@ -71,9 +71,9 @@ public class TableController {
 	 * @return String
 	 */
 	@PostMapping("/table")
-	public ResponseEntity<Map<String, String>> createTable(
+	public ResponseEntity<Map<String, Object>> createTable(
 			@RequestBody StoreNoDto storeNoDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.createTable(storeNoDto.getStoreNo());
@@ -93,9 +93,9 @@ public class TableController {
 	 * @return String
 	 */
 	@PostMapping("/to")
-	public ResponseEntity<Map<String, String>> loginTable(
+	public ResponseEntity<Map<String, Object>> loginTable(
 			@RequestBody TableLoginDto tableLoginDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.loginTable(tableLoginDto);
@@ -115,9 +115,9 @@ public class TableController {
 	 * @return String
 	 */
 	@PostMapping("/to/login")
-	public ResponseEntity<Map<String, String>> loginTableAdmin(
+	public ResponseEntity<Map<String, Object>> loginTableAdmin(
 			@RequestBody TableAdminDto tableAdminDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.loginTableAdmin(tableAdminDto);
@@ -135,9 +135,9 @@ public class TableController {
 	 * @return String
 	 */
 	@PutMapping("/to/admin")
-	public ResponseEntity<Map<String, String>> logoutTable(
+	public ResponseEntity<Map<String, Object>> logoutTable(
 			@RequestBody TableCodeDto tableCodeDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.logoutTable(tableCodeDto.getTableCode());
