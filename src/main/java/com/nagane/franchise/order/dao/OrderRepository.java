@@ -23,9 +23,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByStoreNoAndState(@Param("storeNo") Long storeNo);
 	
 	/* 조회 당일 날짜와 같은 날 들어온 주문 개수를 세는 쿼리(점포 번호 기준) */
-	Long countByStore_StoreNoAndOrderDateBetween(Long storeNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
+  Integer countByStore_StoreNoAndOrderDateBetween(Long storeNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
 	
-	/* 조회 당일 날짜와 같은 날 들어온 주문 개수를 세는 쿼리(점포 번호 기준) */
+	/* 조회 당일 날짜와 같은 날 들어온 주문들을 return하는 쿼리(점포 번호 기준) */
 	List<Order> findByStore_StoreNoAndOrderDateBetween(Long storeNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
 	/* 결제 일시와 상태(1)와 가맹점 번호로 레코드 리스트 반환 */
