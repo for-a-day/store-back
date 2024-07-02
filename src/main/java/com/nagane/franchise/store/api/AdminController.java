@@ -1,7 +1,6 @@
 package com.nagane.franchise.store.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nagane.franchise.store.application.AdminService;
 import com.nagane.franchise.store.dto.admin.AdminCreateDto;
+import com.nagane.franchise.util.model.response.BaseResponseBody;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,9 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:${pos.port}")
 public class AdminController {
 	
+	// 반환할 데이터를 담을 객체 생성
+    private BaseResponseBody responseBody;
+    
 	// 의존성 주입(di)
 	@Autowired
 	private AdminService adminService;
@@ -39,23 +42,19 @@ public class AdminController {
 	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/admin")
-	public ResponseEntity<Map<String, Object>> createAdmin(
+	public ResponseEntity<? extends BaseResponseBody> createAdmin( // BaseResponseBody 상속 받는 다양한 클래스 return 가능
 			@RequestBody AdminCreateDto adminCreateDto) {
-		// 반환할 데이터를 담을 맵 생성
-        Map<String, Object> response = new HashMap<>();
-        
+		
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
-			response.put("msg", "성공적으로 등록되었습니다.");
-			response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "성공적으로 등록되었습니다.");
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
-        	response.put("msg", "관리자 등록에 실패했습니다.");
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
 		}
+		
+		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
 	}
 	
 	
@@ -65,22 +64,21 @@ public class AdminController {
 	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/admin/login")
-	public ResponseEntity<Map<String, Object>> loginAdmin(
+	public ResponseEntity<? extends BaseResponseBody> loginAdmin(
 			@RequestBody AdminCreateDto adminLoginDto) {
-		Map<String, Object> response = new HashMap<>();
-		
+	    
 		// 로그인
 		try {
 			this.adminService.loginAdmin(adminLoginDto);
-			response.put("msg", "로그인에 성공했습니다.");
-			response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "로그인에 성공했습니다.");
 		// 예외 발생 시, 로그인 x
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
 		} catch (Exception e) {
-			response.put("msg", "로그인에 실패했습니다.");
-			response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
 		}
+		
+		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
 	}
 	
 }
