@@ -3,6 +3,7 @@ package com.nagane.franchise.table.api;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,16 @@ import com.nagane.franchise.table.dto.TableLoginDto;
 import com.nagane.franchise.table.dto.TableNoDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
 import com.nagane.franchise.table.dto.TableUpdateDto;
+import com.nagane.franchise.util.exceptions.InsufficientStockException;
+import com.nagane.franchise.util.model.response.BaseResponseBody;
+import com.nagane.franchise.util.model.response.ErrorResponseBody;
+import com.nagane.franchise.util.model.response.SuccessResponseBody;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -34,12 +44,18 @@ import lombok.RequiredArgsConstructor;
  * Table controller 코드
  * 테이블 오더 관련 controller
  * **/
-@Tag(name= "테이블 오더 API")
+@Tag(name= "테이블 오더 API", description = "테이블 오더 관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:${pos.port}")
 public class TableController {
 	
+	// 반환할 데이터를 담을 객체 생성
+    private BaseResponseBody responseBody;
+    
+    // 반환할 데이터를 담을 맵 생성
+    private Map<String, Object> data;
+    
 	// 의존성 주입 (di)
 	@Autowired
 	private TableService tableService;
@@ -49,22 +65,35 @@ public class TableController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 목록 조회", description = "(가맹점) 가맹점 측에서 현재 테이블 목록 전체 조회 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@GetMapping("/table")
-    public ResponseEntity<Map<String, Object>> getTableList(
+    public ResponseEntity<? extends BaseResponseBody> getTableList(
     		@RequestParam Long storeNo) {
-	    Map<String, Object> response = new HashMap<>();
 
 	    try {
 	        // 테이블 정보 리스트 가져오는 서비스 메서드 호출
 	        List<TableResponseDto> tableList = this.tableService.getTableList(storeNo);
-	        response.put("msg", "테이블 목록 조회 성공");
-	        response.put("data", tableList);
-	        return new ResponseEntity<>(response, HttpStatus.OK);
-	    } catch (Exception e) {
-	        response.put("msg", "테이블 목록 조회에 실패했습니다.");
-	        response.put("data", null);
-	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+	        // 맵에 데이터 삽입
+            data = new HashMap<>();
+            data.put("tableList", tableList);
+            
+            // requestBody 생성
+            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "테이블 목록 조회에 성공했습니다.", data);
+            
+	    } catch (NoSuchElementException se) {
+ 			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+ 		} catch (Exception e) {
+ 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 목록 조회에 실패했습니다.");
+        }
+	    return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	
@@ -73,21 +102,28 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 신규 등록", description = "(가맹점) 가맹점 측에서 현재 테이블 신규 등록 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/table")
-	public ResponseEntity<Map<String, Object>> createTable(
-			@RequestBody StoreNoDto storeNoDto) {
-		Map<String, Object> response = new HashMap<>();
+	public ResponseEntity<? extends BaseResponseBody> createTable(
+			@RequestBody StoreNoDto storeNoDto) {              
         
         try {
         	this.tableService.createTable(storeNoDto.getStoreNo());
-        	response.put("msg", "테이블 등록에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 등록에 성공했습니다.");
+        } catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 등록에 실패했습니다.");
+		}
+        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	/**
@@ -95,21 +131,28 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 수정", description = "(가맹점) 가맹점 측에서 현재 테이블 정보 수정 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PutMapping("/table")
-	public ResponseEntity<Map<String, Object>> updateTable(
+	public ResponseEntity<? extends BaseResponseBody> updateTable(
 			@RequestBody TableUpdateDto tableUpdateDto) {
-		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.updateTable(tableUpdateDto);
-        	response.put("msg", "테이블 수정에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 정보 수정에 성공했습니다.");
+        } catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 정보 수정에 실패했습니다.");
+		}
+        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	/**
@@ -117,21 +160,28 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 수정", description = "(가맹점) 가맹점 측에서 해당 테이블을 나가는 손님이 완전히 가게를 나갔을 해 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PutMapping("/table/clear")
-	public ResponseEntity<Map<String, Object>> clearTable(
+	public ResponseEntity<? extends BaseResponseBody> clearTable(
 			@RequestBody TableNoDto tableNoDto) {
-		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.clearTable(tableNoDto.getTableNo());
-        	response.put("msg", "테이블 수정에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "현재 테이블 주문 상태 변경에 성공했습니다.");
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "현재 테이블 주문 상태 변경에 실패했습니다.");
+		}
+        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	
@@ -140,21 +190,32 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 삭제", description = "(가맹점) 가맹점 측에서 현재 테이블 삭제 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@DeleteMapping("/table")
-	public ResponseEntity<Map<String, Object>> deleteTable(
+	public ResponseEntity<? extends BaseResponseBody> deleteTable(
 			@RequestBody TableNoDto tableNoDto) {
-		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.deleteTable(tableNoDto.getTableNo());
-        	response.put("msg", "테이블 삭제에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 삭제에 성공했습니다.");
+        } catch (InsufficientStockException ie) {
+			responseBody = BaseResponseBody.of(HttpStatus.BAD_REQUEST.value(), ie.getMessage());
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 삭제에 실패했습니다.");
+		}
+        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	/**
@@ -162,21 +223,28 @@ public class TableController {
 	 * @param TableLoginDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 오더 로그인", description = "(테이블 오더) 테이블에서 새로 기기 (재)등록할 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/to")
-	public ResponseEntity<Map<String, Object>> loginTable(
+	public ResponseEntity<? extends BaseResponseBody> loginTable(
 			@RequestBody TableLoginDto tableLoginDto) {
-		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.loginTable(tableLoginDto);
-        	response.put("msg", "테이블 오더 로그인에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 오더 로그인에 성공했습니다.");
+        // 예외 발생 시 오류 처리
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 오더 로그인에 실패했습니다.");
+	    }
+		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	
@@ -185,21 +253,28 @@ public class TableController {
 	 * @param TableAdminDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 오더 관리자 모드 로그인", description = "(테이블 오더) 테이블에서 관리자모드로 로그인할 시 사용하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/to/login")
-	public ResponseEntity<Map<String, Object>> loginTableAdmin(
+	public ResponseEntity<? extends BaseResponseBody> loginTableAdmin(
 			@RequestBody TableAdminDto tableAdminDto) {
-		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.loginTableAdmin(tableAdminDto);
-        	response.put("msg", "관리자 로그인에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "관리자 모드 로그인에 성공했습니다.");
+        	// 예외 발생 시 오류 처리
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "관리자 모드 로그인에 실패했습니다.");
+	    }
+		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	/**
@@ -207,20 +282,27 @@ public class TableController {
 	 * @param 
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "테이블 오더 비활성화 요청", description = "(테이블 오더) 해당 테이블 오더를 비활성으로 전환하는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PutMapping("/to/admin")
-	public ResponseEntity<Map<String, Object>> logoutTable(
+	public ResponseEntity<? extends BaseResponseBody> logoutTable(
 			@RequestBody TableCodeDto tableCodeDto) {
-		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.logoutTable(tableCodeDto.getTableCode());
-        	response.put("msg", "테이블 오더 비활성화에 성공했습니다.");
-        	response.put("data", null);
-        	return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-        	response.put("msg", e.getMessage());
-        	response.put("data", null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    		responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 오더 비활성화에 성공했습니다.");
+	    	// 예외 발생 시 오류 처리
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+		} catch (Exception e) {
+			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 오더 비활성화에 실패했습니다.");
+	    }
+		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 }
