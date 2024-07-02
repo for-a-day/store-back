@@ -259,9 +259,9 @@ public class MenuController {
      * @return List<MenuListDto>
      */
     @GetMapping("/admin/menuList")
-    public ResponseEntity<List<MenuListDto>> getMenuList(@RequestParam Long categoryId) {
+    public ResponseEntity<List<MenuListDto>> getMenuList(@RequestParam Long categoryNo) {
         try {
-            List<MenuListDto> menuList = this.menuService.getMenuList(categoryId);
+            List<MenuListDto> menuList = this.menuService.getMenuList(categoryNo);
             return new ResponseEntity<>(menuList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
