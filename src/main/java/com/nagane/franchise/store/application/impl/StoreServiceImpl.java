@@ -30,15 +30,10 @@ public class StoreServiceImpl implements StoreService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(StoreServiceImpl.class);
 	
-	// 필요 레포 연결
-	private final StoreRepository storeRepository;
-	
-	// 의존성 주입(di)
+	// 필요 레포 연결, 의존성 주입(di)
 	@Autowired
-	public StoreServiceImpl(StoreRepository storeRepository) {
-		this.storeRepository = storeRepository;
-	}
-
+	StoreRepository storeRepository;
+	
 	/** 지점 목록 조회 */
 	@Override
 	public List<StoreDto> getStoreList() {
