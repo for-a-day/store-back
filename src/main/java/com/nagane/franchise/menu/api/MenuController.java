@@ -51,6 +51,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MenuController {
+	
 	// 반환할 데이터를 담을 객체 생성
     private BaseResponseBody responseBody;
     
