@@ -3,20 +3,23 @@ package com.nagane.franchise.store.application.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nagane.franchise.order.dao.OrderRepository;
+import com.nagane.franchise.order.domain.Order;
 import com.nagane.franchise.store.application.StoreService;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
+import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
+import com.nagane.franchise.util.exceptions.InsufficientStockException;
 
 /**
  * @author ljy
@@ -30,15 +33,10 @@ public class StoreServiceImpl implements StoreService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(StoreServiceImpl.class);
 	
-	// 필요 레포 연결
-	private final StoreRepository storeRepository;
-	
-	// 의존성 주입(di)
+	// 필요 레포 연결, 의존성 주입(di)
 	@Autowired
-	public StoreServiceImpl(StoreRepository storeRepository) {
-		this.storeRepository = storeRepository;
-	}
-
+	StoreRepository storeRepository;
+	
 	/** 지점 목록 조회 */
 	@Override
 	public List<StoreDto> getStoreList() {
@@ -99,22 +97,22 @@ public class StoreServiceImpl implements StoreService {
 		LOGGER.info("[updateStore] input storeUpdateDto : {}", storeUpdateDto);
 		
 		// 수정할 store 데이터 불러오기
-		Store existingStore = this.storeRepository.findById(storeUpdateDto.getStoreNo())
+		Store nowStore = this.storeRepository.findById(storeUpdateDto.getStoreNo())
                 .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 
 		// 기존 엔티티에 새로운 값 설정
-		existingStore.setStoreName(storeUpdateDto.getStoreName());
-		existingStore.setRprName(storeUpdateDto.getRprName());
-		existingStore.setAddress(storeUpdateDto.getAddress());
-		existingStore.setContact(storeUpdateDto.getContact());
-		existingStore.setExpirationDate(storeUpdateDto.getExpirationDate());
-		existingStore.setWarningCount(storeUpdateDto.getWarningCount());
+		nowStore.setStoreName(storeUpdateDto.getStoreName());
+		nowStore.setRprName(storeUpdateDto.getRprName());
+		nowStore.setAddress(storeUpdateDto.getAddress());
+		nowStore.setContact(storeUpdateDto.getContact());
+		nowStore.setExpirationDate(storeUpdateDto.getExpirationDate());
+		nowStore.setWarningCount(storeUpdateDto.getWarningCount());
 		// existingStore.setStoreCode(storeUpdateDto.getStoreCode());
-		existingStore.setAreaCode(storeUpdateDto.getAreaCode());
-		// existingStore.setState(storeUpdateDto.getState());
+		nowStore.setAreaCode(storeUpdateDto.getAreaCode());
+		nowStore.setState(storeUpdateDto.getState());
 		
 		// 데이터 업데이트
-		this.storeRepository.save(existingStore);
+		this.storeRepository.save(nowStore);
 		
 	}
 
@@ -124,36 +122,40 @@ public class StoreServiceImpl implements StoreService {
 		LOGGER.info("[deleteStore] input StoreNo : {}", storeNo);
 		
 		// 지점 번호(pk) 기준으로 해당하는 데이터 상태 변경
-		Optional<Store> deleteStore = this.storeRepository.findById(storeNo);
-		
 		// 없을 시, NoSuchElementException throw
-		Store updateStateStore = deleteStore
+		Store deleteStore = this.storeRepository.findById(storeNo)
 				.orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 		
-		// 상태값 0일 시 1로, 1일 시 0으로 변경
-		if (updateStateStore.getState() == 1) {
-			updateStateStore.setState(0);
-		} 
-		/*
-		 * else { updateStateStore.setState(1); }
-		 */
-		
-		// state 값 업데이트
-		this.storeRepository.save(updateStateStore);
-		
+		// 만약 주문 기록이 존재하면 삭제 불가
+		if (deleteStore.getOrderList().size() == 0) {
+			this.storeRepository.delete(deleteStore);
+		} else {
+			throw new InsufficientStockException("해당 지점 삭제가 불가합니다.");
+		}
 	}
 
 	/** 가맹점 로그인 */
 	@Override
-	public void loginStore(StoreLoginDto storeLoginDto) throws NoSuchElementException {
+	public StoreResponseDto loginStore(StoreLoginDto storeLoginDto) throws NoSuchElementException {
 		LOGGER.info("[loginStore] input storeLoginDto : {}", storeLoginDto);
 		
 		// 해당 가맹점 코드, 대표자명으로 db 조회하여 해당 데이터 있는지 검증
-		Optional<Store> optionalStore = this.storeRepository
-				.findByStoreCodeAndRprName(storeLoginDto.getStoreCode(), storeLoginDto.getRprName());
-	
 		// 없을 시, NoSuchElementException throw
-		optionalStore.orElseThrow(() -> new NoSuchElementException("no record"));
+		Store nowStore = this.storeRepository
+				.findByStoreCodeAndRprName(storeLoginDto.getStoreCode(), storeLoginDto.getRprName())
+				.orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	
+		// 지점(pos) 측에서 필요한 정보 dto에 담아줌
+		StoreResponseDto storeResponseDto = StoreResponseDto.builder()
+				.storeNo(nowStore.getStoreNo())
+				.storeName(nowStore.getStoreName())
+				.rprName(nowStore.getRprName())
+				.warningCount(nowStore.getWarningCount())
+				.storeCode(nowStore.getStoreCode())
+				.build();
+		
+		return storeResponseDto;
+	
 	}
 	
 	
