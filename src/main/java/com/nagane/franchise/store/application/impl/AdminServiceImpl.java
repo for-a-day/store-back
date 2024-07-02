@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 		Optional<Admin> optionalAdmin = this.adminRepository
 				.findByAdminIdAndAdminPassword(adminLoginDto.getAdminId(), adminLoginDto.getAdminPassword());
 		
-		optionalAdmin.orElseThrow(() -> new NoSuchElementException("no record"));
+		optionalAdmin.orElseThrow(() -> new NoSuchElementException("아이디 또는 비밀번호가 일치하지 않습니다."));
 	}
 
 	/** 관리자 생성 */

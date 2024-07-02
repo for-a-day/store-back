@@ -23,6 +23,7 @@ import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
+import com.nagane.franchise.order.dto.order.OrderUpdateDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
 import com.nagane.franchise.stoke.dao.StockRepository;
@@ -71,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
 	    try {
 	        // 해당 가맹점 받아오기
 	        Store nowStore = this.storeRepository.findById(storeNo)
-	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
 	        
 	        // 모든 order 목록 조회
 	        List<Order> orderList = this.orderRepository.findByStoreNoAndState(nowStore.getStoreNo());
@@ -172,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
 	    try {
 	        // 해당 가맹점 받아오기
 	        Store nowStore = this.storeRepository.findById(storeNo)
-	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
 	        
 	        // 오늘 날짜를 가져옴
 	        LocalDate today = LocalDate.now();
@@ -224,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			// 주문 정보 찾기
 			Order nowOrder = this.orderRepository.findById(orderChangeStateDto.getOrderNo())
-					.orElseThrow(() -> new NoSuchElementException("주문 정보를 찾을 수 없습니다."));
+					.orElseThrow(() -> new NoSuchElementException("해당 주문 정보를 찾을 수 없습니다."));
 			
 			// 케이스따라 정보 수정
 			switch (orderChangeStateDto.getOrderStateInstr()) {
@@ -261,7 +262,7 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			// 주문 정보 찾기
 			Order nowOrder = this.orderRepository.findById(orderNo)
-					.orElseThrow(() -> new NoSuchElementException("주문 정보를 찾을 수 없습니다."));
+					.orElseThrow(() -> new NoSuchElementException("해당 결제 정보를 찾을 수 없습니다."));
 			
 			// 환불로 수정(code: 99)
 			if (nowOrder.getState() == 1) {
@@ -352,7 +353,7 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			// 해당 가맹점 받아오기
 	        Store nowStore = this.storeRepository.findByStoreCode(orderCreateDto.getStoreCode())
-	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
 			
 	        // 해당 table 단일 조회
 	        StoreTable nowTable = this.tableRepository.findByTableCode(orderCreateDto.getTableCode())
@@ -383,8 +384,6 @@ public class OrderServiceImpl implements OrderService {
 	        		.store(nowStore)
 	        		.table(nowTable)
 	        		.build();
-	        
-	        LOGGER.info("[createOrder] create createOrder : {}", createOrder);
 	        
 	        // 주문 정보 db에 저장
 	        Order savedOrder = this.orderRepository.save(createOrder);
@@ -428,6 +427,36 @@ public class OrderServiceImpl implements OrderService {
 	        LOGGER.error("Error occurred while saving order: ", e);
 	        throw e;
 	    }
+	}
+
+	/**
+	 * 주문 수정
+	 * @param OrderUpdateDto orderUpdateDto
+	 * @return void
+	 */
+	@Override
+	public void updateOrder(OrderUpdateDto orderUpdateDto) {
+		try {
+			
+			// 주문 정보 찾기
+			Order nowOrder = this.orderRepository.findById(orderUpdateDto.getOrderNo())
+					.orElseThrow(() -> new NoSuchElementException("해당 주문 정보를 찾을 수 없습니다."));
+			
+			// 지정한 table 데이터 불러오기
+			StoreTable newTable = this.tableRepository.findByTableCode(orderUpdateDto.getTableCode())
+					.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+			// 정보 수정
+			nowOrder.setTable(newTable);
+			nowOrder.setPaymentMethod(orderUpdateDto.getPaymentMethod());
+			
+			this.orderRepository.save(nowOrder);
+			
+		} catch (Exception e) {
+	        LOGGER.error("Error occurred while saving order: ", e);
+	        throw e;
+	    }
+	
 	}
 
 
