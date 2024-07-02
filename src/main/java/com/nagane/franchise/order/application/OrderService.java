@@ -6,6 +6,7 @@ import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
+import com.nagane.franchise.order.dto.order.OrderUpdateDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
 
 /**
@@ -37,4 +38,6 @@ public interface OrderService {
 	/** 주문 신규 등록 */
     OrderDetailDto createOrder(OrderCreateDto orderCreateDto);
     
+    /** 주문 수정 */
+    void updateOrder(OrderUpdateDto orderUpdateDto);
 }
