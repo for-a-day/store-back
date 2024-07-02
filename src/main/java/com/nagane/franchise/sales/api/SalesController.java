@@ -97,7 +97,7 @@ public class SalesController {
 	        // 맵에 데이터 삽입
 	        data = new HashMap<>();
 	        data.put("salesList", salesDetailList);
-	        responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "월별 매출 정보 리스트를 성공적으로 가져왔습니다.", data);
+	        responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "월별 매출 정보 목록을 성공적으로 가져왔습니다.", data);
 			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
