@@ -16,6 +16,7 @@ import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
+import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 
 /**
@@ -140,15 +141,26 @@ public class StoreServiceImpl implements StoreService {
 
 	/** 가맹점 로그인 */
 	@Override
-	public void loginStore(StoreLoginDto storeLoginDto) throws NoSuchElementException {
+	public StoreResponseDto loginStore(StoreLoginDto storeLoginDto) throws NoSuchElementException {
 		LOGGER.info("[loginStore] input storeLoginDto : {}", storeLoginDto);
 		
 		// 해당 가맹점 코드, 대표자명으로 db 조회하여 해당 데이터 있는지 검증
-		Optional<Store> optionalStore = this.storeRepository
-				.findByStoreCodeAndRprName(storeLoginDto.getStoreCode(), storeLoginDto.getRprName());
-	
 		// 없을 시, NoSuchElementException throw
-		optionalStore.orElseThrow(() -> new NoSuchElementException("no record"));
+		Store nowStore = this.storeRepository
+				.findByStoreCodeAndRprName(storeLoginDto.getStoreCode(), storeLoginDto.getRprName())
+				.orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
+	
+		// 지점(pos) 측에서 필요한 정보 dto에 담아줌
+		StoreResponseDto storeResponseDto = StoreResponseDto.builder()
+				.storeNo(nowStore.getStoreNo())
+				.storeName(nowStore.getStoreName())
+				.rprName(nowStore.getRprName())
+				.warningCount(nowStore.getWarningCount())
+				.storeCode(nowStore.getStoreCode())
+				.build();
+		
+		return storeResponseDto;
+	
 	}
 	
 	

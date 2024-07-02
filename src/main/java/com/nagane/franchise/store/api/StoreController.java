@@ -1,5 +1,6 @@
 package com.nagane.franchise.store.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
 import com.nagane.franchise.store.dto.store.StoreNoDto;
+import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -146,13 +148,13 @@ public class StoreController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-            this.storeService.loginStore(storeLoginDto);
+			StoreResponseDto storeResponseDto = this.storeService.loginStore(storeLoginDto);
             response.put("message", "로그인에 성공했습니다.");
-            response.put("data", null);
+            response.put("data", storeResponseDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
         	response.put("message", "로그인에 실패했습니다.");
-        	response.put("data", null);
+        	response.put("data", new ArrayList());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
