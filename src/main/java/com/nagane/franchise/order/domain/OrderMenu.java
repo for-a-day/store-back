@@ -1,11 +1,6 @@
 package com.nagane.franchise.order.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.nagane.franchise.menu.domain.Menu;
-import com.nagane.franchise.store.domain.Store;
-import com.nagane.franchise.table.domain.StoreTable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

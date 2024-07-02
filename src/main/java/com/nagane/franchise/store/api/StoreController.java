@@ -98,7 +98,7 @@ public class StoreController {
 	 */
 	@Operation(summary = "지점 신규 등록", description = "(관리자) 관리자 측에서 지점 신규 등록 시 사용하는 api입니다.")
 	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "201", description = "CREATED"),
+			@ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
@@ -108,7 +108,7 @@ public class StoreController {
 		
 		try {
             this.storeService.createStore(storeCreateDto);
-            responseBody = BaseResponseBody.of(HttpStatus.CREATED.value(), "가맹점 등록에 성공했습니다.");
+            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "가맹점 등록에 성공했습니다.");
         } catch (Exception e) {
    
         	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");

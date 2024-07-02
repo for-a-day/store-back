@@ -53,7 +53,7 @@ public class AdminController {
 	 */
 	@Operation(summary = "신규 관리자 생성", description = "(관리자) 관리자 새로 생성할 때 사용하는 api입니다.")
 	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "201", description = "CREATED"),
+	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
 	        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -66,7 +66,7 @@ public class AdminController {
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
-			responseBody = BaseResponseBody.of(HttpStatus.CREATED.value(), "성공적으로 등록되었습니다.");
+			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "성공적으로 등록되었습니다.");
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
