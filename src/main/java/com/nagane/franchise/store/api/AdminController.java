@@ -13,7 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nagane.franchise.store.application.AdminService;
 import com.nagane.franchise.store.dto.admin.AdminCreateDto;
 import com.nagane.franchise.util.model.response.BaseResponseBody;
+import com.nagane.franchise.util.model.response.ErrorResponseBody;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +29,7 @@ import lombok.RequiredArgsConstructor;
  * Admin controller 코드
  * 관리자 관련 controller
  * **/
-@Tag(name= "관리자 API")
+@Tag(name= "관리자 API", description = "관리자 관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:${pos.port}")
@@ -41,6 +47,14 @@ public class AdminController {
 	 * @param AdminCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "신규 관리자 생성", description = "관리자 새로 생성할 때 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "201", description = "CREATED"),
+	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
+	        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/admin")
 	public ResponseEntity<? extends BaseResponseBody> createAdmin( // BaseResponseBody 상속 받는 다양한 클래스 return 가능
 			@RequestBody AdminCreateDto adminCreateDto) {
@@ -48,7 +62,7 @@ public class AdminController {
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
-			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "성공적으로 등록되었습니다.");
+			responseBody = BaseResponseBody.of(HttpStatus.CREATED.value(), "성공적으로 등록되었습니다.");
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
@@ -63,6 +77,14 @@ public class AdminController {
 	 * @param AdminCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "관리자 로그인", description = "관리자 로그인 시 이용합니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+	        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/admin/login")
 	public ResponseEntity<? extends BaseResponseBody> loginAdmin(
 			@RequestBody AdminCreateDto adminLoginDto) {

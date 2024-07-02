@@ -1,6 +1,5 @@
 package com.nagane.franchise.store.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,14 @@ import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 import com.nagane.franchise.util.exceptions.InsufficientStockException;
 import com.nagane.franchise.util.model.response.BaseResponseBody;
+import com.nagane.franchise.util.model.response.ErrorResponseBody;
+import com.nagane.franchise.util.model.response.SuccessResponseBody;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +42,7 @@ import lombok.RequiredArgsConstructor;
  * Store controller 코드
  * 지점 관련 controller
  * **/
-@Tag(name= "가맹점 API")
+@Tag(name= "가맹점 API", description = "가맹점 관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:${pos.port}")
@@ -56,6 +62,13 @@ public class StoreController {
 	 * @param 
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "지점 목록 조회", description = "관리자 측에서 지점 목록 전체 조회 시 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@GetMapping("/admin/store")
     public ResponseEntity<? extends BaseResponseBody> getStoreList() {
         try {
@@ -67,9 +80,9 @@ public class StoreController {
             data.put("stores", storeList);
             
             // requestBody 생성
-            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "성공적으로 가져왔습니다.", data);
+            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "성공적으로 가져왔습니다.", data);
         } catch (Exception e) {
-        	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        	responseBody = ErrorResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
         return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
@@ -80,13 +93,19 @@ public class StoreController {
 	 * @param StoreCreateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "지점 신규 등록", description = "관리자 측에서 지점 신규 등록 시 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "201", description = "CREATED"),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/admin/store")
 	public ResponseEntity<? extends BaseResponseBody> createStore(
 			@RequestBody StoreCreateDto storeCreateDto) {
 		
 		try {
             this.storeService.createStore(storeCreateDto);
-            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "가맹점 등록에 성공했습니다.");
+            responseBody = BaseResponseBody.of(HttpStatus.CREATED.value(), "가맹점 등록에 성공했습니다.");
         } catch (Exception e) {
    
         	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
@@ -99,6 +118,14 @@ public class StoreController {
 	 * @param StoreUpdateDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "지점 정보 수정", description = "관리자 측에서 지점 정보 수정 시 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PutMapping("/admin/store")
 	public ResponseEntity<? extends BaseResponseBody> updateStore(
 			@RequestBody StoreUpdateDto storeUpdateDto) {
@@ -119,6 +146,16 @@ public class StoreController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "지점 삭제", description = "관리자 측에서 지점 삭제 시 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@DeleteMapping("/admin/store")
 	public ResponseEntity<? extends BaseResponseBody> deleteStore(
 			@RequestBody StoreNoDto storeNoDto) {
@@ -126,10 +163,10 @@ public class StoreController {
 		try {
 			this.storeService.deleteStore(storeNoDto.getStoreNo());
 			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "가맹점 삭제가 완료되었습니다.");
-        } catch (NoSuchElementException se) {
-			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
-		} catch (InsufficientStockException ie) {
+        } catch (InsufficientStockException ie) {
 			responseBody = BaseResponseBody.of(HttpStatus.BAD_REQUEST.value(), ie.getMessage());
+		} catch (NoSuchElementException se) {
+			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
 		} catch (Exception e) {
 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
 		}
@@ -142,6 +179,15 @@ public class StoreController {
 	 * @param StoreLoginDto
 	 * @return Map<String, Object>>
 	 */
+	@Operation(summary = "가맹점 로그인", description = "가맹점 측에서 로그인 시 사용하는 메서드입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
 	@PostMapping("/login")
 	public ResponseEntity<? extends BaseResponseBody> loginStore(
 			@RequestBody StoreLoginDto storeLoginDto) {
@@ -150,8 +196,7 @@ public class StoreController {
 			StoreResponseDto storeResponseDto = this.storeService.loginStore(storeLoginDto);
             data = new HashMap<>();
             data.put("storeInfo", storeResponseDto);
-            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "로그인 되었습니다.", data);
-            
+            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "로그인 되었습니다.", data);
             // 예외 발생 시 오류 처리
  		} catch (NoSuchElementException se) {
  			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
