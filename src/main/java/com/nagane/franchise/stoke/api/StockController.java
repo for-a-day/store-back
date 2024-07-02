@@ -62,7 +62,7 @@ public class StockController {
 	 * @param StockCreateDto
 	 * @return String
 	 */
-	@Operation(summary = "특정 가맹점의 매출 정보 조회", description = "(가맹점) 선택한 가맹점의 매출 정보를 조회하는 api입니다.")
+	@Operation(summary = "재고 등록", description = "(가맹점) 재고를 신규로 등록하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
@@ -140,7 +140,7 @@ public class StockController {
 	 * @param Long 재고 번호
 	 * @return String
 	 */
-	@Operation(summary = "재고 수정", description = "(가맹점) 선택한 재고 정보를 수정하는 api입니다.")
+	@Operation(summary = "재고 삭제", description = "(가맹점) 선택한 재고를 삭제하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
