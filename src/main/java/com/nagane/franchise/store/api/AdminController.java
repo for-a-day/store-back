@@ -1,5 +1,6 @@
 package com.nagane.franchise.store.api;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class AdminController {
 	
 	// 반환할 데이터를 담을 객체 생성
     private BaseResponseBody responseBody;
+    
+    // 반환할 데이터를 담을 맵 생성
+    private Map<String, Object> data;
     
 	// 의존성 주입(di)
 	@Autowired
