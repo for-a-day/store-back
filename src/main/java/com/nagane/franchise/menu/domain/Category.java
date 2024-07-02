@@ -38,6 +38,7 @@ public class Category {
 	
 	/* 상태(0=단종, 1=판매) */
 	@Column(name="state", nullable=false)
+	@Builder.Default
 	private Integer state = 1;
 	
 	/* menu 엔티티와 OneToMany 매핑 */

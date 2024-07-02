@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author ljy
@@ -33,6 +34,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
+@ToString(exclude = "orderMenuList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

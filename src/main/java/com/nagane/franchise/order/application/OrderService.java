@@ -32,9 +32,9 @@ public interface OrderService {
     void refundPayment(Long orderNo);
     
 	/** 해당 테이블 주문 내역 조회 */
-    OrderDetailDto getTableOrder(String tableCode);
+    List<OrderDetailDto> getTableOrder(String tableCode);
 	
 	/** 주문 신규 등록 */
-    void createOrder(OrderCreateDto orderCreateDto);
+    OrderDetailDto createOrder(OrderCreateDto orderCreateDto);
     
 }
