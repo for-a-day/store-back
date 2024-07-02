@@ -113,6 +113,29 @@ public class TableController {
     }
 	
 	/**
+	 * 현재 테이블 내 주문 내역(0, 1. 환불 제외) 다 2로 수정
+	 * @param TableCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@PutMapping("/table/clear")
+	public ResponseEntity<Map<String, Object>> clearTable(
+			@RequestBody TableNoDto tableNoDto) {
+		Map<String, Object> response = new HashMap<>();
+        
+        try {
+        	this.tableService.clearTable(tableNoDto.getTableNo());
+        	response.put("msg", "테이블 수정에 성공했습니다.");
+        	response.put("data", null);
+        	return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	
+	/**
 	 * 테이블 삭제
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>

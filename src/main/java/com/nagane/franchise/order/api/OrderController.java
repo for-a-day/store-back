@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -197,10 +198,10 @@ public class OrderController {
         
         try {
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
-        	OrderDetailDto orderDetailDto = this.orderService.getTableOrder(tableCode);
+        	List<OrderDetailDto> orderList = this.orderService.getTableOrder(tableCode);
             // 맵에 데이터 삽입
             response.put("msg", "주문 내역을 불러오는 데에 성공했습니다.");
-            response.put("data", orderDetailDto);
+            response.put("data", orderList);
 
             // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -218,6 +219,62 @@ public class OrderController {
 	 */
 	@PostMapping("/order")
     public ResponseEntity<Map<String, Object>> createOrder(
+    		@RequestBody OrderCreateDto orderCreateDto) {
+		
+        // 반환할 데이터를 담을 맵 생성
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // OrderDto 리스트를 가져오는 서비스 메서드 호출
+        	OrderDetailDto newOrder = this.orderService.createOrder(orderCreateDto);
+            // 맵에 데이터 삽입
+            response.put("msg", "주문에 성공했습니다.");
+            response.put("data", newOrder);
+
+            // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", "주문에 실패했습니다.");
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	/**
+	 * 주문 수정
+	 * @param OrderCreateDto orderCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@PutMapping("/order")
+    public ResponseEntity<Map<String, Object>> updateOrder(
+    		@RequestBody OrderCreateDto orderCreateDto) {
+		
+        // 반환할 데이터를 담을 맵 생성
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // OrderDto 리스트를 가져오는 서비스 메서드 호출
+            this.orderService.createOrder(orderCreateDto);
+            // 맵에 데이터 삽입
+            response.put("msg", "주문에 성공했습니다.");
+            response.put("data", null);
+
+            // ResponseEntity에 맵과 HttpStatus.OK를 포함하여 반환
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", "주문에 실패했습니다.");
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	/**
+	 * 주문 삭제
+	 * @param OrderCreateDto orderCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@DeleteMapping("/order")
+    public ResponseEntity<Map<String, Object>> deleteOrder(
     		@RequestBody OrderCreateDto orderCreateDto) {
 		
         // 반환할 데이터를 담을 맵 생성

@@ -49,6 +49,6 @@ public class StoreUpdateDto {
 	private String areaCode;
 
 	/* 상태 0=폐점, 1=영업 */
-	// private Integer state;
+	private Integer state;
 	
 }
