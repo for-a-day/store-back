@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nagane.franchise.stoke.domain.Stock;
 
@@ -19,6 +20,10 @@ public interface StockRepository extends JpaRepository<Stock, Long>{
 	
 	/* 메뉴 번호 기준으로 재고 단일 반환 */
 	Optional<Stock> findByMenu_MenuNo(Long MenuNo);
+
+	/* 메뉴 번호로 재고 삭제*/
+    @Transactional
+    void deleteByMenuMenuNo(Long menuNo);
 	
 }
 
