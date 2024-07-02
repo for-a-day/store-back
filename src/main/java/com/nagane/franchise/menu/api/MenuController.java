@@ -71,7 +71,7 @@ public class MenuController {
 	 * @param CategoryCreateDto
 	 * @return String
 	 */
-	@Operation(summary = "카테고리 등록", description = "관리자 측에서 카테고리 신규 등록 시 사용하는 api입니다.")
+	@Operation(summary = "카테고리 등록", description = "(관리자) 관리자 측에서 카테고리 신규 등록 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -101,7 +101,7 @@ public class MenuController {
 	 * @param categoryUpdateDto
 	 * @return String
 	 */
-	@Operation(summary = "카테고리 수정", description = "관리자 측에서 카테고리 정보 수정 시 사용하는 api입니다.")
+	@Operation(summary = "카테고리 수정", description = "(관리자) 관리자 측에서 카테고리 정보 수정 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -125,7 +125,7 @@ public class MenuController {
      * @param
      * @return List<CategoryListDto>
      */
-	@Operation(summary = "카테고리 목록 조회", description = "관리자 측에서 카테고리 목록을 조회할 시 사용하는 api입니다.")
+	@Operation(summary = "카테고리 목록 조회", description = "(관리자) 관리자 측에서 카테고리 목록을 조회할 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -170,7 +170,7 @@ public class MenuController {
 	  * @param Long 카테고리 번호
 	  * @return String
 	  */
-	@Operation(summary = "카테고리 영구 삭제", description = "관리자 측에서 카테고리 영구 삭제할 시 사용하는 api입니다.")
+	@Operation(summary = "카테고리 영구 삭제", description = "(관리자) 관리자 측에서 카테고리 영구 삭제할 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -197,7 +197,7 @@ public class MenuController {
 	* @param
 	* @return List<CategoryListForToDto>
 	*/
-	@Operation(summary = "TO 용 판매중인 카테고리 목록 조회", description = "테이블 오더에서 현재 조회 가능한 카테고리를 확인할 때 사용하는 api입니다.")
+	@Operation(summary = "TO 용 판매중인 카테고리 목록 조회", description = "(테이블 오더) 테이블 오더에서 현재 조회 가능한 카테고리를 확인할 때 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -222,7 +222,7 @@ public class MenuController {
 	 * @param MenuCreateDto
 	 * @return String
 	 */
-	@Operation(summary = "메뉴 등록", description = "관리자가 신규 메뉴 등록 시 사용하는 api입니다.")
+	@Operation(summary = "메뉴 등록", description = "(관리자) 관리자가 신규 메뉴 등록 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -251,7 +251,7 @@ public class MenuController {
 	 * @param MenuUpdateDto
 	 * @return String
 	 */
-	@Operation(summary = "메뉴 수정", description = "관리자가 메뉴 정보 수정 시 사용하는 api입니다.")
+	@Operation(summary = "메뉴 수정", description = "(관리자) 관리자가 메뉴 정보 수정 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -280,7 +280,7 @@ public class MenuController {
      * @param Long 메뉴 번호
      * @return String
      */
-	@Operation(summary = "메뉴 영구 삭제", description = "관리자가 메뉴 삭제 시 사용하는 api입니다.")
+	@Operation(summary = "메뉴 영구 삭제", description = "(관리자) 관리자가 메뉴 삭제 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -306,7 +306,7 @@ public class MenuController {
      * @param Long 카테고리 번호
      * @return List<MenuListForToDto>
      */
-	@Operation(summary = "특정 카테고리의 판매중인 메뉴 목록 조회", description = "테이블 오더 기준으로 카테고리를 특정해서 해당 카테고리에 속한 메뉴(단, 판매 중)만 조회하는 api입니다.")
+	@Operation(summary = "특정 카테고리의 판매중인 메뉴 목록 조회", description = "(테이블 오더) 테이블 오더 기준으로 카테고리를 특정해서 해당 카테고리에 속한 메뉴(단, 판매 중)만 조회하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -333,7 +333,7 @@ public class MenuController {
      * @param Long 메뉴 번호
      * @return MenuForToDto
      */
-	@Operation(summary = "TO용 판매가능한 메뉴 상세정보 조회", description = "테이블 오더에서 선택한 (판매 가능한) 메뉴의 상세 정보롤 조회할 수 있게 하는 api입니다.")
+	@Operation(summary = "TO용 판매가능한 메뉴 상세정보 조회", description = "(테이블 오더) 테이블 오더에서 선택한 (판매 가능한) 메뉴의 상세 정보롤 조회할 수 있게 하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -362,7 +362,7 @@ public class MenuController {
      * @param Long 카테고리 번호
      * @return List<MenuListDto>
      */
-	@Operation(summary = "특정 카테고리의 메뉴 목록 조회", description = "관리자가 선택한 카테고리에 속한 메뉴 목록을 조회할 수 있게 하는 api입니다.")
+	@Operation(summary = "특정 카테고리의 메뉴 목록 조회", description = "(관리자) 관리자가 선택한 카테고리에 속한 메뉴 목록을 조회할 수 있게 하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
@@ -388,7 +388,7 @@ public class MenuController {
      * @param Long 메뉴 번호
      * @return MenuReadDto
      */
-	@Operation(summary = "관리자용 메뉴 상세정보 조회", description = "관리자가 선택한 메뉴의 상세 정보를 조회할 수 있게 하는 api입니다.")
+	@Operation(summary = "관리자용 메뉴 상세정보 조회", description = "(관리자) 관리자가 선택한 메뉴의 상세 정보를 조회할 수 있게 하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),

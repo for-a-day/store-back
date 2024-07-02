@@ -63,10 +63,12 @@ public class StoreController {
 	 * @param 
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 목록 조회", description = "관리자 측에서 지점 목록 전체 조회 시 사용하는 api입니다.")
+	@Operation(summary = "지점 목록 조회", description = "(관리자) 관리자 측에서 지점 목록 전체 조회 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
@@ -78,7 +80,7 @@ public class StoreController {
             
             // 맵에 데이터 삽입
             data = new HashMap<>();
-            data.put("stores", storeList);
+            data.put("storeList", storeList);
             
             // requestBody 생성
             responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "성공적으로 가져왔습니다.", data);
@@ -94,7 +96,7 @@ public class StoreController {
 	 * @param StoreCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 신규 등록", description = "관리자 측에서 지점 신규 등록 시 사용하는 api입니다.")
+	@Operation(summary = "지점 신규 등록", description = "(관리자) 관리자 측에서 지점 신규 등록 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "201", description = "CREATED"),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -119,7 +121,7 @@ public class StoreController {
 	 * @param StoreUpdateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 정보 수정", description = "관리자 측에서 지점 정보 수정 시 사용하는 api입니다.")
+	@Operation(summary = "지점 정보 수정", description = "(관리자) 관리자 측에서 지점 정보 수정 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
@@ -147,7 +149,7 @@ public class StoreController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 삭제", description = "관리자 측에서 지점 삭제 시 사용하는 api입니다.")
+	@Operation(summary = "지점 삭제", description = "(관리자) 관리자 측에서 지점 삭제 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
@@ -180,7 +182,7 @@ public class StoreController {
 	 * @param StoreLoginDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "가맹점 로그인", description = "가맹점 측에서 로그인 시 사용하는 api입니다.")
+	@Operation(summary = "가맹점 로그인", description = "(가맹점) 가맹점 측에서 로그인 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
