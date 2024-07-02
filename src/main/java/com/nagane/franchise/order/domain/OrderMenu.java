@@ -46,6 +46,7 @@ public class OrderMenu {
 	
 	/* 수량 */
 	@Column(name = "quantity", nullable = false)
+	@Builder.Default
 	private Integer quantity = 1;
 	
 	/* 메뉴 번호(fk) */
