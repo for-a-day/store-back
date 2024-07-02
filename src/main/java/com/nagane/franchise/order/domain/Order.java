@@ -34,7 +34,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
-@ToString(exclude = "orderMenuList")
+@ToString(exclude = {"orderMenuList", "store", "table"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

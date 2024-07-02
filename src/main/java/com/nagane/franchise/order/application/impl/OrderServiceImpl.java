@@ -385,8 +385,6 @@ public class OrderServiceImpl implements OrderService {
 	        		.table(nowTable)
 	        		.build();
 	        
-	        LOGGER.info("[createOrder] create createOrder : {}", createOrder);
-	        
 	        // 주문 정보 db에 저장
 	        Order savedOrder = this.orderRepository.save(createOrder);
 	        
