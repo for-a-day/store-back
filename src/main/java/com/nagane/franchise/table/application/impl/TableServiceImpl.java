@@ -17,7 +17,9 @@ import com.nagane.franchise.table.dao.StoreTableRepository;
 import com.nagane.franchise.table.domain.StoreTable;
 import com.nagane.franchise.table.dto.TableAdminDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
+import com.nagane.franchise.table.dto.TableNoDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
+import com.nagane.franchise.table.dto.TableUpdateDto;
 import com.nagane.franchise.util.TableCodeGenerator;
 
 /**
@@ -119,6 +121,41 @@ public class TableServiceImpl implements TableService {
 		// db에 저장
 		this.tableReponsitory.save(newStoreTable);
 	}
+	
+	/**
+	 * 테이블 수정
+	 * @param TableUpdateDto
+	 * @return void
+	 */
+	@Override
+	public void updateTable(TableUpdateDto tableUpdateDto) {
+		// 지정한 table 데이터 불러오기
+		StoreTable nowTable = this.tableReponsitory.findById(tableUpdateDto.getTableNo())
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+		// 원하는 정보 입력한 뒤, 수정
+		nowTable.setTableNumber(tableUpdateDto.getTableNumber());
+		nowTable.setTableName(tableUpdateDto.getTableName());
+		
+		this.tableReponsitory.save(nowTable);
+    }
+	
+	/**
+	 * 테이블 삭제
+	 * @param Long
+	 * @return void
+	 */
+	@Override
+	public void deleteTable(Long tableNo) {
+		// 지정한 table 데이터 불러오기
+		StoreTable nowTable = this.tableReponsitory.findById(tableNo)
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+		// 연관된 주문이 0개일 시, 테이블 삭제
+		if (nowTable.getOrderList().size() == 0) {
+			this.tableReponsitory.delete(nowTable);
+		}
+    }
 
 	/**
 	 * 테이블 로그인
@@ -135,15 +172,16 @@ public class TableServiceImpl implements TableService {
                 .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 				
 		// 지정한 table 데이터 불러오기
-		StoreTable existingTable = this.tableReponsitory.findByTableCode(tableLoginDto.getTableCode())
+		StoreTable nowTable = this.tableReponsitory.findByTableCode(tableLoginDto.getTableCode())
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 		
 		// 입력받은 데이터로 테이블 번호, 테이블 명 변경
-		existingTable.setTableNumber(tableLoginDto.getTableNumber());
-		existingTable.setTableName(tableLoginDto.getTableName());
+		nowTable.setTableNumber(tableLoginDto.getTableNumber());
+		nowTable.setTableName(tableLoginDto.getTableName());
+		nowTable.setState(1);
 		
 		// 데이터 업데이트
-		this.tableReponsitory.save(existingTable);
+		this.tableReponsitory.save(nowTable);
 		
 	}
 
@@ -162,7 +200,7 @@ public class TableServiceImpl implements TableService {
                 .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 				
 		// 지정한 table 데이터 불러오기
-		StoreTable existingTable = this.tableReponsitory.findByTableCode(tableAdminDto.getTableCode())
+		StoreTable nowTable = this.tableReponsitory.findByTableCode(tableAdminDto.getTableCode())
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 	
 	}
