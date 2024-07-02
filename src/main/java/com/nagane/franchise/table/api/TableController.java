@@ -43,8 +43,8 @@ public class TableController {
 	
 	/**
 	 * 테이블 목록 조회
-	 * @param 
-	 * @return Map<String, List<TableResponseDto>>
+	 * @param Long
+	 * @return Map<String, Object>>
 	 */
 	@GetMapping("/table")
     public ResponseEntity<Map<String, Object>> getTableList(
@@ -54,11 +54,11 @@ public class TableController {
 	    try {
 	        // 테이블 정보 리스트 가져오는 서비스 메서드 호출
 	        List<TableResponseDto> tableList = this.tableService.getTableList(storeNo);
-	        response.put("message", "테이블 목록 조회 성공");
+	        response.put("msg", "테이블 목록 조회 성공");
 	        response.put("data", tableList);
 	        return new ResponseEntity<>(response, HttpStatus.OK);
 	    } catch (Exception e) {
-	        response.put("message", "테이블 목록 조회에 실패했습니다.");
+	        response.put("msg", "테이블 목록 조회에 실패했습니다.");
 	        response.put("data", null);
 	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
@@ -68,20 +68,21 @@ public class TableController {
 	/**
 	 * 테이블 신규 등록
 	 * @param TableCreateDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/table")
-	public ResponseEntity<Map<String, String>> createTable(
+	public ResponseEntity<Map<String, Object>> createTable(
 			@RequestBody StoreNoDto storeNoDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.createTable(storeNoDto.getStoreNo());
-        	response.put("message", "테이블 등록에 성공했습니다.");
+        	response.put("msg", "테이블 등록에 성공했습니다.");
+        	response.put("data", null);
         	return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-     
-        	response.put("message", e.getMessage());
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,21 +90,22 @@ public class TableController {
 	
 	/**
 	 * 테이블 오더 로그인
-	 * @param 
-	 * @return String
+	 * @param TableLoginDto
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/to")
-	public ResponseEntity<Map<String, String>> loginTable(
+	public ResponseEntity<Map<String, Object>> loginTable(
 			@RequestBody TableLoginDto tableLoginDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
         
         try {
         	this.tableService.loginTable(tableLoginDto);
-        	response.put("message", "테이블 오더 로그인에 성공했습니다.");
+        	response.put("msg", "테이블 오더 로그인에 성공했습니다.");
+        	response.put("data", null);
         	return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-     
-        	response.put("message", e.getMessage());
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -111,20 +113,22 @@ public class TableController {
 	
 	/**
 	 * 테이블 오더 관리자 모드 로그인
-	 * @param 
-	 * @return String
+	 * @param TableAdminDto
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/to/login")
-	public ResponseEntity<Map<String, String>> loginTableAdmin(
+	public ResponseEntity<Map<String, Object>> loginTableAdmin(
 			@RequestBody TableAdminDto tableAdminDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.loginTableAdmin(tableAdminDto);
-        	response.put("message", "관리자 로그인에 성공했습니다.");
+        	response.put("msg", "관리자 로그인에 성공했습니다.");
+        	response.put("data", null);
         	return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", e.getMessage());
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -132,19 +136,21 @@ public class TableController {
 	/**
 	 * 테이블 오더 비활성화 요청
 	 * @param 
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PutMapping("/to/admin")
-	public ResponseEntity<Map<String, String>> logoutTable(
+	public ResponseEntity<Map<String, Object>> logoutTable(
 			@RequestBody TableCodeDto tableCodeDto) {
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		
         try {
         	this.tableService.logoutTable(tableCodeDto.getTableCode());
-        	response.put("message", "테이블 오더 비활성화에 성공했습니다.");
+        	response.put("msg", "테이블 오더 비활성화에 성공했습니다.");
+        	response.put("data", null);
         	return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-        	response.put("message", e.getMessage());
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

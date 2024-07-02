@@ -1,5 +1,8 @@
 package com.nagane.franchise.store.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +36,25 @@ public class AdminController {
 	/**
 	 * 관리자 생성
 	 * @param AdminCreateDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/admin")
-	public ResponseEntity<String> createAdmin(
+	public ResponseEntity<Map<String, Object>> createAdmin(
 			@RequestBody AdminCreateDto adminCreateDto) {
-
+		// 반환할 데이터를 담을 맵 생성
+        Map<String, Object> response = new HashMap<>();
+        
 		// 신규 관리자 계정 생성
 		try {
 			this.adminService.createAdmin(adminCreateDto);
-			return new ResponseEntity<>("성공적으로 등록되었습니다.", HttpStatus.OK);
+			response.put("msg", "성공적으로 등록되었습니다.");
+			response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 		// 예외 발생 시, 에러 return
 		} catch (Exception e) {
-			return new ResponseEntity<>("관리자 등록에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        	response.put("msg", "관리자 등록에 실패했습니다.");
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -53,18 +62,24 @@ public class AdminController {
 	/**
 	 * 관리자 로그인
 	 * @param AdminCreateDto
-	 * @return String
+	 * @return Map<String, Object>>
 	 */
 	@PostMapping("/admin/login")
-	public ResponseEntity<String> loginAdmin(
+	public ResponseEntity<Map<String, Object>> loginAdmin(
 			@RequestBody AdminCreateDto adminLoginDto) {
+		Map<String, Object> response = new HashMap<>();
+		
 		// 로그인
 		try {
 			this.adminService.loginAdmin(adminLoginDto);
-			return new ResponseEntity<>("로그인 되었습니다.", HttpStatus.OK);
+			response.put("msg", "로그인에 성공했습니다.");
+			response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 		// 예외 발생 시, 로그인 x
 		} catch (Exception e) {
-			return new ResponseEntity<>("로그인에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+			response.put("msg", "로그인에 실패했습니다.");
+			response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
