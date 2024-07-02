@@ -45,30 +45,20 @@ public class OrderServiceImpl implements OrderService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 	
-	// 필요 레포 연결
-	private final StoreRepository storeRepository;
-	private final StoreTableRepository tableRepository;
-	private final OrderRepository orderRepository;
-	private final OrderMenuRepository orderMenuRepository;
-	private final MenuRepository menuRepository;
-	private final StockRepository stockRepository;
-	
-	// 의존성 주입(di)
+	// 필요 레포 연결, 의존성 주입(di)
 	@Autowired
-	public OrderServiceImpl(
-			StoreRepository storeRepository,
-			StoreTableRepository tableRepository,
-			OrderRepository orderRepository,
-			OrderMenuRepository orderMenuRepository,
-			MenuRepository menuRepository,
-			StockRepository stockRepository) {
-		this.storeRepository = storeRepository;
-		this.tableRepository = tableRepository;
-		this.orderRepository = orderRepository;
-		this.orderMenuRepository = orderMenuRepository;
-		this.menuRepository = menuRepository;
-		this.stockRepository = stockRepository;
-	}
+	StoreRepository storeRepository;
+	@Autowired
+	StoreTableRepository tableRepository;
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	OrderMenuRepository orderMenuRepository;
+	@Autowired
+	MenuRepository menuRepository;
+	@Autowired
+	StockRepository stockRepository;
+	
 		
 	/**
 	 * 현재 주문 목록 조회

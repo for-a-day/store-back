@@ -25,14 +25,9 @@ public class AdminServiceImpl implements AdminService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 	
-	// 필요 레포지토리 연결
-	private final AdminRepository adminRepository;
-	
-	// 의존성 주입(di)
+	// 필요 레포지토리 연결, 의존성 주입(di)
 	@Autowired
-	public AdminServiceImpl(AdminRepository adminRepository) {
-		this.adminRepository = adminRepository;
-	}
+	AdminRepository adminRepository;
 
 	/** 관리자 로그인 */
 	@Override

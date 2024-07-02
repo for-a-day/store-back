@@ -32,18 +32,11 @@ public class TableServiceImpl implements TableService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(TableServiceImpl.class);
 	
-	// 필요 레포 연결
-	private final StoreRepository storeRepository;
-	private final StoreTableRepository tableReponsitory;
-	
-	// 의존성 주입(di)
+	// 필요 레포 연결, 의존성 주입(di)
 	@Autowired
-	public TableServiceImpl(
-			StoreRepository storeRepository, 
-			StoreTableRepository storeTableRepository) {
-		this.storeRepository = storeRepository;
-		this.tableReponsitory = storeTableRepository;
-	}
+	StoreRepository storeRepository;
+	@Autowired
+	StoreTableRepository tableReponsitory;
 	
 	/**
 	 * 테이블 목록 조회
