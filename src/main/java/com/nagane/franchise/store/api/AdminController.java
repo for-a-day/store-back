@@ -51,7 +51,7 @@ public class AdminController {
 	 * @param AdminCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "신규 관리자 생성", description = "관리자 새로 생성할 때 사용하는 메서드입니다.")
+	@Operation(summary = "신규 관리자 생성", description = "관리자 새로 생성할 때 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "201", description = "CREATED"),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
@@ -81,7 +81,7 @@ public class AdminController {
 	 * @param AdminCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "관리자 로그인", description = "관리자 로그인 시 이용합니다.")
+	@Operation(summary = "관리자 로그인", description = "관리자 로그인 시 이용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
