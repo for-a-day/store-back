@@ -11,12 +11,16 @@ import com.nagane.franchise.menu.dao.CategoryRepository;
 import com.nagane.franchise.menu.dao.MenuRepository;
 import com.nagane.franchise.menu.domain.Category;
 import com.nagane.franchise.menu.domain.Menu;
-import com.nagane.franchise.menu.dto.menu.MenuForToDto;
-import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuCreateDto;
+import com.nagane.franchise.menu.dto.menu.MenuForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuListDto;
+import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuReadDto;
 import com.nagane.franchise.menu.dto.menu.MenuUpdateDto;
+import com.nagane.franchise.stoke.dao.StockRepository;
+import com.nagane.franchise.stoke.domain.Stock;
+import com.nagane.franchise.store.dao.StoreRepository;
+import com.nagane.franchise.store.domain.Store;
 
 /**
  * @author nsr
@@ -30,6 +34,10 @@ public class MenuServiceImpl implements MenuService {
 	MenuRepository menuRepository;
 	@Autowired
 	CategoryRepository categoryRepository;
+	@Autowired
+	StockRepository stockRepository;
+	@Autowired
+	StoreRepository storeRepository;
 	
 	// Admin
 	/**
@@ -67,6 +75,18 @@ public class MenuServiceImpl implements MenuService {
 		Menu saved = menuRepository.save(menu);
 		
 		System.out.println(saved.toString());
+		List<Store> storeList = storeRepository.findActiveStores();
+		for(int i = 0 ; i < storeList.size(); i++) {
+
+			// 모든 지점에 대해서 레코드 생성
+			Stock stock = Stock.builder()
+					.menu(saved)
+					.store(storeList.get(i))
+					.build();
+			
+			stockRepository.save(stock);
+		}
+		
 
         return saved.getMenuNo();
 	}
@@ -78,9 +98,9 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	@Override
 	public List<MenuListDto> getMenuList(Long categoryNo) {
-
+		System.out.println("categoryNo : " + categoryNo);
 	    List<Menu> menuList = menuRepository.findByCategory_CategoryNo(categoryNo);
-
+	    System.out.println(menuList.toString()); 	
 	    // Menu를 MenuDto로 변환
 	    List<MenuListDto> menuDtoList = menuList.stream()
 	            .map(menu -> {
@@ -194,7 +214,8 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public boolean deleteMenu(Long menuNo) {
 		
-			menuRepository.deleteById(menuNo);
+		stockRepository.deleteByMenuMenuNo(menuNo);
+		menuRepository.deleteById(menuNo);
 			
 			return true;
 	}
