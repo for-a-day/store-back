@@ -5,6 +5,7 @@ import java.util.List;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 import com.nagane.franchise.store.dto.store.StoreLoginDto;
+import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 
 /**
@@ -28,6 +29,6 @@ public interface StoreService {
 	void deleteStore(Long storeNo);
 	
 	/** 가맹점 로그인 */
-	void loginStore(StoreLoginDto storeLoginDto);
+	StoreResponseDto loginStore(StoreLoginDto storeLoginDto);
 	
 }
