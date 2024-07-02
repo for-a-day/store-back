@@ -1,6 +1,11 @@
 package com.nagane.franchise.order.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.nagane.franchise.menu.domain.Menu;
+import com.nagane.franchise.store.domain.Store;
+import com.nagane.franchise.table.domain.StoreTable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +17,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * OrderMenu entity 코드
@@ -23,7 +31,10 @@ import lombok.Data;
 @Entity
 @Table(name = "order_menu")
 @SequenceGenerator(name = "order_menu_seq", sequenceName = "order_menu_seq", allocationSize = 1)
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class OrderMenu {
 	
 	/* 주문 항목 번호(pk) */

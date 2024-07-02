@@ -52,7 +52,7 @@ public class StoreTable {
 	private LocalDateTime registerDate = LocalDateTime.now();
 
 	/* 지점 내 테이블 번호 */
-	@Column(name = "table_number", unique=true)
+	@Column(name = "table_number")
 	private Integer tableNumber;
 
 	/* 테이블명 */
@@ -60,7 +60,7 @@ public class StoreTable {
 	private String tableName;
 
 	/* 상태 */
-	@Column(name = "menu_name", nullable = false)
+	@Column(name = "state", nullable = false)
 	@Builder.Default
 	private Integer state = 1;
 

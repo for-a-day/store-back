@@ -33,8 +33,8 @@ public class TableServiceImpl implements TableService {
 	private final Logger LOGGER = LoggerFactory.getLogger(TableServiceImpl.class);
 	
 	// 필요 레포 연결
-	private final StoreTableRepository tableReponsitory;
 	private final StoreRepository storeRepository;
+	private final StoreTableRepository tableReponsitory;
 	
 	// 의존성 주입(di)
 	@Autowired
@@ -44,7 +44,6 @@ public class TableServiceImpl implements TableService {
 		this.storeRepository = storeRepository;
 		this.tableReponsitory = storeTableRepository;
 	}
-	
 	
 	/**
 	 * 테이블 목록 조회
@@ -74,8 +73,6 @@ public class TableServiceImpl implements TableService {
 	                    .registerDate(table.getRegisterDate())
 	                    .tableNo(table.getTableNo())
 	                    .state(table.getState())
-	                    .orderList(table.getOrderList())
-	                    // .store(table.getStore())
 	                    .build();
 	            
 	            changedTableList.add(tableResponseDto);

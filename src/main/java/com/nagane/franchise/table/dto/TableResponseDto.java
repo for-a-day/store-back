@@ -40,10 +40,4 @@ public class TableResponseDto {
 
 	/* 상태 */
 	private int state;
-
-	/* order 엔티티와 OneToMany 매핑 */
-	private List<Order> orderList;
-
-	/* 점포번호(fk) */
-	// private Store store;
 }
