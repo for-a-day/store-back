@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +21,9 @@ import com.nagane.franchise.table.application.TableService;
 import com.nagane.franchise.table.dto.TableAdminDto;
 import com.nagane.franchise.table.dto.TableCodeDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
+import com.nagane.franchise.table.dto.TableNoDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
+import com.nagane.franchise.table.dto.TableUpdateDto;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +90,72 @@ public class TableController {
         }
     }
 	
+	/**
+	 * 테이블 수정
+	 * @param TableCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@PutMapping("/table")
+	public ResponseEntity<Map<String, Object>> updateTable(
+			@RequestBody TableUpdateDto tableUpdateDto) {
+		Map<String, Object> response = new HashMap<>();
+        
+        try {
+        	this.tableService.updateTable(tableUpdateDto);
+        	response.put("msg", "테이블 수정에 성공했습니다.");
+        	response.put("data", null);
+        	return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	/**
+	 * 현재 테이블 내 주문 내역(0, 1. 환불 제외) 다 2로 수정
+	 * @param TableCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@PutMapping("/table/clear")
+	public ResponseEntity<Map<String, Object>> clearTable(
+			@RequestBody TableNoDto tableNoDto) {
+		Map<String, Object> response = new HashMap<>();
+        
+        try {
+        	this.tableService.clearTable(tableNoDto.getTableNo());
+        	response.put("msg", "테이블 수정에 성공했습니다.");
+        	response.put("data", null);
+        	return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	
+	/**
+	 * 테이블 삭제
+	 * @param TableCreateDto
+	 * @return Map<String, Object>>
+	 */
+	@DeleteMapping("/table")
+	public ResponseEntity<Map<String, Object>> deleteTable(
+			@RequestBody TableNoDto tableNoDto) {
+		Map<String, Object> response = new HashMap<>();
+        
+        try {
+        	this.tableService.deleteTable(tableNoDto.getTableNo());
+        	response.put("msg", "테이블 삭제에 성공했습니다.");
+        	response.put("data", null);
+        	return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+        	response.put("msg", e.getMessage());
+        	response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	/**
 	 * 테이블 오더 로그인

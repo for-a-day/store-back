@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nagane.franchise.order.dao.OrderRepository;
+import com.nagane.franchise.order.domain.Order;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.application.TableService;
@@ -18,7 +20,9 @@ import com.nagane.franchise.table.domain.StoreTable;
 import com.nagane.franchise.table.dto.TableAdminDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
+import com.nagane.franchise.table.dto.TableUpdateDto;
 import com.nagane.franchise.util.TableCodeGenerator;
+import com.nagane.franchise.util.exceptions.InsufficientStockException;
 
 /**
  * @author ljy
@@ -32,18 +36,13 @@ public class TableServiceImpl implements TableService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(TableServiceImpl.class);
 	
-	// 필요 레포 연결
-	private final StoreRepository storeRepository;
-	private final StoreTableRepository tableReponsitory;
-	
-	// 의존성 주입(di)
+	// 필요 레포 연결, 의존성 주입(di)
 	@Autowired
-	public TableServiceImpl(
-			StoreRepository storeRepository, 
-			StoreTableRepository storeTableRepository) {
-		this.storeRepository = storeRepository;
-		this.tableReponsitory = storeTableRepository;
-	}
+	StoreRepository storeRepository;
+	@Autowired
+	StoreTableRepository tableRepository;
+	@Autowired
+	OrderRepository orderRepository;
 	
 	/**
 	 * 테이블 목록 조회
@@ -60,7 +59,7 @@ public class TableServiceImpl implements TableService {
 	                .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 	        
 	        // 모든 table 목록 조회
-	        List<StoreTable> tableList = this.tableReponsitory.findByStore_StoreNo(nowStore.getStoreNo());
+	        List<StoreTable> tableList = this.tableRepository.findByStore_StoreNo(nowStore.getStoreNo());
 	        
 	        // return할 changedTableList 미리 생성
 	        List<TableResponseDto> changedTableList = new ArrayList<>();
@@ -108,7 +107,7 @@ public class TableServiceImpl implements TableService {
 		while (true) {
 			newTableCode = TableCodeGenerator.generateTableCode();
 			
-			Optional<StoreTable> findTable = this.tableReponsitory.findByTableCode(newTableCode);
+			Optional<StoreTable> findTable = this.tableRepository.findByTableCode(newTableCode);
 			
 			if (!findTable.isPresent()) {
 				break;
@@ -124,8 +123,67 @@ public class TableServiceImpl implements TableService {
 		LOGGER.info("[createTable] create new Table entity : {}", newStoreTable);
 		
 		// db에 저장
-		this.tableReponsitory.save(newStoreTable);
+		this.tableRepository.save(newStoreTable);
 	}
+	
+	/**
+	 * 테이블 수정
+	 * @param TableUpdateDto
+	 * @return void
+	 */
+	@Override
+	public void updateTable(TableUpdateDto tableUpdateDto) {
+		// 지정한 table 데이터 불러오기
+		StoreTable nowTable = this.tableRepository.findById(tableUpdateDto.getTableNo())
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+		// 원하는 정보 입력한 뒤, 수정
+		nowTable.setTableNumber(tableUpdateDto.getTableNumber());
+		nowTable.setTableName(tableUpdateDto.getTableName());
+		
+		this.tableRepository.save(nowTable);
+    }
+	
+	/**
+	 * 테이블 삭제
+	 * @param Long
+	 * @return void
+	 */
+	@Override
+	public void deleteTable(Long tableNo) {
+		// 지정한 table 데이터 불러오기
+		StoreTable nowTable = this.tableRepository.findById(tableNo)
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+		// 연관된 주문이 0개일 시, 테이블 삭제
+		if (nowTable.getOrderList().size() == 0) {
+			this.tableRepository.delete(nowTable);
+		} else {
+			throw new InsufficientStockException("해당 테이블 삭제가 불가합니다.");
+		}
+    }
+	
+	/**
+	 * 현재 테이블 내 주문 내역(0, 1. 환불 제외) 다 2로 수정
+	 * @param 
+	 * @return Map<String, Object>>
+	 */
+	@Override
+	public void clearTable(Long tableNo) {
+		// 지정한 table 데이터 불러오기
+		StoreTable nowTable = this.tableRepository.findById(tableNo)
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		
+		// 현재 테이블 기준으로 상태 0이나 1인 주문만 불러오기
+		List<Order> nowOrderList = this.orderRepository.findByTableCodeAndState(nowTable.getTableCode());
+		
+		// 상태 손님 나감(2)로 변경
+		nowOrderList.forEach(nowOrder -> {
+			nowOrder.setState(2);
+			this.orderRepository.save(nowOrder);
+		});
+		
+	};
 
 	/**
 	 * 테이블 로그인
@@ -142,15 +200,16 @@ public class TableServiceImpl implements TableService {
                 .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 				
 		// 지정한 table 데이터 불러오기
-		StoreTable existingTable = this.tableReponsitory.findByTableCode(tableLoginDto.getTableCode())
+		StoreTable nowTable = this.tableRepository.findByTableCode(tableLoginDto.getTableCode())
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 		
 		// 입력받은 데이터로 테이블 번호, 테이블 명 변경
-		existingTable.setTableNumber(tableLoginDto.getTableNumber());
-		existingTable.setTableName(tableLoginDto.getTableName());
+		nowTable.setTableNumber(tableLoginDto.getTableNumber());
+		nowTable.setTableName(tableLoginDto.getTableName());
+		nowTable.setState(1);
 		
 		// 데이터 업데이트
-		this.tableReponsitory.save(existingTable);
+		this.tableRepository.save(nowTable);
 		
 	}
 
@@ -169,7 +228,7 @@ public class TableServiceImpl implements TableService {
                 .orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
 				
 		// 지정한 table 데이터 불러오기
-		StoreTable existingTable = this.tableReponsitory.findByTableCode(tableAdminDto.getTableCode())
+		StoreTable nowTable = this.tableRepository.findByTableCode(tableAdminDto.getTableCode())
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 	
 	}
@@ -185,7 +244,7 @@ public class TableServiceImpl implements TableService {
 		LOGGER.info("[logoutTable] logout request from table: {}", tableCode);
 		
 		// 지정한 table 데이터 불러오기
-		StoreTable targetTable = this.tableReponsitory.findByTableCode(tableCode)
+		StoreTable targetTable = this.tableRepository.findByTableCode(tableCode)
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 		
 		// 테이블 상태 변경
@@ -194,7 +253,7 @@ public class TableServiceImpl implements TableService {
 		}
 		
 		// state 값 업데이트
-		this.tableReponsitory.save(targetTable);
+		this.tableRepository.save(targetTable);
 	}
 
 }

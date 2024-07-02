@@ -1,16 +1,22 @@
 package com.nagane.franchise.store.domain;
+import java.util.ArrayList;
 /**
  * @author nsr
  * @since 2024.06.27 
  * 가맹점 엔티티
  */
 import java.util.Date;
+import java.util.List;
+
+import com.nagane.franchise.order.domain.Order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -20,10 +26,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "store")
 @SequenceGenerator(name = "store_seq", sequenceName = "store_seq", allocationSize = 1)
+@ToString(exclude = "orderList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -78,6 +86,10 @@ public class Store {
 	@Column(name = "state", nullable = false)
 	@Builder.Default
 	private Integer state = 1;
+	
+	/* order 엔티티와 OneToMany 매핑 */
+	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+	private List<Order> orderList = new ArrayList<>();
 	
 	@PrePersist
 	protected void onCreate() {

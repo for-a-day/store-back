@@ -11,8 +11,8 @@ import lombok.ToString;
 /**
  * @author ljy
  * @since 2024.06.28
- * StoreResponse dto 코드
- * 지점 조회 시 return용 dto
+ * Store dto 코드
+ * 관리자 시점 지점 조회 시 return용 dto
  * **/
 @Data
 @NoArgsConstructor
