@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.dao;
+package com.nagane.franchise.stock.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nagane.franchise.stoke.domain.Stock;
+import com.nagane.franchise.stock.domain.Stock;
 
 /**
  * @author ljy, nsr

@@ -1,9 +1,9 @@
-package com.nagane.franchise.stoke.dto.purchaseorder;
+package com.nagane.franchise.stock.dto.purchaseorder;
 
 import java.util.Date;
 
-import com.nagane.franchise.stoke.domain.Stock;
-import com.nagane.franchise.stoke.dto.PurchaseOrderDto;
+import com.nagane.franchise.stock.domain.Stock;
+import com.nagane.franchise.stock.dto.PurchaseOrderDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

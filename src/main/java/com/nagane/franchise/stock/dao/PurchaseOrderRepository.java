@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.dao;
+package com.nagane.franchise.stock.dao;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.nagane.franchise.stoke.domain.PurchaseOrder;
+import com.nagane.franchise.stock.domain.PurchaseOrder;
 
 /**
  * @author ljy, nsr
@@ -15,9 +15,9 @@ import com.nagane.franchise.stoke.domain.PurchaseOrder;
  * **/
 public interface PurchaseOrderRepository  extends JpaRepository<PurchaseOrder, Long>{
 	
-	/* 재고 번호로 발주 상태(state)가 0이거나 1인 레코드 조회 */
+	/* 재고 번호로 발주 상태(state)가 0인 레코드 조회 */
     @Query("SELECT po FROM PurchaseOrder po WHERE po.stock.stockNo = :stockNo " +
-           "AND (po.state = 0 OR po.state = 1)")
+            "AND (po.state = 0)")
     PurchaseOrder findLatestPurchaseOrderByStockNo(@Param("stockNo") Long stockNo);
     
     /* 발주 상태(state)에 따라 레코드들 리스트로 반환 */

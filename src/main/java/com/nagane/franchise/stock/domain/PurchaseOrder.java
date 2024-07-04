@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.domain;
+package com.nagane.franchise.stock.domain;
 
 import java.util.Date;
 

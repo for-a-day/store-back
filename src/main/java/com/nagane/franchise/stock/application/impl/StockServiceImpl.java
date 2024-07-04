@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.application.impl;
+package com.nagane.franchise.stock.application.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,17 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.menu.dao.MenuRepository;
 import com.nagane.franchise.menu.domain.Menu;
-import com.nagane.franchise.stoke.application.StockService;
-import com.nagane.franchise.stoke.dao.PurchaseOrderRepository;
-import com.nagane.franchise.stoke.dao.StockRepository;
-import com.nagane.franchise.stoke.domain.PurchaseOrder;
-import com.nagane.franchise.stoke.domain.Stock;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderUpdateDto;
-import com.nagane.franchise.stoke.dto.stock.StockCreateDto;
-import com.nagane.franchise.stoke.dto.stock.StockListDto;
-import com.nagane.franchise.stoke.dto.stock.StockUpdateDto;
+import com.nagane.franchise.stock.application.StockService;
+import com.nagane.franchise.stock.dao.PurchaseOrderRepository;
+import com.nagane.franchise.stock.dao.StockRepository;
+import com.nagane.franchise.stock.domain.PurchaseOrder;
+import com.nagane.franchise.stock.domain.Stock;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderCreateDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderListDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderUpdateDto;
+import com.nagane.franchise.stock.dto.stock.StockCreateDto;
+import com.nagane.franchise.stock.dto.stock.StockListDto;
+import com.nagane.franchise.stock.dto.stock.StockUpdateDto;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 
@@ -104,7 +104,6 @@ public class StockServiceImpl implements StockService {
 	public List<StockListDto> getStockList(Long storeNo) {
 
 		// 발주 정보 가져오기
-		PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStockNo(storeNo);
 	    List<Stock> stockList = stockRepository.findByStore_StoreNo(storeNo);
 
 	    // Stock을 StockListDto로 변환
@@ -115,10 +114,13 @@ public class StockServiceImpl implements StockService {
 	            	stockDto.setQuantity(stock.getQuantity());
 	            	stockDto.setLastStockDate(stock.getLastStockDate());
 	            	stockDto.setMenuName(stock.getMenu().getMenuName());
+	            	stockDto.setSupplyPrice(stock.getMenu().getSupplyPrice());            		
+	            	PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStockNo(stock.getStockNo());
 	            	if(purchaseOrder != null) {
 	            		stockDto.setPoState(purchaseOrder.getState());
 	            		stockDto.setPoQuantity(purchaseOrder.getQuantity());
-	            		stockDto.setPoPrice(purchaseOrder.getPrice());	            		
+	            		stockDto.setPoPrice(purchaseOrder.getPrice());	  
+	            		stockDto.setPoNo(purchaseOrder.getPOrderNo());  
 	            	}
 	                return stockDto;
 	            })
