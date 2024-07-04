@@ -104,7 +104,6 @@ public class StockServiceImpl implements StockService {
 	public List<StockListDto> getStockList(Long storeNo) {
 
 		// 발주 정보 가져오기
-		PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStockNo(storeNo);
 	    List<Stock> stockList = stockRepository.findByStore_StoreNo(storeNo);
 
 	    // Stock을 StockListDto로 변환
@@ -115,10 +114,13 @@ public class StockServiceImpl implements StockService {
 	            	stockDto.setQuantity(stock.getQuantity());
 	            	stockDto.setLastStockDate(stock.getLastStockDate());
 	            	stockDto.setMenuName(stock.getMenu().getMenuName());
+	            	stockDto.setSupplyPrice(stock.getMenu().getSupplyPrice());            		
+	            	PurchaseOrder purchaseOrder = purchaseOrderRepository.findLatestPurchaseOrderByStockNo(stock.getStockNo());
 	            	if(purchaseOrder != null) {
 	            		stockDto.setPoState(purchaseOrder.getState());
 	            		stockDto.setPoQuantity(purchaseOrder.getQuantity());
-	            		stockDto.setPoPrice(purchaseOrder.getPrice());	            		
+	            		stockDto.setPoPrice(purchaseOrder.getPrice());	  
+	            		stockDto.setPoNo(purchaseOrder.getPOrderNo());  
 	            	}
 	                return stockDto;
 	            })
