@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.api;
+package com.nagane.franchise.stock.api;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nagane.franchise.stoke.application.PurchaseOrderService;
-import com.nagane.franchise.stoke.application.StockService;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderUpdateDto;
-import com.nagane.franchise.stoke.dto.stock.StockCreateDto;
-import com.nagane.franchise.stoke.dto.stock.StockListDto;
-import com.nagane.franchise.stoke.dto.stock.StockUpdateDto;
+import com.nagane.franchise.stock.application.PurchaseOrderService;
+import com.nagane.franchise.stock.application.StockService;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderCreateDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderListDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderUpdateDto;
+import com.nagane.franchise.stock.dto.stock.StockCreateDto;
+import com.nagane.franchise.stock.dto.stock.StockListDto;
+import com.nagane.franchise.stock.dto.stock.StockUpdateDto;
 import com.nagane.franchise.util.model.response.BaseResponseBody;
 import com.nagane.franchise.util.model.response.ErrorResponseBody;
 import com.nagane.franchise.util.model.response.SuccessResponseBody;

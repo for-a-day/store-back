@@ -17,8 +17,8 @@ import com.nagane.franchise.menu.dto.menu.MenuListDto;
 import com.nagane.franchise.menu.dto.menu.MenuListForToDto;
 import com.nagane.franchise.menu.dto.menu.MenuReadDto;
 import com.nagane.franchise.menu.dto.menu.MenuUpdateDto;
-import com.nagane.franchise.stoke.dao.StockRepository;
-import com.nagane.franchise.stoke.domain.Stock;
+import com.nagane.franchise.stock.dao.StockRepository;
+import com.nagane.franchise.stock.domain.Stock;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 

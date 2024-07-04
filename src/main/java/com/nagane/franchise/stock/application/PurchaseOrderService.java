@@ -1,10 +1,10 @@
-package com.nagane.franchise.stoke.application;
+package com.nagane.franchise.stock.application;
 
 import java.util.List;
 
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderUpdateDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderCreateDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderListDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderUpdateDto;
 
 /**
  * @author nsr
