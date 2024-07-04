@@ -370,9 +370,9 @@ public class MenuController {
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
     @GetMapping("/admin/menuList")
-    public ResponseEntity<? extends BaseResponseBody> getMenuList(@RequestParam Long categoryId) {
+    public ResponseEntity<? extends BaseResponseBody> getMenuList(@RequestParam Long categoryNo) {
         try {
-            List<MenuListDto> menuList = this.menuService.getMenuList(categoryId);
+            List<MenuListDto> menuList = this.menuService.getMenuList(categoryNo);
             data = new HashMap<>();
             data.put("menuList", menuList);
             responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "메뉴 목록을 성공적으로 조회했습니다.", data);
