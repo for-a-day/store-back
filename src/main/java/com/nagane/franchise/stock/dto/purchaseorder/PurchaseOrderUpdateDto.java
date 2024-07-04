@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.dto.purchaseorder;
+package com.nagane.franchise.stock.dto.purchaseorder;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

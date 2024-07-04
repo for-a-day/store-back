@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.dto.stock;
+package com.nagane.franchise.stock.dto.stock;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
