@@ -1,4 +1,4 @@
-package com.nagane.franchise.stoke.application.impl;
+package com.nagane.franchise.stock.application.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.menu.dao.MenuRepository;
-import com.nagane.franchise.stoke.application.PurchaseOrderService;
-import com.nagane.franchise.stoke.dao.PurchaseOrderRepository;
-import com.nagane.franchise.stoke.dao.StockRepository;
-import com.nagane.franchise.stoke.domain.PurchaseOrder;
-import com.nagane.franchise.stoke.domain.Stock;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderCreateDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderListDto;
-import com.nagane.franchise.stoke.dto.purchaseorder.PurchaseOrderUpdateDto;
+import com.nagane.franchise.stock.application.PurchaseOrderService;
+import com.nagane.franchise.stock.dao.PurchaseOrderRepository;
+import com.nagane.franchise.stock.dao.StockRepository;
+import com.nagane.franchise.stock.domain.PurchaseOrder;
+import com.nagane.franchise.stock.domain.Stock;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderCreateDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderListDto;
+import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderUpdateDto;
 import com.nagane.franchise.store.dao.StoreRepository;
 
 /**

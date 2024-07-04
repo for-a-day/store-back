@@ -1,10 +1,10 @@
-package com.nagane.franchise.stoke.dto.stock;
+package com.nagane.franchise.stock.dto.stock;
 
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nagane.franchise.menu.dto.MenuDto;
-import com.nagane.franchise.stoke.dto.StokeDto;
+import com.nagane.franchise.stock.dto.StokeDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
 
 import lombok.AllArgsConstructor;

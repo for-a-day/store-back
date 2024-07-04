@@ -1,8 +1,8 @@
-package com.nagane.franchise.stoke.dto;
+package com.nagane.franchise.stock.dto;
 
 import java.util.Date;
 
-import com.nagane.franchise.stoke.domain.Stock;
+import com.nagane.franchise.stock.domain.Stock;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
