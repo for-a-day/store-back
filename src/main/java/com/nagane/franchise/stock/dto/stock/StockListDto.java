@@ -30,5 +30,9 @@ public class StockListDto {
     private Integer poQuantity;
     
     private Integer poPrice;
+
+    private Long poNo;
+
+    private Integer supplyPrice;
     
 }

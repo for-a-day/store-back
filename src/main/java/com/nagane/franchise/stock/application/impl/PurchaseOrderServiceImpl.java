@@ -1,12 +1,12 @@
 package com.nagane.franchise.stock.application.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nagane.franchise.menu.dao.MenuRepository;
 import com.nagane.franchise.stock.application.PurchaseOrderService;
 import com.nagane.franchise.stock.dao.PurchaseOrderRepository;
 import com.nagane.franchise.stock.dao.StockRepository;
@@ -15,7 +15,6 @@ import com.nagane.franchise.stock.domain.Stock;
 import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderCreateDto;
 import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderListDto;
 import com.nagane.franchise.stock.dto.purchaseorder.PurchaseOrderUpdateDto;
-import com.nagane.franchise.store.dao.StoreRepository;
 
 /**
  * @author nsr
@@ -74,10 +73,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderUpdateDto.getPOrderNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 발주를 찾을 수 없습니다."));
 		
-		// 2. 발주 정보 업데이트
+		// 2. 재고 정보 업데이트
+		Stock stock = purchaseOrder.getStock();
+		stock.setLastStockDate(new Date());
+		Integer stockQuantity = stock.getQuantity(); 
+		stock.setQuantity(stockQuantity + purchaseOrder.getQuantity());
+		stockRepository.save(stock);
+		
+		// 3. 발주 정보 업데이트
 		purchaseOrder.setState(purchaseOrderUpdateDto.getState());
 		
-		// 3. 발주 수정
+		// 4. 발주 수정
 		PurchaseOrder saved = purchaseOrderRepository.save(purchaseOrder);
 		System.out.println(saved.toString());
 		
