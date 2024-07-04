@@ -70,7 +70,8 @@ public class TableServiceImpl implements TableService {
 	                    .tableNo(table.getTableNo())
 	                    .tableCode(table.getTableCode())
 	                    .registerDate(table.getRegisterDate())
-	                    .tableNo(table.getTableNo())
+	                    .tableNumber(table.getTableNumber() == null ? -1 : table.getTableNumber())
+	                    .tableName(table.getTableName() == null ? "" : table.getTableName())
 	                    .state(table.getState())
 	                    .build();
 	            
