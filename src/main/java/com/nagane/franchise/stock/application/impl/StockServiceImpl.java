@@ -104,7 +104,7 @@ public class StockServiceImpl implements StockService {
 	public List<StockListDto> getStockList(Long storeNo) {
 
 		// 발주 정보 가져오기
-	    List<Stock> stockList = stockRepository.findByStore_StoreNo(storeNo);
+	    List<Stock> stockList = stockRepository.findByStoreStoreNo(storeNo);
 
 	    // Stock을 StockListDto로 변환
 	    List<StockListDto> stockDtoList = stockList.stream()

@@ -23,4 +23,6 @@ public class MenuListForToDto {
 	/* 판매가격 */
 	private Integer price;
 
+	/* 품절상태 */
+	private boolean soldOut;
 }

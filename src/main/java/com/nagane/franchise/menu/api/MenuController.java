@@ -315,13 +315,15 @@ public class MenuController {
 	    })
     @GetMapping("/to/menuList")
     public ResponseEntity<? extends BaseResponseBody> getAvailableMenuList(
-    		@RequestParam Long categoryNo) {
+    		@RequestParam String storeCode, @RequestParam Long categoryNo) {
         try {
-            List<MenuListForToDto> menuList = this.menuService.getAvailableMenuList(categoryNo);
+            List<MenuListForToDto> menuList = this.menuService.getAvailableMenuList(storeCode, categoryNo);
+            System.out.println(menuList.toString());
             data = new HashMap<>();
             data.put("menuList", menuList);
             responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "메뉴 목록을 성공적으로 조회했습니다.", data);
         } catch (Exception e) {
+        	System.out.println(e.getMessage());
             responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "메뉴 목록 조회에 실패했습니다.");
         }
         return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
@@ -342,9 +344,9 @@ public class MenuController {
 	    })
     @GetMapping("/to/menu")
     public ResponseEntity<? extends BaseResponseBody> getTOMenuDetail(
-    		@RequestParam Long menuNo){
+    		@RequestParam String storeCode, @RequestParam Long menuNo){
     	try {
-            MenuForToDto menu = this.menuService.getAvailableMenu(menuNo);
+            MenuForToDto menu = this.menuService.getAvailableMenu(storeCode, menuNo);
             data = new HashMap<>();
             data.put("menu", menu);
             responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "메뉴 정보를 성공적으로 불러왔습니다.", data);
