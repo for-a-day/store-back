@@ -23,6 +23,7 @@ import com.nagane.franchise.table.dto.TableAdminDto;
 import com.nagane.franchise.table.dto.TableCodeDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
 import com.nagane.franchise.table.dto.TableNoDto;
+import com.nagane.franchise.table.dto.TableOrderDetailDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
 import com.nagane.franchise.table.dto.TableUpdateDto;
 import com.nagane.franchise.util.exceptions.InsufficientStockException;
@@ -182,6 +183,43 @@ public class TableController {
 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "현재 테이블 주문 상태 변경에 실패했습니다.");
 		}
         return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+    }
+	
+	
+	/**
+	 * 선택한 테이블 주문 리스트 조회
+	 * @param Long
+	 * @return Map<String, Object>>
+	 */
+	@Operation(summary = "선택한 테이블 주문 리스트 조회", description = "(가맹점) 가맹점 측에서 지정된 테이블의 주문 상태를 자세히 확인할 수 있는 api입니다.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK", 
+	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	    })
+	@GetMapping("/table/order")
+    public ResponseEntity<? extends BaseResponseBody> getTableOrderList(
+    		@RequestParam String tableCode) {
+
+	    try {
+	        // 테이블 정보 리스트 가져오는 서비스 메서드 호출
+	    	TableOrderDetailDto tableOrderDetail = this.tableService.getTableOrderList(tableCode);
+	        // 맵에 데이터 삽입
+            data = new HashMap<>();
+            data.put("tableOrderDetail", tableOrderDetail);
+            
+            // requestBody 생성
+            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "테이블 목록 조회에 성공했습니다.", data);
+            
+	    } catch (NoSuchElementException se) {
+ 			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
+ 		} catch (Exception e) {
+ 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "테이블 목록 조회에 실패했습니다.");
+        }
+	    return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
 	
 	
