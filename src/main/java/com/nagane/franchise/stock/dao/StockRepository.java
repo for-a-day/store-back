@@ -30,7 +30,6 @@ public interface StockRepository extends JpaRepository<Stock, Long>{
             "AND s.menu.menuNo = :menuNo ")
     Stock findByMenuNoAndStoreNo(@Param("menuNo")Long menuNo, @Param("storeNo")Long storeNo);
     
-	
 	/* 메뉴 번호 기준으로 재고 단일 반환 */
 	Optional<Stock> findByMenu_MenuNo(Long MenuNo);
 

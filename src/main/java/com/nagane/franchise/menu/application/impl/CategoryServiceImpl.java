@@ -165,6 +165,7 @@ public class CategoryServiceImpl implements CategoryService{
 				.map(category ->{
 					
 					CategoryListForToDto categoryDto = new CategoryListForToDto();
+					categoryDto.setCategoryNo(category.getCategoryNo());
 					categoryDto.setCategoryName(category.getCategoryName());
 					
 					return categoryDto;

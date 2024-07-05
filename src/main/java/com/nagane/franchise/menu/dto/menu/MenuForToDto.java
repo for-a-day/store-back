@@ -28,5 +28,8 @@ public class MenuForToDto {
 	
 	/* 설명 */
 	private String description;
+	
+	/* 품절상태 */
+	private boolean soldOut;
 
 }

@@ -227,22 +227,35 @@ public class MenuServiceImpl implements MenuService {
 	//  TO
 	/**
 	 * 카테고리별 판매중인 메뉴 목록 조회
-	 * @param Long 카테고리의 No
+	 * @param Long 카테고리의 No, String 가맹점 코드
 	 * @return List<MenuListForToDto> 
 	 */
 	@Override
-	public List<MenuListForToDto> getAvailableMenuList(Long categoryNo) {
+	public List<MenuListForToDto> getAvailableMenuList(String StoreCode, Long categoryNo) {
 		// 1. 메뉴 테이블에서 카테고리 번호로 상태가 1(판매)인 레코드 리스트 return
-		List<Menu> menuList = menuRepository.findByCategory_CategoryNoAndState(categoryNo, 1);
+		List<Menu> menuList;
+		
+		if(categoryNo > 0) {
+			menuList = menuRepository.findByCategory_CategoryNoAndState(categoryNo, 1);
+		}
+		else {
+			menuList =  menuRepository.findByState(1);
+		}		
+				
+		Optional<Store> store = storeRepository.findByStoreCode(StoreCode);
+    	System.out.println(StoreCode);
+		
 		// 2. 선택한 카테고리 메뉴 리스트 return
 		// Menu를 MenuDto로 변환
         List<MenuListForToDto> menuDtoList = menuList.stream()
                 .map(menu ->{
-
+                	System.out.println(menu.getMenuNo()+ ", " + store.get().getStoreNo());
+                    Stock stock = stockRepository.findByMenuNoAndStoreNo(menu.getMenuNo(), store.get().getStoreNo());
                 	MenuListForToDto menuDto = new MenuListForToDto();
                     menuDto.setMenuNo(menu.getMenuNo());
                     menuDto.setMenuName(menu.getMenuName());
                     menuDto.setPrice(menu.getPrice());
+                    menuDto.setSoldOut(stock.getQuantity() <= 0);
 
                     return menuDto;
                 }) // 메소드 참조를 이용한 변환
@@ -253,23 +266,27 @@ public class MenuServiceImpl implements MenuService {
 	
     /**
      * TO용 판매가능한 메뉴 상세 보기
-     * @param Long 메뉴의 No
+     * @param Long 메뉴의 No, String 가맹점 코드
      * @return MenuForToDto 메뉴 정보
      */
     @Override
-    public MenuForToDto getAvailableMenu(Long menuNo) {
+    public MenuForToDto getAvailableMenu(String StoreCode, Long menuNo) {
         
         Optional<Menu> menuOptional = menuRepository.findById(menuNo);
-        
+
+		Optional<Store> store = storeRepository.findByStoreCode(StoreCode);
+		
         if(menuOptional.isPresent()) {
             Menu menu = menuOptional.get();
-            
+            Stock stock = stockRepository.findByMenuNoAndStoreNo(menu.getMenuNo(), store.get().getStoreNo());
+        	
             MenuForToDto menuDto = new MenuForToDto();
             menuDto.setMenuNo(menu.getMenuNo());
             menuDto.setMenuName(menu.getMenuName());
             menuDto.setPrice(menu.getPrice());
             menuDto.setMenuImage(menu.getMenuImage());
             menuDto.setDescription(menu.getDescription());
+            menuDto.setSoldOut(stock.getQuantity() <= 0);
             
             return menuDto;
         }
