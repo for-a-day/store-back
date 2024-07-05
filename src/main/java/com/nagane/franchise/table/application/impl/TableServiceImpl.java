@@ -12,13 +12,19 @@ import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.order.dao.OrderRepository;
 import com.nagane.franchise.order.domain.Order;
+import com.nagane.franchise.order.dto.order.OrderDetailDto;
+import com.nagane.franchise.order.dto.order.OrderResponseDto;
+import com.nagane.franchise.order.dto.order.OrderTableDetailDto;
+import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.application.TableService;
 import com.nagane.franchise.table.dao.StoreTableRepository;
 import com.nagane.franchise.table.domain.StoreTable;
 import com.nagane.franchise.table.dto.TableAdminDto;
+import com.nagane.franchise.table.dto.TableDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
+import com.nagane.franchise.table.dto.TableOrderDetailDto;
 import com.nagane.franchise.table.dto.TableResponseDto;
 import com.nagane.franchise.table.dto.TableUpdateDto;
 import com.nagane.franchise.util.TableCodeGenerator;
@@ -85,6 +91,33 @@ public class TableServiceImpl implements TableService {
 	    }
 	}
 
+	/** 테이블 상세 정보 조회 */
+	@Override
+	public TableResponseDto getTableDetail(String tableCode) {
+		LOGGER.info("[getTableDetail] input tableCode : {}", tableCode);
+		
+		try {
+			// 해당 테이블 정보 받아오기
+			// 지정한 table 데이터 불러오기
+			StoreTable nowTable = this.tableRepository.findByTableCode(tableCode)
+					.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+			
+			TableResponseDto tableResponseDto = TableResponseDto.builder()
+	                .tableNo(nowTable.getTableNo())
+	                .tableCode(nowTable.getTableCode())
+	                .registerDate(nowTable.getRegisterDate())
+	                .tableNumber(nowTable.getTableNumber() == null ? -1 : nowTable.getTableNumber())
+	                .tableName(nowTable.getTableName() == null ? "" : nowTable.getTableName())
+	                .state(nowTable.getState())
+	                .build();
+			
+			return tableResponseDto;
+		} catch (Exception e) {
+			LOGGER.error("Error occurred while getting table list: ", e);
+	        throw e;
+		}
+	};
+	
 	/**
 	 * 테이블 생성
 	 * 해당 지점에 귀속되는 테이블 신규 생성
@@ -186,6 +219,64 @@ public class TableServiceImpl implements TableService {
 		
 	};
 
+	
+	/** 선택한 테이블 주문 리스트 조회 */
+	@Override
+	public TableOrderDetailDto getTableOrderList(String tableCode) {
+		try {
+			// 해당 테이블 정보 받아오기
+			// 지정한 table 데이터 불러오기
+			StoreTable nowTable = this.tableRepository.findByTableCode(tableCode)
+					.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+			
+			// 현재 가용한 주문만 불러옴
+			List<Order> nowOrderList = this.orderRepository.findByTableCodeAndState(nowTable.getTableCode());
+			
+			List<OrderTableDetailDto> orderList = new ArrayList<>();
+			
+			nowOrderList.forEach( order -> {
+							List<OrderMenuResponseDto> orderMenuList = new ArrayList<>();
+							order.getOrderMenuList().forEach( orderMenu -> {
+								OrderMenuResponseDto changedOrderMenu = OrderMenuResponseDto.builder()
+										.menuNo(orderMenu.getMenu().getMenuNo())
+										.menuName(orderMenu.getMenu().getMenuName())
+										.quantity(orderMenu.getQuantity())
+										.build();
+								orderMenuList.add(changedOrderMenu);
+							}
+						);
+							OrderTableDetailDto orderDetailDto = OrderTableDetailDto.builder()
+									.orderNo(order.getOrderNo())
+									.amount(order.getAmount())
+									.orderDate(order.getOrderDate())
+									.state(order.getState())
+									.paymentMethod(order.getPaymentMethod())
+									.updatedDate(order.getUpdatedDate())
+									.orderMenuList(orderMenuList)
+									.build();
+							
+							orderList.add(orderDetailDto);
+					}
+				);
+			
+					
+			TableOrderDetailDto tableOrderDetailDto = TableOrderDetailDto.builder()
+					.tableNo(nowTable.getTableNo())
+					.tableCode(nowTable.getTableCode())
+					.registerDate(nowTable.getRegisterDate())
+					.tableNumber(nowTable.getTableNumber())
+					.tableName(nowTable.getTableName())
+					.state(nowTable.getState())
+					.orderList(orderList)
+					.build();
+			
+			return tableOrderDetailDto;
+		} catch (Exception e) {
+			LOGGER.error("Error occurred while getting table order list: ", e);
+	        throw e;
+		}
+	};
+	
 	/**
 	 * 테이블 로그인
 	 * 테이블 오더 기기에서 테이블 등록, 이때 테이블 명과 번호도 기록함
