@@ -19,6 +19,6 @@ public interface MenuService {
 	public boolean deleteMenu(Long menuNo);
 	
 	// TO 조회
-	public List<MenuListForToDto> getAvailableMenuList(Long categoryNo);
-	public MenuForToDto getAvailableMenu(Long menuNo);
+	public List<MenuListForToDto> getAvailableMenuList(String StoreCode, Long categoryNo);
+	public MenuForToDto getAvailableMenu(String StoreCode, Long menuNo);
 }

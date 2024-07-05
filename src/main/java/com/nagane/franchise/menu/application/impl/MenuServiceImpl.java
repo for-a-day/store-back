@@ -68,24 +68,13 @@ public class MenuServiceImpl implements MenuService {
 				.description(menuCreateDto.getDescription())
 				.category(category)
 				.supplyPrice(menuCreateDto.getSupplyPrice())
-				.state(1)
+				.state(0)
 				.build();
 
 		// 3. 메뉴 레코드 생성
 		Menu saved = menuRepository.save(menu);
 		
 		System.out.println(saved.toString());
-		List<Store> storeList = storeRepository.findActiveStores();
-		for(int i = 0 ; i < storeList.size(); i++) {
-
-			// 모든 지점에 대해서 레코드 생성
-			Stock stock = Stock.builder()
-					.menu(saved)
-					.store(storeList.get(i))
-					.build();
-			
-			stockRepository.save(stock);
-		}
 		
 
         return saved.getMenuNo();
@@ -152,22 +141,19 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public Long updateMenu(MenuUpdateDto menuUpdateDto) {
 		System.out.println(menuUpdateDto.toString());
-			 Category category = categoryRepository.findById(menuUpdateDto.getCategoryNo())
-		                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
-			
-			 
-		// 1. 메뉴를 다시 판매중으로 수정 한 경우, 해당 카테고리도 판매중으로 수정
-		if(menuUpdateDto.getState() == 1) {
-			 category.setState(1);
-		}
-		 
-		 
-		// 2. 기존 메뉴 정보 가져오기
+		// 1. 기존 메뉴 정보 가져오기
 		Menu menu = menuRepository.findById(menuUpdateDto.getMenuNo())
-		.orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다."));
+					 .orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다."));
+		// 2. 설정할 카테고리 정보 가져오기
+		Category category = categoryRepository.findById(menuUpdateDto.getCategoryNo())
+				      .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
 
-
-		// 3. 메뉴 정보 업데이트
+		// 3. 메뉴를 다시 판매중으로 수정 한 경우, 해당 카테고리도 판매중으로 수정
+		if(menuUpdateDto.getState() == 1) {
+			category.setState(1);	
+		}
+			
+		// 4. 메뉴 정보 업데이트
 		menu.setMenuName(menuUpdateDto.getMenuName());
 		menu.setPrice(menuUpdateDto.getPrice());
 		menu.setMenuImage(menuUpdateDto.getMenuImage());
@@ -176,10 +162,28 @@ public class MenuServiceImpl implements MenuService {
 		menu.setSupplyPrice(menuUpdateDto.getSupplyPrice());
 		menu.setState(menuUpdateDto.getState());
 
-		// 4. 메뉴 레코드 업데이트
+		// 5. 메뉴 레코드 업데이트
 		Menu saved = menuRepository.save(menu);
 		
 		System.out.println(saved.toString());
+		
+		// 3. 메뉴를 판매중으로 수정 한 경우, 모든 지점에 대해서 레코드 생성
+		if(menuUpdateDto.getState() == 1) {
+			 List<Store> storeList = storeRepository.findActiveStores();
+				for(int i = 0 ; i < storeList.size(); i++) {
+					Store store = storeList.get(i);
+					Stock existingStock = stockRepository.findByMenuNoAndStoreNo(menu.getMenuNo(), store.getStoreNo());
+					if(existingStock == null) {
+						Stock stock = Stock.builder()
+								.menu(saved)
+								.store(store)
+								.build();
+						
+						stockRepository.save(stock);						
+					}
+				}	
+		}
+		
 
        return saved.getMenuNo();
 	}
@@ -214,8 +218,8 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public boolean deleteMenu(Long menuNo) {
 		
-		stockRepository.deleteByMenuMenuNo(menuNo);
 		menuRepository.deleteById(menuNo);
+		stockRepository.deleteByMenuNo(menuNo);
 			
 			return true;
 	}
@@ -223,22 +227,35 @@ public class MenuServiceImpl implements MenuService {
 	//  TO
 	/**
 	 * 카테고리별 판매중인 메뉴 목록 조회
-	 * @param Long 카테고리의 No
+	 * @param Long 카테고리의 No, String 가맹점 코드
 	 * @return List<MenuListForToDto> 
 	 */
 	@Override
-	public List<MenuListForToDto> getAvailableMenuList(Long categoryNo) {
+	public List<MenuListForToDto> getAvailableMenuList(String StoreCode, Long categoryNo) {
 		// 1. 메뉴 테이블에서 카테고리 번호로 상태가 1(판매)인 레코드 리스트 return
-		List<Menu> menuList = menuRepository.findByCategory_CategoryNoAndState(categoryNo, 1);
+		List<Menu> menuList;
+		
+		if(categoryNo > 0) {
+			menuList = menuRepository.findByCategory_CategoryNoAndState(categoryNo, 1);
+		}
+		else {
+			menuList =  menuRepository.findByState(1);
+		}		
+				
+		Optional<Store> store = storeRepository.findByStoreCode(StoreCode);
+    	System.out.println(StoreCode);
+		
 		// 2. 선택한 카테고리 메뉴 리스트 return
 		// Menu를 MenuDto로 변환
         List<MenuListForToDto> menuDtoList = menuList.stream()
                 .map(menu ->{
-
+                	System.out.println(menu.getMenuNo()+ ", " + store.get().getStoreNo());
+                    Stock stock = stockRepository.findByMenuNoAndStoreNo(menu.getMenuNo(), store.get().getStoreNo());
                 	MenuListForToDto menuDto = new MenuListForToDto();
                     menuDto.setMenuNo(menu.getMenuNo());
                     menuDto.setMenuName(menu.getMenuName());
                     menuDto.setPrice(menu.getPrice());
+                    menuDto.setSoldOut(stock.getQuantity() <= 0);
 
                     return menuDto;
                 }) // 메소드 참조를 이용한 변환
@@ -249,23 +266,27 @@ public class MenuServiceImpl implements MenuService {
 	
     /**
      * TO용 판매가능한 메뉴 상세 보기
-     * @param Long 메뉴의 No
+     * @param Long 메뉴의 No, String 가맹점 코드
      * @return MenuForToDto 메뉴 정보
      */
     @Override
-    public MenuForToDto getAvailableMenu(Long menuNo) {
+    public MenuForToDto getAvailableMenu(String StoreCode, Long menuNo) {
         
         Optional<Menu> menuOptional = menuRepository.findById(menuNo);
-        
+
+		Optional<Store> store = storeRepository.findByStoreCode(StoreCode);
+		
         if(menuOptional.isPresent()) {
             Menu menu = menuOptional.get();
-            
+            Stock stock = stockRepository.findByMenuNoAndStoreNo(menu.getMenuNo(), store.get().getStoreNo());
+        	
             MenuForToDto menuDto = new MenuForToDto();
             menuDto.setMenuNo(menu.getMenuNo());
             menuDto.setMenuName(menu.getMenuName());
             menuDto.setPrice(menu.getPrice());
             menuDto.setMenuImage(menu.getMenuImage());
             menuDto.setDescription(menu.getDescription());
+            menuDto.setSoldOut(stock.getQuantity() <= 0);
             
             return menuDto;
         }
