@@ -265,9 +265,7 @@ public class OrderServiceImpl implements OrderService {
 					.orElseThrow(() -> new NoSuchElementException("해당 결제 정보를 찾을 수 없습니다."));
 			
 			// 환불로 수정(code: 99)
-			if (nowOrder.getState() == 1) {
-				nowOrder.setState(99);
-			}
+			nowOrder.setState(99);
 			
 			// 수정된 정보 db에 저장
 			this.orderRepository.save(nowOrder);
