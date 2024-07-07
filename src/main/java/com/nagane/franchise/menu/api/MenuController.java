@@ -1,16 +1,26 @@
 package com.nagane.franchise.menu.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +50,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 
 /**
  * @author nsr, (doc) jy
@@ -217,6 +228,8 @@ public class MenuController {
 		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
 	}
 
+	
+
 	/**
 	 * 메뉴 등록
 	 * @param MenuCreateDto
@@ -231,9 +244,7 @@ public class MenuController {
 	    })
 	@PostMapping("/admin/menu")
 	public ResponseEntity<? extends BaseResponseBody> createMenu(
-			@RequestBody MenuCreateDto menuCreateDto) {
-
-		System.out.println("메뉴 : " + menuCreateDto.toString());
+			@ModelAttribute  MenuCreateDto menuCreateDto){
 		// 신규 관리자 계정 생성
 		try {
 			this.menuService.createMenu(menuCreateDto);
@@ -245,6 +256,7 @@ public class MenuController {
 		}
 		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
 	}
+	    
 
 	/**
 	 * 메뉴 수정
@@ -260,8 +272,8 @@ public class MenuController {
 	    })
 	@PutMapping("/admin/menu")
 	public ResponseEntity<? extends BaseResponseBody> updateMenu(
-			@RequestBody MenuUpdateDto menuUpdateDto){
-
+			@ModelAttribute MenuUpdateDto menuUpdateDto){
+		
 		// 메뉴 수정
 		try {
 			this.menuService.updateMenu(menuUpdateDto);
@@ -359,30 +371,34 @@ public class MenuController {
     
 	
 
-    /**
-     * 특정 카테고리의 메뉴 목록 조회
-     * @param Long 카테고리 번호
-     * @return List<MenuListDto>
-     */
-	@Operation(summary = "특정 카테고리의 메뉴 목록 조회", description = "(관리자) 관리자가 선택한 카테고리에 속한 메뉴 목록을 조회할 수 있게 하는 api입니다.")
+	/**
+	 * 특정 카테고리의 메뉴 목록 조회
+	 *
+	 * @param categoryNo 카테고리 번호
+	 * @return 메뉴 목록 응답
+	 */
+	@Operation(summary = "특정 카테고리의 메뉴 목록 조회", description = "관리자가 선택한 카테고리에 속한 메뉴 목록을 조회할 수 있는 API입니다.")
 	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "200", description = "OK", 
-	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
-	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
-        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
-	    })
-    @GetMapping("/admin/menuList")
-    public ResponseEntity<? extends BaseResponseBody> getMenuList(@RequestParam Long categoryNo) {
-        try {
-            List<MenuListDto> menuList = this.menuService.getMenuList(categoryNo);
-            data = new HashMap<>();
-            data.put("menuList", menuList);
-            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "메뉴 목록을 성공적으로 조회했습니다.", data);
-        } catch (Exception e) {
-        	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "메뉴 목록 조회에 실패했습니다.");
-        }
-        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
-    }
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR",
+	                content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+	})
+	@GetMapping("/admin/menuList/{categoryNo}")
+	public ResponseEntity<? extends BaseResponseBody> getMenuList(@PathVariable Long categoryNo) {
+	    try {
+	        List<MenuListDto> menuList = this.menuService.getMenuList(categoryNo);
+	        Map<String, Object> data = new HashMap<>();
+	        data.put("menuList", menuList);
+	        SuccessResponseBody responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "메뉴 목록을 성공적으로 조회했습니다.", data);
+	        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+	    } catch (Exception e) {
+	        // 예외 발생 시 처리
+	        e.printStackTrace();
+	        ErrorResponseBody responseBody = ErrorResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "메뉴 목록 조회에 실패했습니다.");
+	        return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+	    }
+	}
     
     
     /**
@@ -409,4 +425,7 @@ public class MenuController {
         }
     	return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
     }
+	
+	
+	    
 }
