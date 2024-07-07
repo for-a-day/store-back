@@ -57,30 +57,30 @@ public class StockController {
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
 
-	/**
-	 * 재고 등록
-	 * @param StockCreateDto
-	 * @return String
-	 */
-	@Operation(summary = "재고 등록", description = "(가맹점) 재고를 신규로 등록하는 api입니다.")
-	@ApiResponses(value = {
-	        @ApiResponse(responseCode = "200", description = "OK", 
-	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
-	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
-        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
-	    })
-	@PostMapping("/stock")
-	public ResponseEntity<? extends BaseResponseBody> createStock(
-			@RequestBody StockCreateDto stockCreateDto) {
-		try {
-            this.stockService.createStock(stockCreateDto);
-            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "재고가 성공적으로 등록되었습니다.");
-        } catch (Exception e) {
-        	System.out.println(e.getMessage());
-        	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "재고 등록에 실패했습니다.");
-        }
-		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
-	}
+//	/**
+//	 * 재고 등록
+//	 * @param StockCreateDto
+//	 * @return String
+//	 */
+//	@Operation(summary = "재고 등록", description = "(가맹점) 재고를 신규로 등록하는 api입니다.")
+//	@ApiResponses(value = {
+//	        @ApiResponse(responseCode = "200", description = "OK", 
+//	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+//	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
+//        	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
+//	    })
+//	@PostMapping("/stock")
+//	public ResponseEntity<? extends BaseResponseBody> createStock(
+//			@RequestBody StockCreateDto stockCreateDto) {
+//		try {
+//            this.stockService.createStock(stockCreateDto);
+//            responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "재고가 성공적으로 등록되었습니다.");
+//        } catch (Exception e) {
+//        	System.out.println(e.getMessage());
+//        	responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "재고 등록에 실패했습니다.");
+//        }
+//		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+//	}
 	
 	/**
 	 * 재고 수정
