@@ -23,4 +23,5 @@ public class MenuListDto {
 	/* 이미지 */
 	private String menuImage;
 	
+	private byte[] imageByte;
 }
