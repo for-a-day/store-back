@@ -1,5 +1,7 @@
 package com.nagane.franchise.menu.dto.menu;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,5 +43,7 @@ public class MenuUpdateDto {
 
 	/* 카테고리 번호(fk) */
 	private Long categoryNo;
+
+    private MultipartFile file;
 	
 }

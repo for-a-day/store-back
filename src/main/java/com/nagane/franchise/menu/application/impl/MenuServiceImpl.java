@@ -1,9 +1,17 @@
 package com.nagane.franchise.menu.application.impl;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.menu.application.MenuService;
@@ -48,6 +56,27 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public Long createMenu(MenuCreateDto menuCreateDto) {
 		System.out.println(menuCreateDto.toString());
+		
+		try {
+			
+			if(menuCreateDto.getFile() != null) {
+				// 파일명 생성
+				String fileName = UUID.randomUUID().toString() + "_" + menuCreateDto.getFile().getOriginalFilename();
+				menuCreateDto.setMenuImage(fileName);
+				// 저장 경로 설정
+				File uploadDir = new File("C:\\menuImages");
+				if (!uploadDir.exists()) {
+					uploadDir.mkdir();
+				}
+				
+				// 파일 저장
+				menuCreateDto.getFile().transferTo(new File(uploadDir, fileName));
+			}
+		}
+		catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+
 		 
 		// 메뉴 코드 중복 확인
 		 Optional<Menu> existingMenu = menuRepository.findByMenuId(menuCreateDto.getMenuId());
@@ -82,14 +111,14 @@ public class MenuServiceImpl implements MenuService {
 
 	/**
 	 * 카테고리별 메뉴 목록 조회
-	 * @param Long 카테고리 No
-	 * @return List<MenuListDto> 조회된 Menu 목록
+	 *
+	 * @param categoryNo 카테고리 번호
+	 * @return 조회된 Menu 목록
 	 */
 	@Override
 	public List<MenuListDto> getMenuList(Long categoryNo) {
-		System.out.println("categoryNo : " + categoryNo);
 	    List<Menu> menuList = menuRepository.findByCategory_CategoryNo(categoryNo);
-	    System.out.println(menuList.toString()); 	
+
 	    // Menu를 MenuDto로 변환
 	    List<MenuListDto> menuDtoList = menuList.stream()
 	            .map(menu -> {
@@ -97,6 +126,23 @@ public class MenuServiceImpl implements MenuService {
 	                menuDto.setMenuNo(menu.getMenuNo());
 	                menuDto.setMenuName(menu.getMenuName());
 	                menuDto.setMenuImage(menu.getMenuImage());
+
+	                try {
+	                    if (menu.getMenuImage() != null) {
+	                        Path imagePath = Paths.get("C:\\menuImages", menu.getMenuImage());
+	                        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+	                        // HTTP 응답 헤더 설정
+	                        HttpHeaders headers = new HttpHeaders();
+	                        headers.setContentType(MediaType.IMAGE_JPEG); // 이미지 타입에 따라 적절히 설정
+	                        menuDto.setImageByte(imageBytes);
+	                    }
+	                } catch (IOException e) {
+	                    // 파일 읽기 오류 처리
+	                    System.out.println("Failed to read image file: " + e.getMessage());
+	                    menuDto.setImageByte(new byte[0]); // 빈 바이트 배열 설정
+	                }
+
 	                return menuDto;
 	            })
 	            .collect(Collectors.toList());
@@ -152,11 +198,42 @@ public class MenuServiceImpl implements MenuService {
 		if(menuUpdateDto.getState() == 1) {
 			category.setState(1);	
 		}
+		
+		if(menuUpdateDto.getFile() != null) {
+			try {
+				if(menu.getMenuImage() != null) {
+					File file =new File("C:\\menuImages",  menu.getMenuImage());
+		            if (file.delete()) {
+		                System.out.println("파일 삭제 성공: " + menu.getMenuImage());
+		            } else {
+		                System.out.println("파일 삭제 실패: " + menu.getMenuImage());
+		            }
+				}
+				
+			  // 파일명 생성
+				String fileName = UUID.randomUUID().toString() + "_" + menuUpdateDto.getFile().getOriginalFilename();
+				menuUpdateDto.setMenuImage(fileName);
+				System.out.println(fileName);
+				// 저장 경로 설정
+				File uploadDir = new File("C:\\menuImages");
+				if (!uploadDir.exists()) {
+					uploadDir.mkdir();
+				}
+				
+				// 파일 저장
+				menuUpdateDto.getFile().transferTo(new File(uploadDir, fileName));			
+			}catch(IOException e) {
+				System.out.println(e.getMessage());
+			}
+	
+		}
+		
 			
 		// 4. 메뉴 정보 업데이트
 		menu.setMenuName(menuUpdateDto.getMenuName());
 		menu.setPrice(menuUpdateDto.getPrice());
-		menu.setMenuImage(menuUpdateDto.getMenuImage());
+		if(menuUpdateDto.getMenuImage() != null && menuUpdateDto.getMenuImage()!= "")
+			menu.setMenuImage(menuUpdateDto.getMenuImage());
 		menu.setDescription(menuUpdateDto.getDescription());
 		menu.setCategory(category);
 		menu.setSupplyPrice(menuUpdateDto.getSupplyPrice());

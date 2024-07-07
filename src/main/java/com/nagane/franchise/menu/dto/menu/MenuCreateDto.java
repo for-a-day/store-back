@@ -1,5 +1,7 @@
 package com.nagane.franchise.menu.dto.menu;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +32,8 @@ public class MenuCreateDto {
 	
 	/* 이미지 */
 	private String menuImage;
+
+    private MultipartFile file;
 	
 	/* 설명 */
 	private String description;
