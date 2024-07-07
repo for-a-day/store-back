@@ -35,7 +35,7 @@ public interface TableService {
 	void clearTable(Long tableNo);
 	
 	/** 선택한 테이블 주문 리스트 조회 */
-	TableOrderDetailDto getTableOrderList(String tableCode);
+	TableOrderDetailDto getTableOrderList(Long tableNo);
 	
 	/** 테이블 오더 로그인 */
 	void loginTable(TableLoginDto tableLoginDto);

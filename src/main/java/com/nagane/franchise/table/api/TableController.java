@@ -202,11 +202,11 @@ public class TableController {
 	    })
 	@GetMapping("/table/order")
     public ResponseEntity<? extends BaseResponseBody> getTableOrderList(
-    		@RequestParam String tableCode) {
+    		@RequestParam Long tableNo) {
 
 	    try {
 	        // 테이블 정보 리스트 가져오는 서비스 메서드 호출
-	    	TableOrderDetailDto tableOrderDetail = this.tableService.getTableOrderList(tableCode);
+	    	TableOrderDetailDto tableOrderDetail = this.tableService.getTableOrderList(tableNo);
 	        // 맵에 데이터 삽입
             data = new HashMap<>();
             data.put("tableOrderDetail", tableOrderDetail);

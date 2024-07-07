@@ -222,11 +222,11 @@ public class TableServiceImpl implements TableService {
 	
 	/** 선택한 테이블 주문 리스트 조회 */
 	@Override
-	public TableOrderDetailDto getTableOrderList(String tableCode) {
+	public TableOrderDetailDto getTableOrderList(Long tableNo) {
 		try {
 			// 해당 테이블 정보 받아오기
 			// 지정한 table 데이터 불러오기
-			StoreTable nowTable = this.tableRepository.findByTableCode(tableCode)
+			StoreTable nowTable = this.tableRepository.findById(tableNo)
 					.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 			
 			// 현재 가용한 주문만 불러옴
