@@ -24,4 +24,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 	/* 영업중인 가맹점 리스트 반환 */
     @Query("SELECT s FROM Store s WHERE s.state = 1")
     List<Store> findActiveStores();
+    
+    Optional<Store> findByRprName(String rprName);
 }

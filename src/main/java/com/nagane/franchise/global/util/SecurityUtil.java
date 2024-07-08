@@ -13,12 +13,6 @@ import com.nagane.franchise.store.domain.Admin;
 @Component
 public class SecurityUtil {
 
-    private static AdminRepository adminRepository;
-
-    @Autowired
-    public SecurityUtil(AdminRepository adminRepository) {
-        SecurityUtil.adminRepository = adminRepository;
-    }
 
     public static CustomUserDetails getCurrentUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -28,18 +22,6 @@ public class SecurityUtil {
         return null;
     }
 
-    public static Admin getCurrentAdmin() {
-        CustomUserDetails userDetails = getCurrentUserDetails();
-        if (userDetails != null) {
-            String adminID = userDetails.getAdminId();
-            return adminRepository.findByAdminId(adminID).orElse(null);
-        }
-        return null;
-    }
-
-    public static String getCurrentUserId() {
-    	Admin admin = getCurrentAdmin();
-        return (admin != null) ? admin.getAdminId() : null;
-    }
+    
 
 }

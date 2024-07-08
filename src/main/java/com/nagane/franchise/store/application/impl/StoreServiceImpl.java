@@ -1,22 +1,25 @@
 package com.nagane.franchise.store.application.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.nagane.franchise.order.dao.OrderRepository;
-import com.nagane.franchise.order.domain.Order;
+import com.nagane.franchise.global.config.JwtUtil;
 import com.nagane.franchise.store.application.StoreService;
+import com.nagane.franchise.store.dao.AdminRepository;
 import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
-import com.nagane.franchise.store.dto.store.StoreLoginDto;
 import com.nagane.franchise.store.dto.store.StoreResponseDto;
 import com.nagane.franchise.store.dto.store.StoreUpdateDto;
 import com.nagane.franchise.util.exceptions.InsufficientStockException;
@@ -33,9 +36,17 @@ public class StoreServiceImpl implements StoreService {
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(StoreServiceImpl.class);
 	
-	// 필요 레포 연결, 의존성 주입(di)
-	@Autowired
-	StoreRepository storeRepository;
+	// 필요 레포 연결, 의존성 주입(di)	
+	private final StoreRepository storeRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtUtil jwtUtil;
+	
+    @Autowired
+    public StoreServiceImpl(StoreRepository storeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {
+        this.storeRepository = storeRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
 	
 	/** 지점 목록 조회 */
 	@Override
@@ -74,7 +85,6 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public void createStore(StoreCreateDto storeCreateDto) {
 		LOGGER.info("[createStore] input storeCreateDto : {}", storeCreateDto);
-		
 		// 생성용 Store 엔티티 객체 생성
 		Store createStore = Store.builder()
 				.storeName(storeCreateDto.getStoreName())
@@ -136,25 +146,45 @@ public class StoreServiceImpl implements StoreService {
 
 	/** 가맹점 로그인 */
 	@Override
-	public StoreResponseDto loginStore(StoreLoginDto storeLoginDto) throws NoSuchElementException {
-		LOGGER.info("[loginStore] input storeLoginDto : {}", storeLoginDto);
+	public Map<String, Object> loginStore(String rprName, String StoreCode){
+		LOGGER.info("[loginStore] input rprName : {}", rprName);
 		
 		// 해당 가맹점 코드, 대표자명으로 db 조회하여 해당 데이터 있는지 검증
 		// 없을 시, NoSuchElementException throw
-		Store nowStore = this.storeRepository
-				.findByStoreCodeAndRprName(storeLoginDto.getStoreCode(), storeLoginDto.getRprName())
-				.orElseThrow(() -> new NoSuchElementException("지점을 찾을 수 없습니다."));
-	
-		// 지점(pos) 측에서 필요한 정보 dto에 담아줌
-		StoreResponseDto storeResponseDto = StoreResponseDto.builder()
-				.storeNo(nowStore.getStoreNo())
-				.storeName(nowStore.getStoreName())
-				.rprName(nowStore.getRprName())
-				.warningCount(nowStore.getWarningCount())
-				.storeCode(nowStore.getStoreCode())
-				.build();
+		Optional<Store> storeOptional = this.storeRepository.findByRprName(rprName);
 		
-		return storeResponseDto;
+		if (storeOptional.isPresent()) {
+            Store store = storeOptional.get();
+            if (StoreCode.equals(store.getStoreCode())) {
+            	System.out.println("일치함");
+                Map<String, Object> claims = new HashMap<>();
+                claims.put("sub", store.getRprName().toString());
+
+                String accessToken = jwtUtil.generateAccessToken(claims);
+                String refreshToken = jwtUtil.generateRefreshToken(claims);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("accessToken", accessToken);
+                response.put("refreshToken", refreshToken);
+                response.put("store", store);
+                return response;
+            }
+            System.out.println("일치하지 않음");
+        }
+
+        return null;
+		
+//	
+//		// 지점(pos) 측에서 필요한 정보 dto에 담아줌
+//		StoreResponseDto storeResponseDto = StoreResponseDto.builder()
+//				.storeNo(nowStore.getStoreNo())
+//				.storeName(nowStore.getStoreName())
+//				.rprName(nowStore.getRprName())
+//				.warningCount(nowStore.getWarningCount())
+//				.storeCode(nowStore.getStoreCode())
+//				.build();
+//		
+//		return storeResponseDto;
 	
 	}
 	

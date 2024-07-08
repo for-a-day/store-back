@@ -1,12 +1,6 @@
 package com.nagane.franchise.global.config;
 
 import java.io.IOException;
-import com.nagane.franchise.global.config.JwtUtil;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,20 +11,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.nagane.franchise.store.application.impl.AdminServiceImpl;
+import com.nagane.franchise.store.application.impl.StoreServiceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final AdminServiceImpl adminLoginService;
 
     @Autowired
-    public AuthenticationFilter(JwtUtil jwtUtil, AdminServiceImpl adminLoginService) {
+    public AuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.adminLoginService = adminLoginService;
     }
 
     @Override
@@ -43,10 +40,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
             try {
                 Claims claims = jwtUtil.parseToken(token);
-                String adminId = claims.getSubject();
+                String id = claims.getSubject();
 
-                CustomUserDetails userDetails = new CustomUserDetails(adminId.toString(), "",
-                        AuthorityUtils.NO_AUTHORITIES, adminId);
+                CustomUserDetails userDetails = new CustomUserDetails(id.toString(), "",
+                        AuthorityUtils.NO_AUTHORITIES, id);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
