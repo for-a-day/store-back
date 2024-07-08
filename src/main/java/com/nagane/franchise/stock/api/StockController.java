@@ -171,7 +171,7 @@ public class StockController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-	@PostMapping("/purchaseOrder")
+	@PostMapping("/purchaseorder")
 	public ResponseEntity<? extends BaseResponseBody> createPurchaseOrder(
 			@RequestBody PurchaseOrderCreateDto purchaseOrderCreateDto) {
 		try {
@@ -196,7 +196,7 @@ public class StockController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-	@PutMapping("/purchaseOrder")
+	@PutMapping("/purchaseorder")
 	public ResponseEntity<? extends BaseResponseBody> updatePurchaseOrder(
 			@RequestBody PurchaseOrderUpdateDto purchaseOrderUpdateDto) {
 		try {
@@ -249,7 +249,7 @@ public class StockController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-	@DeleteMapping("/purchaseOrder")
+	@DeleteMapping("/purchaseorder")
 	public ResponseEntity<? extends BaseResponseBody> deletePurchaseOrder(
 			@RequestParam Long purchaseOrderNo){
 		try {
