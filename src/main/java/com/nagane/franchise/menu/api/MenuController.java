@@ -314,7 +314,7 @@ public class MenuController {
 
     
     /**
-     * 특정 카테고리의 판매중인 메뉴 목록 조회
+     * TO용 특정 카테고리의 판매중인 메뉴 목록 조회
      * @param Long 카테고리 번호
      * @return List<MenuListForToDto>
      */
@@ -325,7 +325,7 @@ public class MenuController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-    @GetMapping("/to/menuList")
+    @GetMapping("/to/menu/list")
     public ResponseEntity<? extends BaseResponseBody> getAvailableMenuList(
     		@RequestParam String storeCode, @RequestParam Long categoryNo) {
         try {
@@ -384,7 +384,7 @@ public class MenuController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR",
 	                content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	})
-	@GetMapping("/admin/menuList/{categoryNo}")
+	@GetMapping("/admin/menu/list/{categoryNo}")
 	public ResponseEntity<? extends BaseResponseBody> getMenuList(@PathVariable Long categoryNo) {
 	    try {
 	        List<MenuListDto> menuList = this.menuService.getMenuList(categoryNo);
