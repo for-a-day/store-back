@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -126,6 +127,7 @@ public class MenuServiceImpl implements MenuService {
 	                menuDto.setMenuNo(menu.getMenuNo());
 	                menuDto.setMenuName(menu.getMenuName());
 	                menuDto.setMenuImage(menu.getMenuImage());
+	                menuDto.setState(menu.getState());
 
 	                try {
 	                    if (menu.getMenuImage() != null) {
@@ -147,6 +149,8 @@ public class MenuServiceImpl implements MenuService {
 	            })
 	            .collect(Collectors.toList());
 
+	    menuDtoList.sort((a, b) -> Integer.compare(b.getState(), a.getState()));
+        
 	    return menuDtoList;
 	}
 
@@ -294,6 +298,17 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	@Override
 	public boolean deleteMenu(Long menuNo) {
+		Menu menu = menuRepository.findById(menuNo)
+				 .orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다."));
+	
+		if(menu.getMenuImage() != null) {
+			File file =new File("C:\\menuImages",  menu.getMenuImage());
+			if (file.delete()) {
+			    System.out.println("파일 삭제 성공: " + menu.getMenuImage());
+			} else {
+			    System.out.println("파일 삭제 실패: " + menu.getMenuImage());
+			}
+		}	
 		
 		menuRepository.deleteById(menuNo);
 		stockRepository.deleteByMenuNo(menuNo);
@@ -334,9 +349,28 @@ public class MenuServiceImpl implements MenuService {
                     menuDto.setPrice(menu.getPrice());
                     menuDto.setSoldOut(stock.getQuantity() <= 0);
 
+	                try {
+	                    if (menu.getMenuImage() != null) {
+	                        Path imagePath = Paths.get("C:\\menuImages", menu.getMenuImage());
+	                        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+	                        // HTTP 응답 헤더 설정
+	                        HttpHeaders headers = new HttpHeaders();
+	                        headers.setContentType(MediaType.IMAGE_JPEG); // 이미지 타입에 따라 적절히 설정
+	                        menuDto.setImageByte(imageBytes);
+	                    }
+	                } catch (IOException e) {
+	                    // 파일 읽기 오류 처리
+	                    System.out.println("Failed to read image file: " + e.getMessage());
+	                    menuDto.setImageByte(new byte[0]); // 빈 바이트 배열 설정
+	                }
+
+	                
                     return menuDto;
                 }) // 메소드 참조를 이용한 변환
-                .collect(Collectors.toList());			
+                .collect(Collectors.toList());	
+        
+        menuDtoList.sort((a, b) -> Boolean.compare(a.isSoldOut(), b.isSoldOut()));
 
         return menuDtoList;
 	}
@@ -364,6 +398,24 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuImage(menu.getMenuImage());
             menuDto.setDescription(menu.getDescription());
             menuDto.setSoldOut(stock.getQuantity() <= 0);
+            
+
+            try {
+                if (menu.getMenuImage() != null) {
+                    Path imagePath = Paths.get("C:\\menuImages", menu.getMenuImage());
+                    byte[] imageBytes = Files.readAllBytes(imagePath);
+
+                    // HTTP 응답 헤더 설정
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.IMAGE_JPEG); // 이미지 타입에 따라 적절히 설정
+                    menuDto.setImageByte(imageBytes);
+                }
+            } catch (IOException e) {
+                // 파일 읽기 오류 처리
+                System.out.println("Failed to read image file: " + e.getMessage());
+                menuDto.setImageByte(new byte[0]); // 빈 바이트 배열 설정
+            }
+
             
             return menuDto;
         }
