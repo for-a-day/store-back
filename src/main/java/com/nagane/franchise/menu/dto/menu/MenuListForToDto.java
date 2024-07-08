@@ -2,6 +2,7 @@ package com.nagane.franchise.menu.dto.menu;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 /**
  * @author nsr
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class MenuListForToDto {
 
 	/* 메뉴 번호(pk) */
@@ -25,4 +27,8 @@ public class MenuListForToDto {
 
 	/* 품절상태 */
 	private boolean soldOut;
+	
+	/* 이미지 바이트 배열 */
+	private byte[] imageByte;
+	
 }

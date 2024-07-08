@@ -31,5 +31,8 @@ public class MenuForToDto {
 	
 	/* 품절상태 */
 	private boolean soldOut;
+	
+	/* 이미지 바이트 배열 */
+	private byte[] imageByte;
 
 }
