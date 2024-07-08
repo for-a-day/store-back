@@ -15,5 +15,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	
 	/* 관리자 아이디와 비밀번호로 해당하는 레코드 반환 */
 	Optional<Admin> findByAdminIdAndAdminPassword(String adminId, String adminPassword);
+	/* 관리자 아이디와 비밀번호로 해당하는 레코드 반환 */
+	Optional<Admin> findByAdminId(String adminId);
 	
 }

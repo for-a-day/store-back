@@ -1,6 +1,7 @@
 package com.nagane.franchise.store.application;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nagane.franchise.store.dto.store.StoreCreateDto;
 import com.nagane.franchise.store.dto.store.StoreDto;
@@ -29,6 +30,6 @@ public interface StoreService {
 	void deleteStore(Long storeNo);
 	
 	/** 가맹점 로그인 */
-	StoreResponseDto loginStore(StoreLoginDto storeLoginDto);
+	 Map<String, Object> loginStore(String rprName, String StoreCode);
 	
 }

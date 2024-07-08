@@ -1,13 +1,17 @@
 package com.nagane.franchise.store.application.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nagane.franchise.global.config.JwtUtil;
 import com.nagane.franchise.store.application.AdminService;
 import com.nagane.franchise.store.dao.AdminRepository;
 import com.nagane.franchise.store.domain.Admin;
@@ -21,24 +25,50 @@ import com.nagane.franchise.store.dto.admin.AdminCreateDto;
  * **/
 @Service
 public class AdminServiceImpl implements AdminService {
+
+	// 필요 레포지토리 연결, 의존성 주입(di)
+	private final AdminRepository adminRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtUtil jwtUtil;
 	
+    @Autowired
+    public AdminServiceImpl(AdminRepository adminRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {
+        this.adminRepository = adminRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+    
+    
 	// 로그 설정
 	private final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 	
-	// 필요 레포지토리 연결, 의존성 주입(di)
-	@Autowired
-	AdminRepository adminRepository;
 
 	/** 관리자 로그인 */
 	@Override
-	public void loginAdmin(AdminCreateDto adminLoginDto) throws NoSuchElementException {
-		LOGGER.info("[loginAdmin] input adminDto : {}", adminLoginDto);
-		
-		// 해당 admin 존재하는지 검증
-		Optional<Admin> optionalAdmin = this.adminRepository
-				.findByAdminIdAndAdminPassword(adminLoginDto.getAdminId(), adminLoginDto.getAdminPassword());
-		
-		optionalAdmin.orElseThrow(() -> new NoSuchElementException("아이디 또는 비밀번호가 일치하지 않습니다."));
+	public Map<String, Object> loginAdmin(String adminId, String adminPassword) {
+		   Optional<Admin> adminOptional = adminRepository.findByAdminId(adminId);
+
+	        if (adminOptional.isPresent()) {
+	            Admin admin = adminOptional.get();
+	            if (bCryptPasswordEncoder.matches(adminPassword, admin.getAdminPassword())) {
+	            	System.out.println("일치함");
+	                Map<String, Object> claims = new HashMap<>();
+	                claims.put("sub", admin.getAdminId().toString());
+
+	                String accessToken = jwtUtil.generateAccessToken(claims);
+	                String refreshToken = jwtUtil.generateRefreshToken(claims);
+
+	                Map<String, Object> response = new HashMap<>();
+	                response.put("accessToken", accessToken);
+	                response.put("refreshToken", refreshToken);
+	                response.put("admin", admin);
+	                return response;
+	            }
+	            System.out.println("일치하지 않음");
+	        }
+
+	        return null;
+	        
 	}
 
 	/** 관리자 생성 */
@@ -46,10 +76,12 @@ public class AdminServiceImpl implements AdminService {
 	public void createAdmin(AdminCreateDto adminCreateDto) {
 		LOGGER.info("[createAdmin] input adminDto : {}", adminCreateDto);
 		
+		String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateDto.getAdminPassword());
+		
 		// 새로 등록할 admin 계정 엔티티 객체 생성
 		Admin createAdmin = Admin.builder()
 				.adminId(adminCreateDto.getAdminId())
-				.adminPassword(adminCreateDto.getAdminPassword())
+				.adminPassword(encryptedPassword)
 				.build();
 		
 		// admin db에 신규 등록
