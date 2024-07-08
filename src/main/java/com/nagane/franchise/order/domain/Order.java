@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.domain.StoreTable;
+import com.nagane.franchise.util.enums.OrderCase;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -67,6 +68,11 @@ public class Order {
 	/* 업데이트 날짜 */
 	@Column(name = "updated_date", nullable = false)
 	private LocalDateTime updatedDate;
+	
+	/* 픽업 여부(DINE_IN 1, TAKEOUT 0) */
+	@Column(name="order_case", nullable = false)
+	@Builder.Default
+	private Integer orderCase = 1;
 	
 	/* 점포 번호(fk) */
 	 @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
