@@ -90,21 +90,22 @@ public class AdminController {
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
 	@PostMapping("/admin/login")
-	public ResponseEntity<? extends BaseResponseBody> loginAdmin(
-			@RequestBody AdminCreateDto adminLoginDto) {
-	    
-		// 로그인
-		try {
-			this.adminService.loginAdmin(adminLoginDto);
-			responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "로그인에 성공했습니다.");
-		// 예외 발생 시, 로그인 x
-		} catch (NoSuchElementException se) {
-			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
-		} catch (Exception e) {
-			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
-		}
-		
-		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+	public ResponseEntity<Map<String, Object>> loginAdmin(
+			@RequestBody Map<String, String> loginData) {
+			String adminId = loginData.get("adminId");
+	        String adminPassword = loginData.get("adminPassword");
+	        
+	        System.out.println(adminId);
+	        
+			Map<String, Object> result = this.adminService.loginAdmin(adminId, adminPassword);
+
+	        if (result == null) {
+		        System.out.println("로그인 실패");
+	            return ResponseEntity.badRequest().body(null); // 로그인 실패 시 400 에러 반환
+	        }
+
+	        return ResponseEntity.ok(result); // 로그인 성공 시 JWT 토큰 및 사용자 정보 반환
+	        
 	}
 	
 }

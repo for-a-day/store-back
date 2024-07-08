@@ -192,21 +192,18 @@ public class StoreController {
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
 	@PostMapping("/login")
-	public ResponseEntity<? extends BaseResponseBody> loginStore(
-			@RequestBody StoreLoginDto storeLoginDto) {
-		
-		try {
-			StoreResponseDto storeResponseDto = this.storeService.loginStore(storeLoginDto);
-            data = new HashMap<>();
-            data.put("storeInfo", storeResponseDto);
-            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "로그인 되었습니다.", data);
-            // 예외 발생 시 오류 처리
- 		} catch (NoSuchElementException se) {
- 			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
- 		} catch (Exception e) {
- 			responseBody = BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "에러가 발생했습니다.");
-        }
-		return ResponseEntity.status(responseBody.getStatusCode()).body(responseBody);
+	public ResponseEntity<Map<String, Object>> loginStore(
+			@RequestBody Map<String, String> loginData) {
+		String rprName = loginData.get("rprName");
+        String storeCode = loginData.get("storeCode");
+			Map<String, Object> result = this.storeService.loginStore(rprName, storeCode);
+			
+			if (result == null) {
+		        System.out.println("로그인 실패");
+	            return ResponseEntity.badRequest().body(null); // 로그인 실패 시 400 에러 반환
+	        }
+
+	        return ResponseEntity.ok(result); // 로그인 성공 시 JWT 토큰 및 사용자 정보 반환
 	}
 	
 }

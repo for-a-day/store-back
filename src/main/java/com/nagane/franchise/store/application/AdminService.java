@@ -1,5 +1,7 @@
 package com.nagane.franchise.store.application;
 
+import java.util.Map;
+
 import com.nagane.franchise.store.dto.admin.AdminCreateDto;
 
 /**
@@ -11,7 +13,7 @@ import com.nagane.franchise.store.dto.admin.AdminCreateDto;
 public interface AdminService {
 	
 	/** 관리자 로그인 */
-	void loginAdmin(AdminCreateDto adminLoginDto);
+	Map<String, Object> loginAdmin(String adminId, String adminPassword);
 	
 	/** 관리자 생성 */
 	void createAdmin(AdminCreateDto adminCreateDto);

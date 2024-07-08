@@ -271,7 +271,7 @@ public class OrderController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-	@PostMapping("/order")
+	@PostMapping("/to/order")
     public ResponseEntity<? extends BaseResponseBody> createOrder(
     		@RequestBody OrderCreateDto orderCreateDto) {
         
