@@ -7,15 +7,15 @@ import org.springframework.security.core.userdetails.User;
 
 public class CustomUserDetails extends User {
 
-    private final String adminId;
+    private final String id;
 
     public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities,
     		String adminId) {
         super(username, password, authorities);
-        this.adminId = adminId;
+        this.id = adminId;
     }
 
-    public String getAdminId() {
-        return adminId;
+    public String getId() {
+        return id;
     }
 }

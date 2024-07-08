@@ -25,10 +25,10 @@ public class AuthController {
         String refreshToken = request.get("refreshToken");
         try {
             Claims claims = jwtUtil.parseToken(refreshToken);
-            String employeeId = claims.getSubject();
+            String id = claims.getSubject();
 
             Map<String, Object> newClaims = new HashMap<>();
-            newClaims.put("sub", employeeId);
+            newClaims.put("sub", id);
 
             String newAccessToken = jwtUtil.generateAccessToken(newClaims);
 

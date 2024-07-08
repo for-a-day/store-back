@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
 //                		.anyRequest().permitAll()) // 모든 요청을 허용
-                        .requestMatchers("/*/login","/to/*").permitAll()
+                        .requestMatchers("/*/login","/to/*", "/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
