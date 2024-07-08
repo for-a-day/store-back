@@ -374,6 +374,7 @@ public class OrderServiceImpl implements OrderService {
                 }
     	        
         	});
+  
         	
 	        // 주문 엔티티 신규 생성
 	        Order createOrder = Order.builder()
@@ -382,6 +383,21 @@ public class OrderServiceImpl implements OrderService {
 	        		.store(nowStore)
 	        		.table(nowTable)
 	        		.build();
+	        
+	        
+	      	
+        	// 케이스따라 정보 수정
+			switch (orderCreateDto.getOrderCase()) {
+				// 매장 취식일시
+				case DINE_IN:
+					createOrder.setOrderCase(1);
+					break;
+				// 포장 주문일시
+				case TAKEOUT:
+					createOrder.setOrderCase(2);
+					break;
+			}
+			
 	        
 	        // 주문 정보 db에 저장
 	        Order savedOrder = this.orderRepository.save(createOrder);
