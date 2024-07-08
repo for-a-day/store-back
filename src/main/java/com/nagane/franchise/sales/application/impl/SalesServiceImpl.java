@@ -53,6 +53,7 @@ public class SalesServiceImpl implements SalesService {
 	    
 		// 이번달 매출
 		Sales sales = salesRepository.findByStore_StoreNoAndYearAndMonth(storeNo, year, month);
+		
 		// 이번달 주문 건수
 		List<Order> thisMonthPaymentCnt = orderRepository.findByStateAndStoreNoAndOrderDateBetween(storeNo, startOfMonth, endOfMonth);
 		// 오늘 주문
@@ -64,7 +65,10 @@ public class SalesServiceImpl implements SalesService {
 		}
 		
 		SalesDetailDto salesDto = new SalesDetailDto();
-		salesDto.setThisMonthSalesCnt(sales.getMonthlySales());
+		if(sales != null) {
+			salesDto.setThisMonthSalesCnt(sales.getMonthlySales());			
+		}
+		else salesDto.setThisMonthSalesCnt(0l);
 		salesDto.setThisMonthPaymentCnt(thisMonthPaymentCnt.size());
 		salesDto.setTodayPaymentCnt(todayOrders.size());
 		salesDto.setTodaySalesCnt(todaySales);
