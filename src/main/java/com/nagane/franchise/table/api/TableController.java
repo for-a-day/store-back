@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -66,10 +67,16 @@ public class TableController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 목록 조회", description = "(가맹점) 가맹점 측에서 현재 테이블 목록 전체 조회 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 목록 조회", 
+			description = "(가맹점) 가맹점 측에서 현재 테이블 목록 전체 조회 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -103,10 +110,16 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 신규 등록", description = "(가맹점) 가맹점 측에서 현재 테이블 신규 등록 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 신규 등록", 
+			description = "(가맹점) 가맹점 측에서 현재 테이블 신규 등록 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -132,10 +145,16 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 수정", description = "(가맹점) 가맹점 측에서 현재 테이블 정보 수정 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 수정", 
+			description = "(가맹점) 가맹점 측에서 현재 테이블 정보 수정 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -161,10 +180,16 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 수정", description = "(가맹점) 가맹점 측에서 해당 테이블을 나가는 손님이 완전히 가게를 나갔을 해 사용하는 api입니다.")
+	@Operation(summary = "테이블 수정", 
+			description = "(가맹점) 가맹점 측에서 해당 테이블을 나가는 손님이 완전히 가게를 나갔을 해 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -191,10 +216,16 @@ public class TableController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "선택한 테이블 주문 리스트 조회", description = "(가맹점) 가맹점 측에서 지정된 테이블의 주문 상태를 자세히 확인할 수 있는 api입니다.")
+	@Operation(summary = "선택한 테이블 주문 리스트 조회", 
+			description = "(가맹점) 가맹점 측에서 지정된 테이블의 주문 상태를 자세히 확인할 수 있는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -228,12 +259,18 @@ public class TableController {
 	 * @param TableCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 삭제", description = "(가맹점) 가맹점 측에서 현재 테이블 삭제 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 삭제", 
+			description = "(가맹점) 가맹점 측에서 현재 테이블 삭제 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -261,7 +298,8 @@ public class TableController {
 	 * @param TableLoginDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 오더 로그인", description = "(테이블 오더) 테이블에서 새로 기기 (재)등록할 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 오더 로그인", 
+			description = "(테이블 오더) 테이블에서 새로 기기 (재)등록할 시 사용하는 api입니다.")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
@@ -291,9 +329,15 @@ public class TableController {
 	 * @param TableAdminDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 오더 관리자 모드 로그인", description = "(테이블 오더) 테이블에서 관리자모드로 로그인할 시 사용하는 api입니다.")
+	@Operation(summary = "테이블 오더 관리자 모드 로그인", 
+			description = "(테이블 오더) 테이블에서 관리자모드로 로그인할 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -320,9 +364,15 @@ public class TableController {
 	 * @param 
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "테이블 오더 비활성화 요청", description = "(테이블 오더) 해당 테이블 오더를 비활성으로 전환하는 api입니다.")
+	@Operation(summary = "테이블 오더 비활성화 요청", 
+			description = "(테이블 오더) 해당 테이블 오더를 비활성으로 전환하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 

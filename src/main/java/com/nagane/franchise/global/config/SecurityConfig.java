@@ -31,10 +31,20 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-//                		.anyRequest().permitAll()) // 모든 요청을 허용
+                		// .anyRequest().permitAll()) // 모든 요청을 허용
  
-                        .requestMatchers("/*/login","/to/**", "/login", "/admin").permitAll()
-                        .anyRequest().authenticated())
+                		.requestMatchers(
+                                "/swagger-ui/**",
+                                "/api-docs/**",
+                                "/api/authenticate",
+                                "/api/**",
+                                "/v3/api-docs/**",
+                                "/*/login",
+                                "/to/**",
+                                "/login",
+                                "/admin"
+                            ).permitAll()
+                            .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

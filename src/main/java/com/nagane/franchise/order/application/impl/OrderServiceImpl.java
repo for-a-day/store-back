@@ -348,99 +348,93 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDetailDto createOrder(OrderCreateDto orderCreateDto) {
 		LOGGER.info("[createOrder] input orderCreateDto : {}", orderCreateDto);
-		try {
-			// 해당 가맹점 받아오기
-	        Store nowStore = this.storeRepository.findByStoreCode(orderCreateDto.getStoreCode())
-	                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
-			
-	        // 해당 table 단일 조회
-	        StoreTable nowTable = this.tableRepository.findByTableCode(orderCreateDto.getTableCode())
-	        		.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		// 해당 가맹점 받아오기
+        Store nowStore = this.storeRepository.findByStoreCode(orderCreateDto.getStoreCode())
+                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
+		
+        // 해당 table 단일 조회
+        StoreTable nowTable = this.tableRepository.findByTableCode(orderCreateDto.getTableCode())
+        		.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+        
+        // 재고 상태 변경 위한 리스트, 만약 재고 부족할 시 바로 return
+        List<Stock> changeStockList = new ArrayList<>();
+        
+        // 주문 상세 정보 저장
+    	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
+    		// 해당 menu 단일 조회
+	        Stock nowStock = this.stockRepository.findByMenu_MenuNo(orderMenu.getMenuNo())
+	        		.orElseThrow(() -> new NoSuchElementException("해당 재고를 찾을 수 없습니다."));
+	        LOGGER.info("[createOrder] get orderMenu.getQuantity() : {}", orderMenu.getQuantity());
+	        if (nowStock.getQuantity() >= orderMenu.getQuantity()) {
+                nowStock.setQuantity(nowStock.getQuantity() - orderMenu.getQuantity());
+                changeStockList.add(nowStock);
+            } else {
+                throw new InsufficientStockException("재고가 부족합니다. 메뉴 번호: " + orderMenu.getMenuNo());
+            }
 	        
-	        // 재고 상태 변경 위한 리스트, 만약 재고 부족할 시 바로 return
-	        List<Stock> changeStockList = new ArrayList<>();
-	        
-	        // 주문 상세 정보 저장
-        	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
-        		// 해당 menu 단일 조회
-    	        Stock nowStock = this.stockRepository.findByMenu_MenuNo(orderMenu.getMenuNo())
-    	        		.orElseThrow(() -> new NoSuchElementException("해당 재고를 찾을 수 없습니다."));
-        		
-    	        if (nowStock.getQuantity() >= orderMenu.getQuantity()) {
-                    nowStock.setQuantity(nowStock.getQuantity() - orderMenu.getQuantity());
-                    changeStockList.add(nowStock);
-                } else {
-                    throw new InsufficientStockException("재고가 부족합니다. 메뉴 번호: " + orderMenu.getMenuNo());
-                }
-    	        
-        	});
-  
-        	
-	        // 주문 엔티티 신규 생성
-	        Order createOrder = Order.builder()
-	        		.amount(orderCreateDto.getAmount())
-	        		.paymentMethod(orderCreateDto.getPaymentMethod())
-	        		.store(nowStore)
-	        		.table(nowTable)
-	        		.build();
-	        
-	        
-	      	
-        	// 케이스따라 정보 수정
-			switch (orderCreateDto.getOrderCase()) {
-				// 매장 취식일시
-				case DINE_IN:
-					createOrder.setOrderCase(1);
-					break;
-				// 포장 주문일시
-				case TAKEOUT:
-					createOrder.setOrderCase(2);
-					break;
-			}
-			
-	        
-	        // 주문 정보 db에 저장
-	        Order savedOrder = this.orderRepository.save(createOrder);
-	        
-	        // 주문 상세 정보 저장
-        	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
-        		// 해당 menu 단일 조회
-    	        Menu nowMenu = this.menuRepository.findById(orderMenu.getMenuNo())
-    	        		.orElseThrow(() -> new NoSuchElementException("해당 메뉴를 찾을 수 없습니다."));
-        		
-        		OrderMenu createOrderMenu = OrderMenu.builder()
-        				.menu(nowMenu)
-        				.order(savedOrder)
-        				.quantity(orderMenu.getQuantity())
-        				.build();
-        		
-        		this.orderMenuRepository.save(createOrderMenu);
-        	});
-	        
-	        
-        	// 모두 다 통과하면, 재고 변경 사항 반영
-        	changeStockList.forEach(changeStock -> {
-        		this.stockRepository.save(changeStock);
-        	});
-        	
-        	OrderDetailDto nowOrder = OrderDetailDto.builder()
-        			.orderNo(savedOrder.getOrderNo())
-            		.amount(savedOrder.getAmount())
-            		.orderDate(savedOrder.getOrderDate())
-            		.state(savedOrder.getState())
-            		.paymentMethod(savedOrder.getPaymentMethod())
-            		.updatedDate(savedOrder.getUpdatedDate())
-            		.tableNo(savedOrder.getTable().getTableNo())
-            		.tableNumber(savedOrder.getTable().getTableNumber())
-            		.orderMenuList(orderCreateDto.getOrderMenuList())
-                    .build();
-        	
-        	return nowOrder;
-	       
-	    } catch (Exception e) {
-	        LOGGER.error("Error occurred while saving order: ", e);
-	        throw e;
-	    }
+    	});
+    	
+    	
+        // 주문 엔티티 신규 생성
+        Order createOrder = Order.builder()
+        		.amount(orderCreateDto.getAmount())
+        		.paymentMethod(orderCreateDto.getPaymentMethod())
+        		.store(nowStore)
+        		.table(nowTable)
+        		.build();
+        
+        
+      	
+    	// 케이스따라 정보 수정
+		switch (orderCreateDto.getOrderCase()) {
+			// 매장 취식일시
+			case DINE_IN:
+				createOrder.setOrderCase(1);
+				break;
+			// 포장 주문일시
+			case TAKEOUT:
+				createOrder.setOrderCase(2);
+				break;
+		}
+		
+        
+        // 주문 정보 db에 저장
+        Order savedOrder = this.orderRepository.save(createOrder);
+        
+        // 주문 상세 정보 저장
+    	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
+    		// 해당 menu 단일 조회
+	        Menu nowMenu = this.menuRepository.findById(orderMenu.getMenuNo())
+	        		.orElseThrow(() -> new NoSuchElementException("해당 메뉴를 찾을 수 없습니다."));
+    		
+    		OrderMenu createOrderMenu = OrderMenu.builder()
+    				.menu(nowMenu)
+    				.order(savedOrder)
+    				.quantity(orderMenu.getQuantity())
+    				.build();
+    		LOGGER.info("[createOrder] make createOrderMenu : {}", createOrderMenu);
+    		this.orderMenuRepository.save(createOrderMenu);
+    	});
+        
+        
+    	// 모두 다 통과하면, 재고 변경 사항 반영
+    	changeStockList.forEach(changeStock -> {
+    		this.stockRepository.save(changeStock);
+    	});
+    	
+    	OrderDetailDto nowOrder = OrderDetailDto.builder()
+    			.orderNo(savedOrder.getOrderNo())
+        		.amount(savedOrder.getAmount())
+        		.orderDate(savedOrder.getOrderDate())
+        		.state(savedOrder.getState())
+        		.paymentMethod(savedOrder.getPaymentMethod())
+        		.updatedDate(savedOrder.getUpdatedDate())
+        		.tableNo(savedOrder.getTable().getTableNo())
+        		.tableNumber(savedOrder.getTable().getTableNumber())
+        		.orderMenuList(orderCreateDto.getOrderMenuList())
+                .build();
+    	
+    	return nowOrder;
 	}
 
 	/**
@@ -450,26 +444,19 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public void updateOrder(OrderUpdateDto orderUpdateDto) {
-		try {
-			
-			// 주문 정보 찾기
-			Order nowOrder = this.orderRepository.findById(orderUpdateDto.getOrderNo())
-					.orElseThrow(() -> new NoSuchElementException("해당 주문 정보를 찾을 수 없습니다."));
-			
-			// 지정한 table 데이터 불러오기
-			StoreTable newTable = this.tableRepository.findByTableCode(orderUpdateDto.getTableCode())
-					.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+		// 주문 정보 찾기
+		Order nowOrder = this.orderRepository.findById(orderUpdateDto.getOrderNo())
+				.orElseThrow(() -> new NoSuchElementException("해당 주문 정보를 찾을 수 없습니다."));
 		
-			// 정보 수정
-			nowOrder.setTable(newTable);
-			nowOrder.setPaymentMethod(orderUpdateDto.getPaymentMethod());
-			
-			this.orderRepository.save(nowOrder);
-			
-		} catch (Exception e) {
-	        LOGGER.error("Error occurred while saving order: ", e);
-	        throw e;
-	    }
+		// 지정한 table 데이터 불러오기
+		StoreTable newTable = this.tableRepository.findByTableCode(orderUpdateDto.getTableCode())
+				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
+	
+		// 정보 수정
+		nowOrder.setTable(newTable);
+		nowOrder.setPaymentMethod(orderUpdateDto.getPaymentMethod());
+		
+		this.orderRepository.save(nowOrder);
 	
 	}
 
