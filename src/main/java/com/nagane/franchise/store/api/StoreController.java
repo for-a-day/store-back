@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -63,10 +64,16 @@ public class StoreController {
 	 * @param 
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 목록 조회", description = "(관리자) 관리자 측에서 지점 목록 전체 조회 시 사용하는 api입니다.")
+	@Operation(summary = "지점 목록 조회", 
+			description = "(관리자) 관리자 측에서 지점 목록 전체 조회 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+	        		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -96,9 +103,15 @@ public class StoreController {
 	 * @param StoreCreateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 신규 등록", description = "(관리자) 관리자 측에서 지점 신규 등록 시 사용하는 api입니다.")
+	@Operation(summary = "지점 신규 등록", 
+			description = "(관리자) 관리자 측에서 지점 신규 등록 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
@@ -121,9 +134,15 @@ public class StoreController {
 	 * @param StoreUpdateDto
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 정보 수정", description = "(관리자) 관리자 측에서 지점 정보 수정 시 사용하는 api입니다.")
+	@Operation(summary = "지점 정보 수정", 
+			description = "(관리자) 관리자 측에서 지점 정보 수정 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -149,11 +168,17 @@ public class StoreController {
 	 * @param Long
 	 * @return Map<String, Object>>
 	 */
-	@Operation(summary = "지점 삭제", description = "(관리자) 관리자 측에서 지점 삭제 시 사용하는 api입니다.")
+	@Operation(summary = "지점 삭제", 
+			description = "(관리자) 관리자 측에서 지점 삭제 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
