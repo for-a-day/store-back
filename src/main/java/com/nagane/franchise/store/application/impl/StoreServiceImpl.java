@@ -166,7 +166,18 @@ public class StoreServiceImpl implements StoreService {
                 Map<String, Object> response = new HashMap<>();
                 response.put("accessToken", accessToken);
                 response.put("refreshToken", refreshToken);
-                response.put("store", store);
+                
+
+                StoreResponseDto storeResponseDto = StoreResponseDto.builder()
+        				.storeNo(store.getStoreNo())
+        				.storeName(store.getStoreName())
+        				.rprName(store.getRprName())
+        				.warningCount(store.getWarningCount())
+        				.storeCode(store.getStoreCode())
+        				.build();
+                
+                
+                response.put("store", storeResponseDto);
                 return response;
             }
             System.out.println("일치하지 않음");
