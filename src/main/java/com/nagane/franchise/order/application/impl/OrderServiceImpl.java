@@ -22,9 +22,11 @@ import com.nagane.franchise.order.domain.OrderMenu;
 import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
+import com.nagane.franchise.order.dto.order.OrderDetailResponseDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
 import com.nagane.franchise.order.dto.order.OrderUpdateDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
+import com.nagane.franchise.order.dto.ordermenu.OrderMenuDetailDto;
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
 import com.nagane.franchise.stock.dao.StockRepository;
 import com.nagane.franchise.stock.domain.Stock;
@@ -69,50 +71,45 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderResponseDto> getOrderList(Long storeNo) {
 	    LOGGER.info("[getOrderList] input storeNo : {}", storeNo);
-	    try {
-	        // 해당 가맹점 받아오기
-	        Store nowStore = this.storeRepository.findById(storeNo)
-	                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
-	        
-	        // 모든 order 목록 조회
-	        List<Order> orderList = this.orderRepository.findByStoreNoAndState(nowStore.getStoreNo());
-	        
-	        // return할 changedOrderList 미리 생성
-	        List<OrderResponseDto> changedOrderList = new ArrayList<>();
-	        
-	        // 각 order 엔티티 객체 OrderResponseDto로 변경해서 changedOrderList에 추가
-	        orderList.forEach(order -> {
-	        	
-	        	// 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
-	        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
-	        	
-	        	order.getOrderMenuList().forEach(orderMenu -> {
-	        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
-	        				.menuNo(orderMenu.getMenu().getMenuNo())
-	        				.menuName(orderMenu.getMenu().getMenuName())
-	        				.quantity(orderMenu.getQuantity())
-	        				.build();
-	        		
-	        		orderMenuResponseList.add(orderMenuResponseDto);
-	        	});
-	        	
-	        	
-	            OrderResponseDto orderResponseDto = OrderResponseDto.builder()
-	            		.orderNo(order.getOrderNo())
-	            		.amount(order.getAmount())
-	            		.tableNo(order.getTable().getTableNo())
-	            		.tableNumber(order.getTable().getTableNumber())
-	            		.orderMenuList(orderMenuResponseList)
-	                    .build();
-	            
-	            changedOrderList.add(orderResponseDto);
-	        });
-	        
-	        return changedOrderList;
-	    } catch (Exception e) {
-	        LOGGER.error("Error occurred while getting order list: ", e);
-	        throw e;
-	    }
+	 // 해당 가맹점 받아오기
+        Store nowStore = this.storeRepository.findById(storeNo)
+                .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
+        
+        // 모든 order 목록 조회
+        List<Order> orderList = this.orderRepository.findByStoreNoAndState(nowStore.getStoreNo());
+        
+        // return할 changedOrderList 미리 생성
+        List<OrderResponseDto> changedOrderList = new ArrayList<>();
+        
+        // 각 order 엔티티 객체 OrderResponseDto로 변경해서 changedOrderList에 추가
+        orderList.forEach(order -> {
+        	
+        	// 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
+        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
+        	
+        	order.getOrderMenuList().forEach(orderMenu -> {
+        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
+        				.menuNo(orderMenu.getMenu().getMenuNo())
+        				.menuName(orderMenu.getMenu().getMenuName())
+        				.quantity(orderMenu.getQuantity())
+        				.build();
+        		
+        		orderMenuResponseList.add(orderMenuResponseDto);
+        	});
+        	
+        	
+            OrderResponseDto orderResponseDto = OrderResponseDto.builder()
+            		.orderNo(order.getOrderNo())
+            		.amount(order.getAmount())
+            		.tableNo(order.getTable().getTableNo())
+            		.tableNumber(order.getTable().getTableNumber())
+            		.orderMenuList(orderMenuResponseList)
+                    .build();
+            
+            changedOrderList.add(orderResponseDto);
+        });
+        
+        return changedOrderList;
 	}
 
 	/**
@@ -123,43 +120,38 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDetailDto getOrder(Long orderNo) {
 	    LOGGER.info("[getOrder] input orderNo : {}", orderNo);
-	    try {
-	        // 해당 order 단일 조회
-	        Order order = this.orderRepository.findById(orderNo)
-	        		.orElseThrow(() -> new NoSuchElementException("해당 주문을 찾을 수 없습니다."));
-	        
-	        // 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
-        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
-	        
-        	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
-	        order.getOrderMenuList().forEach(orderMenu -> {
-        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
-        				.menuNo(orderMenu.getMenu().getMenuNo())
-        				.menuName(orderMenu.getMenu().getMenuName())
-        				.quantity(orderMenu.getQuantity())
-        				.build();
-        		
-        		orderMenuResponseList.add(orderMenuResponseDto);
-        	});
-	        
-	        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
-	        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
-            		.orderNo(order.getOrderNo())
-            		.amount(order.getAmount())
-            		.orderDate(order.getOrderDate())
-            		.state(order.getState())
-            		.paymentMethod(order.getPaymentMethod())
-            		.updatedDate(order.getUpdatedDate())
-            		.tableNo(order.getTable().getTableNo())
-            		.tableNumber(order.getTable().getTableNumber())
-            		.orderMenuList(orderMenuResponseList)
-                    .build();
-	        
-	        return orderDetailDto;
-	    } catch (Exception e) {
-	        LOGGER.error("Error occurred while getting order: ", e);
-	        throw e;
-	    }
+	 // 해당 order 단일 조회
+        Order order = this.orderRepository.findById(orderNo)
+        		.orElseThrow(() -> new NoSuchElementException("해당 주문을 찾을 수 없습니다."));
+        
+        // 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
+    	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
+        
+    	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
+        order.getOrderMenuList().forEach(orderMenu -> {
+    		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
+    				.menuNo(orderMenu.getMenu().getMenuNo())
+    				.menuName(orderMenu.getMenu().getMenuName())
+    				.quantity(orderMenu.getQuantity())
+    				.build();
+    		
+    		orderMenuResponseList.add(orderMenuResponseDto);
+    	});
+        
+        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
+        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
+        		.orderNo(order.getOrderNo())
+        		.amount(order.getAmount())
+        		.orderDate(order.getOrderDate())
+        		.state(order.getState())
+        		.paymentMethod(order.getPaymentMethod())
+        		.updatedDate(order.getUpdatedDate())
+        		.tableNo(order.getTable().getTableNo())
+        		.tableNumber(order.getTable().getTableNumber())
+        		.orderMenuList(orderMenuResponseList)
+                .build();
+        
+        return orderDetailDto;
 	}
 
 	/**
@@ -279,65 +271,58 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * 해당 테이블 주문 내역 조회
 	 * @param String tableCode
-	 * @return List<OrderResponseDto>
+	 * @return List<OrderDetailResponseDto>
 	 */
 	@Override
-	public List<OrderDetailDto> getTableOrder(String tableCode) {
+	public List<OrderDetailResponseDto> getTableOrder(String tableCode) {
 		LOGGER.info("[getTableOrder] input tableCode : {}", tableCode);
 		// 지정한 table 데이터 불러오기
 		StoreTable nowTable = this.tableRepository.findByTableCode(tableCode)
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 				
-	    try {
-	        // 해당 order 리스트 조회
-	        List<Order> orderList = this.orderRepository.findByTableCodeAndState(nowTable.getTableCode());
+        // 해당 order 리스트 조회
+        List<Order> orderList = this.orderRepository.findByTableCodeAndStateDESC(nowTable.getTableCode());
+        
+        // LOGGER.info("[getTableOrder] get orderList : {}", orderList);
+        
+        // dto로 변환한 값 저장할 changedOrderList 생성
+        List<OrderDetailResponseDto> changedOrderList = new ArrayList<>();
+        
+        orderList.forEach(order -> {
+        	// 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
+        	List<OrderMenuDetailDto> orderMenuResponseList = new ArrayList<>();
 	        
-	        // LOGGER.info("[getTableOrder] get orderList : {}", orderList);
+        	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
+	        order.getOrderMenuList().forEach(orderMenu -> {
+	        	OrderMenuDetailDto orderMenuDetailDto = OrderMenuDetailDto.builder()
+        				.menuNo(orderMenu.getMenu().getMenuNo())
+        				.menuName(orderMenu.getMenu().getMenuName())
+        				.quantity(orderMenu.getQuantity())
+        				.price(orderMenu.getMenu().getPrice())
+        				.build();
+        		
+        		orderMenuResponseList.add(orderMenuDetailDto);
+        		// LOGGER.info("[getTableOrder] make orderMenuResponseDto : {}", orderMenuResponseDto);
+        	});
 	        
-	        // dto로 변환한 값 저장할 changedOrderList 생성
-	        List<OrderDetailDto> changedOrderList = new ArrayList<>();
 	        
-	        orderList.forEach(order -> {
-	        	// 각 orderMenu 항목 먼저 변환(메뉴번호, 메뉴명, 주문한 개수)
-	        	List<OrderMenuResponseDto> orderMenuResponseList = new ArrayList<>();
-		        
-	        	// 주문 상세 정보 OrderMenuResponseDto 형태로 변환해서 orderMenuResponseList에 추가
-		        order.getOrderMenuList().forEach(orderMenu -> {
-	        		OrderMenuResponseDto orderMenuResponseDto = OrderMenuResponseDto.builder()
-	        				.menuNo(orderMenu.getMenu().getMenuNo())
-	        				.menuName(orderMenu.getMenu().getMenuName())
-	        				.quantity(orderMenu.getQuantity())
-	        				.build();
-	        		
-	        		orderMenuResponseList.add(orderMenuResponseDto);
-	        		// LOGGER.info("[getTableOrder] make orderMenuResponseDto : {}", orderMenuResponseDto);
-	        	});
-		        
-		        
-		        
-		        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
-		        OrderDetailDto orderDetailDto = OrderDetailDto.builder()
-	            		.orderNo(order.getOrderNo())
-	            		.amount(order.getAmount())
-	            		.orderDate(order.getOrderDate())
-	            		.state(order.getState())
-	            		.paymentMethod(order.getPaymentMethod())
-	            		.updatedDate(order.getUpdatedDate())
-	            		.tableNo(order.getTable().getTableNo())
-	            		.tableNumber(order.getTable().getTableNumber())
-	            		.orderMenuList(orderMenuResponseList)
-	                    .build();
-		        
-		        changedOrderList.add(orderDetailDto);
-		        
-		        // LOGGER.info("[getTableOrder] make orderDetailDto : {}", orderDetailDto);
-	        });
 	        
-	        return changedOrderList;
-	    } catch (Exception e) {
-	        LOGGER.error("Error occurred while getting order: ", e);
-	        throw e;
-	    }
+	        // order 엔티티 orderDetailDto 형태로 변환해서 list에 저장
+	        OrderDetailResponseDto orderDetailDto = OrderDetailResponseDto.builder()
+            		.orderNo(order.getOrderNo())
+            		.amount(order.getAmount())
+            		.orderDate(order.getOrderDate())
+            		.paymentMethod(order.getPaymentMethod())
+            		.tableNumber(order.getTable().getTableNumber())
+            		.orderMenuDetailList(orderMenuResponseList)
+                    .build();
+	        
+	        changedOrderList.add(orderDetailDto);
+	        
+	        // LOGGER.info("[getTableOrder] make orderDetailDto : {}", orderDetailDto);
+        });
+        
+        return changedOrderList;
 	}
 
 	/**
