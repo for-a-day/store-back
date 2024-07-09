@@ -21,6 +21,7 @@ import com.nagane.franchise.order.application.OrderService;
 import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
+import com.nagane.franchise.order.dto.order.OrderDetailResponseDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
 import com.nagane.franchise.order.dto.order.OrderUpdateDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
@@ -272,7 +273,7 @@ public class OrderController {
     		@RequestParam("tableCode") String tableCode) {
         
         try {
-        	List<OrderDetailDto> orderList = this.orderService.getTableOrder(tableCode);
+        	List<OrderDetailResponseDto> orderList = this.orderService.getTableOrder(tableCode);
             data = new HashMap<>();
 			data.put("orderList", orderList);
 			responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "주문 내역을 불러오는 데에 성공했습니다.", data);

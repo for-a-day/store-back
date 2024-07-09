@@ -22,6 +22,9 @@ public class MenuListDto {
 	
 	/* 이미지 */
 	private String menuImage;
+	
+	/* 메뉴 가격 */
+	private Integer price;
 
 	/* 이미지 바이트 배열 */
 	private byte[] imageByte;

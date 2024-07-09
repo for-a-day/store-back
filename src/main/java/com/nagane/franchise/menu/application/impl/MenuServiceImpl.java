@@ -128,6 +128,7 @@ public class MenuServiceImpl implements MenuService {
 	                menuDto.setMenuName(menu.getMenuName());
 	                menuDto.setMenuImage(menu.getMenuImage());
 	                menuDto.setState(menu.getState());
+	                menuDto.setPrice(menu.getPrice());
 
 	                try {
 	                    if (menu.getMenuImage() != null) {
