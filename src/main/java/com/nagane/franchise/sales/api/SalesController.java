@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 /**
@@ -49,10 +50,16 @@ public class SalesController {
 	 * @param Long 가맹점 번호
 	 * @return SalesDetailDto
 	 */
-	@Operation(summary = "특정 가맹점의 매출 정보 조회", description = "(가맹점) 선택한 가맹점의 매출 정보를 조회하는 api입니다.")
+	@Operation(summary = "특정 가맹점의 매출 정보 조회", 
+			description = "(가맹점) 선택한 가맹점의 매출 정보를 조회하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })

@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -66,10 +67,15 @@ public class OrderController {
 	 */
 	@Operation(summary = "현재 주문 목록 조회", 
 			description = "(가맹점) 현재 해당 가게에 들어와 있는 주문 목록을 조회하는 api입니다."
-					+ "\n 이미 완료되거나 환불된 주문은 조회하지 않습니다.")
+					+ "\n 이미 완료되거나 환불된 주문은 조회하지 않습니다.",
+					security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -100,10 +106,15 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "선택한 주문 상세 정보 조회", 
-			description = "(가맹점) 선택한 주문의 상세 정보를 조회하는 api입니다.")
+			description = "(가맹점) 선택한 주문의 상세 정보를 조회하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -133,10 +144,15 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "결제 목록 조회(영수증)", 
-			description = "(가맹점) 가맹점에서 결제 목록 조회(영수증)할 때 사용하는 api입니다(당일 항목만 제공)")
+			description = "(가맹점) 가맹점에서 결제 목록 조회(영수증)할 때 사용하는 api입니다(당일 항목만 제공)",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -167,9 +183,14 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "주문 상태 변경", 
-			description = "(가맹점) 가맹점에서 주문 상태를 원하는 상태로 변경할 때 사용하는 api입니다.")
+			description = "(가맹점) 가맹점에서 주문 상태를 원하는 상태로 변경할 때 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -197,9 +218,14 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "단일 결제 환불", 
-			description = "(가맹점) 가맹점에서 단일 결제 환불 시 사용하는 api입니다.")
+			description = "(가맹점) 가맹점에서 단일 결제 환불 시 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -227,10 +253,15 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "해당 테이블 주문 내역 조회", 
-			description = "(테이블 오더) 테이블 오더에서 해당 테이블 주문 내역 조회하는 api입니다.")
+			description = "(테이블 오더) 테이블 오더에서 해당 테이블 주문 내역 조회하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -260,12 +291,17 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "주문 신규 등록", 
-			description = "(테이블 오더) 주문 신규 등록할 때 사용하는 api입니다(현재는 테이블 오더에서만 주문 & 결제 가능).")
+			description = "(테이블 오더) 주문 신규 등록할 때 사용하는 api입니다(현재는 테이블 오더에서만 주문 & 결제 가능).",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
 	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
 	        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
@@ -276,6 +312,7 @@ public class OrderController {
     		@RequestBody OrderCreateDto orderCreateDto) {
         
         try {
+        	System.out.println(orderCreateDto.toString());
             // OrderDto 리스트를 가져오는 서비스 메서드 호출
         	OrderDetailDto newOrder = this.orderService.createOrder(orderCreateDto);
 	        data = new HashMap<>();
@@ -298,9 +335,14 @@ public class OrderController {
 	 * @return Map<String, Object>>
 	 */
 	@Operation(summary = "주문 수정", 
-			description = "(가맹점) 가맹점에서 주문 정보 수정 시(현재는 결제 방법만 가능) 사용하는 api입니다.")
+			description = "(가맹점) 가맹점에서 주문 정보 수정 시(현재는 결제 방법만 가능) 사용하는 api입니다.",
+			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+    		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
+		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
+			content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "404", description = "NOT_FOUND", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
