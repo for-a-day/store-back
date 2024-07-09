@@ -5,6 +5,7 @@ import java.util.List;
 import com.nagane.franchise.order.dto.order.OrderChangeStateDto;
 import com.nagane.franchise.order.dto.order.OrderCreateDto;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
+import com.nagane.franchise.order.dto.order.OrderDetailResponseDto;
 import com.nagane.franchise.order.dto.order.OrderResponseDto;
 import com.nagane.franchise.order.dto.order.OrderUpdateDto;
 import com.nagane.franchise.order.dto.order.PaymentResponseDto;
@@ -33,7 +34,7 @@ public interface OrderService {
     void refundPayment(Long orderNo);
     
 	/** 해당 테이블 주문 내역 조회 */
-    List<OrderDetailDto> getTableOrder(String tableCode);
+    List<OrderDetailResponseDto> getTableOrder(String tableCode);
 	
 	/** 주문 신규 등록 */
     OrderDetailDto createOrder(OrderCreateDto orderCreateDto);
