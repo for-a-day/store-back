@@ -194,9 +194,9 @@ public class TableServiceImpl implements TableService {
 	 * @return void
 	 */
 	@Override
-	public void deleteTable(Long tableNo) {
+	public void deleteTable(String tableCode) {
 		// 지정한 table 데이터 불러오기
-		StoreTable nowTable = this.tableRepository.findById(tableNo)
+		StoreTable nowTable = this.tableRepository.findByTableCode(tableCode)
 				.orElseThrow(() -> new NoSuchElementException("해당 테이블을 찾을 수 없습니다."));
 		
 		// 연관된 주문이 0개일 시, 테이블 삭제
