@@ -1,6 +1,7 @@
 package com.nagane.franchise.table.application;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nagane.franchise.table.dto.TableAdminDto;
 import com.nagane.franchise.table.dto.TableLoginDto;
@@ -38,7 +39,7 @@ public interface TableService {
 	TableOrderDetailDto getTableOrderList(Long tableNo);
 	
 	/** 테이블 오더 로그인 */
-	void loginTable(TableLoginDto tableLoginDto);
+	Map<String, Object> loginTable(TableLoginDto tableLoginDto);
 	
 	/** 테이블 관리자 로그인 */
 	void loginTableAdmin(TableAdminDto tableAdminDto);
