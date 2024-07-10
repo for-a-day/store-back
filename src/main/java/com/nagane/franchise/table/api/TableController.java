@@ -115,7 +115,7 @@ public class TableController {
 			security = @SecurityRequirement(name="bearerAuth"))
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "OK", 
-	            	content = @Content(schema = @Schema(implementation = BaseResponseBody.class))),
+	            	content = @Content(schema = @Schema(implementation = SuccessResponseBody.class))),
 	        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
     		content = @Content(schema = @Schema(implementation = ErrorResponseBody.class))),
 		    @ApiResponse(responseCode = "403", description = "FORBIDDEN",
@@ -130,8 +130,11 @@ public class TableController {
 			@RequestBody StoreNoDto storeNoDto) {              
         
         try {
-        	this.tableService.createTable(storeNoDto.getStoreNo());
-        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 등록에 성공했습니다.");
+        	String newTableCode = this.tableService.createTable(storeNoDto.getStoreNo());
+        	// 맵에 데이터 삽입
+            data = new HashMap<>();
+            data.put("tableCode", newTableCode);
+        	responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "테이블 등록에 성공했습니다.", data);
         } catch (NoSuchElementException se) {
 			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());
 		} catch (Exception e) {

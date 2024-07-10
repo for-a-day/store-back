@@ -219,8 +219,8 @@ public class StoreController {
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginStore(
 			@RequestBody Map<String, String> loginData) {
-		String rprName = loginData.get("rprName");
-        String storeCode = loginData.get("storeCode");
+			String rprName = loginData.get("rprName");
+	        String storeCode = loginData.get("storeCode");
 			Map<String, Object> result = this.storeService.loginStore(rprName, storeCode);
 			
 			if (result == null) {
