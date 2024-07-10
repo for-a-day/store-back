@@ -23,7 +23,7 @@ public interface TableService {
 	TableResponseDto getTableDetail(String tableCode);
 	
 	/** 테이블 신규 등록 */
-	void createTable(Long storeNo);
+	String createTable(Long storeNo);
 	
 	/** 테이블 수정 */
 	void updateTable(TableUpdateDto tableUpdateDto);
