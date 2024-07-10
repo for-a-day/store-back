@@ -156,6 +156,18 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+		
+	    <!-- Spring WebSocket -->
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-websocket</artifactId>
+	    </dependency>
+	
+	    <!-- Spring Messaging -->
+	    <dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-messaging</artifactId>
+	    </dependency>
 	   
 	</dependencies>
 
