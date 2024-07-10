@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/api/**",
                                 "/v3/api-docs/**",
                                 "/*/login",
-                                "/to/**",
+                                // "/to/**",
+                                "/to",
                                 "/login",
                                 "/admin"
                             ).permitAll()
