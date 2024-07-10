@@ -315,8 +315,12 @@ public class TableController {
 			@RequestBody TableLoginDto tableLoginDto) {
         
         try {
-        	this.tableService.loginTable(tableLoginDto);
-        	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 오더 로그인에 성공했습니다.");
+        	Map<String, Object> tokens = this.tableService.loginTable(tableLoginDto);
+        	// 맵에 데이터 삽입
+            data = new HashMap<>();
+            data.put("tokens", tokens);
+        	// responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 오더 로그인에 성공했습니다.");
+            responseBody = SuccessResponseBody.of(HttpStatus.OK.value(), "테이블 오더 로그인에 성공했습니다.", data);
         // 예외 발생 시 오류 처리
 		} catch (NoSuchElementException se) {
 			responseBody = BaseResponseBody.of(HttpStatus.NOT_FOUND.value(), se.getMessage());

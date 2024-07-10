@@ -294,7 +294,7 @@ public class TableServiceImpl implements TableService {
 	 * @return
 	 */
 	@Override
-	public void loginTable(TableLoginDto tableLoginDto) {
+	public Map<String, Object> loginTable(TableLoginDto tableLoginDto) {
 		LOGGER.info("[loginTable] input tableLoginDto : {}", tableLoginDto);
 		
 		// 해당 가맹점 정보 확인
@@ -311,8 +311,18 @@ public class TableServiceImpl implements TableService {
 		nowTable.setState(1);
 		
 		// 데이터 업데이트
-		this.tableRepository.save(nowTable);
-        
+		StoreTable registerTable = this.tableRepository.save(nowTable);
+		
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("sub", registerTable.getTableCode().toString());
+		
+		String accessToken = jwtUtil.generateAccessToken(claims);
+		String refreshToken = jwtUtil.generateRefreshToken(claims);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("accessToken", accessToken);
+        response.put("refreshToken", refreshToken);
+        return response;
 	}
 
 	/**
