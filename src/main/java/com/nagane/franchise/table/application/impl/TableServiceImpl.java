@@ -133,7 +133,7 @@ public class TableServiceImpl implements TableService {
 	 * @return 
 	 */
 	@Override
-	public void createTable(Long storeNo) {
+	public String createTable(Long storeNo) {
 		LOGGER.info("[createTable] input storeNo : {}", storeNo);
 
 		// 해당 가맹점 받아오기
@@ -165,7 +165,9 @@ public class TableServiceImpl implements TableService {
 		LOGGER.info("[createTable] create new Table entity : {}", newStoreTable);
 		
 		// db에 저장
-		this.tableRepository.save(newStoreTable);
+		StoreTable savedTable = this.tableRepository.save(newStoreTable);
+		
+		return savedTable.getTableCode();
 	}
 	
 	/**
