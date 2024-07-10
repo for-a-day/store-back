@@ -29,7 +29,7 @@ public interface TableService {
 	void updateTable(TableUpdateDto tableUpdateDto);
 	
 	/** 테이블 삭제 */
-	void deleteTable(Long tableNo);
+	void deleteTable(String tableCode);
 	
 	/** 현 테이블 내 주문 내역 2로 수정 */
 	void clearTable(Long tableNo);
