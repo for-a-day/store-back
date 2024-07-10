@@ -64,7 +64,7 @@ public class StoreTable {
 	/* 상태 */
 	@Column(name = "state", nullable = false)
 	@Builder.Default
-	private Integer state = 1;
+	private Integer state = 0;
 
 	/* order 엔티티와 OneToMany 매핑 */
 	@OneToMany(fetch = FetchType.LAZY)
