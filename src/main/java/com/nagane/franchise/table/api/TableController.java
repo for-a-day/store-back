@@ -281,10 +281,10 @@ public class TableController {
 	    })
 	@DeleteMapping("/table")
 	public ResponseEntity<? extends BaseResponseBody> deleteTable(
-			@RequestBody TableNoDto tableNoDto) {
+			@RequestBody TableCodeDto tableCodeDto) {
         
         try {
-        	this.tableService.deleteTable(tableNoDto.getTableNo());
+        	this.tableService.deleteTable(tableCodeDto.getTableCode());
         	responseBody = BaseResponseBody.of(HttpStatus.OK.value(), "테이블 삭제에 성공했습니다.");
         } catch (InsufficientStockException ie) {
 			responseBody = BaseResponseBody.of(HttpStatus.BAD_REQUEST.value(), ie.getMessage());
