@@ -1,15 +1,19 @@
 package com.nagane.franchise.table.application.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nagane.franchise.global.config.JwtUtil;
 import com.nagane.franchise.order.dao.OrderRepository;
 import com.nagane.franchise.order.domain.Order;
 import com.nagane.franchise.order.dto.order.OrderDetailDto;
@@ -49,6 +53,10 @@ public class TableServiceImpl implements TableService {
 	StoreTableRepository tableRepository;
 	@Autowired
 	OrderRepository orderRepository;
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	JwtUtil jwtUtil;
 	
 	/**
 	 * 테이블 목록 조회
@@ -302,7 +310,7 @@ public class TableServiceImpl implements TableService {
 		
 		// 데이터 업데이트
 		this.tableRepository.save(nowTable);
-		
+        
 	}
 
 	/**
