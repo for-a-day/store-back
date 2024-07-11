@@ -20,7 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByStore_StoreNo(@Param("storeNo") Long storeNo);
 
 	/* 점포번호로 상태가 0(주문 접수) 또는 1(음식 나감)인 주문 리스트 반환 */
-	@Query("SELECT o FROM Order o WHERE o.store.storeNo = :storeNo " + "AND (o.state = 0 OR o.state = 1)")
+	@Query("SELECT o FROM Order o WHERE o.store.storeNo = :storeNo " + "AND (o.state = 0 OR o.state = 1 OR o.state = 2)")
 	List<Order> findByStoreNoAndState(@Param("storeNo") Long storeNo);
 
 	/* 조회 당일 날짜와 같은 날 들어온 주문 개수를 세는 쿼리(점포 번호 기준) */
