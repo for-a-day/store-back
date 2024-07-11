@@ -35,6 +35,7 @@ import com.nagane.franchise.store.dao.StoreRepository;
 import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.dao.StoreTableRepository;
 import com.nagane.franchise.table.domain.StoreTable;
+import com.nagane.franchise.util.enums.OrderCase;
 import com.nagane.franchise.util.exceptions.InsufficientStockException;
 
 /**
@@ -108,6 +109,12 @@ public class OrderServiceImpl implements OrderService {
             		.tableNumber(order.getTable().getTableNumber())
             		.orderMenuList(orderMenuResponseList)
                     .build();
+            
+            if (order.getOrderCase() == 1) {
+            	orderResponseDto.setOrderCase(OrderCase.DINE_IN);
+            } else {
+            	orderResponseDto.setOrderCase(OrderCase.TAKEOUT);
+            }
             
             changedOrderList.add(orderResponseDto);
         });
@@ -422,8 +429,8 @@ public class OrderServiceImpl implements OrderService {
         		.orderMenuList(orderCreateDto.getOrderMenuList())
                 .build();
     	
-//    	List<OrderResponseDto> orders = getOrderList(nowStore.getStoreNo());
-//        messagingTemplate.convertAndSend("/topic/orders/" + nowStore.getStoreNo(), orders);
+    	List<OrderResponseDto> orders = getOrderList(nowStore.getStoreNo());
+        messagingTemplate.convertAndSend("/topic/orders/" + nowStore.getStoreNo(), orders);
         
     	return nowOrder;
 	}

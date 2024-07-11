@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nagane.franchise.order.dto.ordermenu.OrderMenuResponseDto;
+import com.nagane.franchise.util.enums.OrderCase;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,9 @@ public class OrderResponseDto {
 	
 	/* 테이블 번호(fk) */
 	private Long tableNo;
+	
+	/* 픽업 여부(DINE_IN 1, TAKEOUT 2) */
+	private OrderCase orderCase = OrderCase.DINE_IN;
 	
 	/* 매점 내 테이블 번호 */
 	private int tableNumber;
