@@ -263,6 +263,7 @@ public class TableServiceImpl implements TableService {
 									.paymentMethod(order.getPaymentMethod())
 									.updatedDate(order.getUpdatedDate())
 									.orderMenuList(orderMenuList)
+									.orderCase(order.getOrderCase())
 									.build();
 							
 							orderList.add(orderDetailDto);

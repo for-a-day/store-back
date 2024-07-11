@@ -47,4 +47,7 @@ public class OrderTableDetailDto {
 	/* order_menu 엔티티와 OneToMany 매핑 */
 	private List<OrderMenuResponseDto> orderMenuList = new ArrayList<>();
 
+	/* 주문 상태 */
+	private Integer orderCase;
+
 }
