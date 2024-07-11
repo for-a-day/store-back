@@ -350,7 +350,7 @@ public class TableController {
 	        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", 
         	content = @Content(schema = @Schema(implementation = ErrorResponseBody.class)))
 	    })
-	@PostMapping("/to/login")
+	@PostMapping("/to/admin")
 	public ResponseEntity<? extends BaseResponseBody> loginTableAdmin(
 			@RequestBody TableAdminDto tableAdminDto) {
 		
