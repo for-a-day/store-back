@@ -64,9 +64,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	StockRepository stockRepository;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-		
+//    @Autowired
+//    private SimpMessagingTemplate messagingTemplate;
+//		
 	/**
 	 * 현재 주문 목록 조회
 	 * @param Long storeNo
@@ -429,9 +429,9 @@ public class OrderServiceImpl implements OrderService {
         		.orderMenuList(orderCreateDto.getOrderMenuList())
                 .build();
     	
-    	List<OrderResponseDto> orders = getOrderList(nowStore.getStoreNo());
-        messagingTemplate.convertAndSend("/topic/orders/" + nowStore.getStoreNo(), orders);
-        
+//    	List<OrderResponseDto> orders = getOrderList(nowStore.getStoreNo());
+//        messagingTemplate.convertAndSend("/topic/orders/" + nowStore.getStoreNo(), orders);
+//        
     	return nowOrder;
 	}
 
