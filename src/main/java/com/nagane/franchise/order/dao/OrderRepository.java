@@ -30,7 +30,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByStore_StoreNoAndOrderDateBetween(Long storeNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
 	/* 결제 일시와 상태(1)와 가맹점 번호로 레코드 리스트 반환 */
-	@Query("SELECT o FROM Order o WHERE o.state = 1 AND o.store.storeNo = :storeNo AND o.orderDate BETWEEN :startDate AND :endDate")
+	@Query("SELECT o FROM Order o WHERE (o.state = 0 OR o.state = 1 OR o.state = 2) AND o.store.storeNo = :storeNo AND o.orderDate BETWEEN :startDate AND :endDate")
 	List<Order> findByStateAndStoreNoAndOrderDateBetween(@Param("storeNo") Long storeNo,
 			@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
