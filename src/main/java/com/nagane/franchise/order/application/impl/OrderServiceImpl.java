@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.nagane.franchise.menu.dao.MenuRepository;
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
         
         // 모든 order 목록 조회
-        List<Order> orderList = this.orderRepository.findByStoreNoAndState(nowStore.getStoreNo());
+        List<Order> orderList = this.orderRepository.findByStoreNoAndState2(nowStore.getStoreNo());
         
         // return할 changedOrderList 미리 생성
         List<OrderResponseDto> changedOrderList = new ArrayList<>();
@@ -342,7 +342,8 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public OrderDetailDto createOrder(OrderCreateDto orderCreateDto) {
-		LOGGER.info("[createOrder] input orderCreateDto : {}", orderCreateDto);
+//		LOGGER.info("[createOrder] input orderCreateDto : {}", orderCreateDto);
+        System.out.println(orderCreateDto);
 		// 해당 가맹점 받아오기
         Store nowStore = this.storeRepository.findByStoreCode(orderCreateDto.getStoreCode())
                 .orElseThrow(() -> new NoSuchElementException("해당 지점을 찾을 수 없습니다."));
@@ -357,13 +358,15 @@ public class OrderServiceImpl implements OrderService {
         // 주문 상세 정보 저장
     	orderCreateDto.getOrderMenuList().forEach(orderMenu -> {
     		// 해당 menu 단일 조회
-	        Stock nowStock = this.stockRepository.findByMenu_MenuNo(orderMenu.getMenuNo())
+	        Stock nowStock = this.stockRepository.findByMenu_MenuNoAndStore_StoreNo(orderMenu.getMenuNo(), nowStore.getStoreNo())
 	        		.orElseThrow(() -> new NoSuchElementException("해당 재고를 찾을 수 없습니다."));
-	        LOGGER.info("[createOrder] get orderMenu.getQuantity() : {}", orderMenu.getQuantity());
+//	        LOGGER.info("[createOrder] get orderMenu.getQuantity() : {}", orderMenu.getQuantity());
+	        System.out.println("재고량과 주문 수 비교 ===> " + nowStock.getQuantity() + ", " +  orderMenu.getQuantity());
 	        if (nowStock.getQuantity() >= orderMenu.getQuantity()) {
                 nowStock.setQuantity(nowStock.getQuantity() - orderMenu.getQuantity());
                 changeStockList.add(nowStock);
             } else {
+                System.out.println("재고가 부족합니다.");
                 throw new InsufficientStockException("재고가 부족합니다. 메뉴 번호: " + orderMenu.getMenuNo());
             }
 	        
@@ -407,7 +410,7 @@ public class OrderServiceImpl implements OrderService {
     				.order(savedOrder)
     				.quantity(orderMenu.getQuantity())
     				.build();
-    		LOGGER.info("[createOrder] make createOrderMenu : {}", createOrderMenu);
+//    		LOGGER.info("[createOrder] make createOrderMenu : {}", createOrderMenu);
     		this.orderMenuRepository.save(createOrderMenu);
     	});
         
