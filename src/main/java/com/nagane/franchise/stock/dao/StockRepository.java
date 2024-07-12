@@ -37,6 +37,7 @@ public interface StockRepository extends JpaRepository<Stock, Long>{
     @Transactional
     void deleteByMenuMenuNo(Long menuNo);
     
+    Optional<Stock> findByMenu_MenuNoAndStore_StoreNo(Long menuNo, Long storeNo);
 
     @Modifying
     @Transactional

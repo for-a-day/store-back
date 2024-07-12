@@ -48,4 +48,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	/* 테이블 code 기준으로 해당하는 주문 정보 받아오기(주문시간 기준 역순) */
 	@Query("SELECT o FROM Order o WHERE o.table.tableCode = :tableCode " + "AND (o.state = 0 OR o.state = 1) ORDER BY o.orderDate DESC")
 	List<Order> findByTableCodeAndStateDESC(@Param("tableCode") String tableCode);
+	
+	@Query("SELECT o FROM Order o WHERE o.store.storeNo = :storeNo " + "AND (o.state = 0 OR o.state = 1)")
+	List<Order> findByStoreNoAndState2(@Param("storeNo") Long storeNo);
 }
