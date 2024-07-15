@@ -1,26 +1,41 @@
 package com.nagane.franchise.store.domain;
+import java.util.ArrayList;
 /**
  * @author nsr
  * @since 2024.06.27 
  * 가맹점 엔티티
  */
 import java.util.Date;
+import java.util.List;
+
+import com.nagane.franchise.order.domain.Order;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "store")
 @SequenceGenerator(name = "store_seq", sequenceName = "store_seq", allocationSize = 1)
+@ToString(exclude = "orderList")
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class Store {
 
 	/* 지점 번호 (PK) */
@@ -56,10 +71,11 @@ public class Store {
 
 	/* 경고 횟수 */
 	@Column(name = "warning_count", nullable = false)
-	private Integer warningCount;
+	@Builder.Default
+	private Integer warningCount = 0;
 
 	/* 점포 코드 */
-	@Column(name = "store_code", nullable = false, length = 20)
+	@Column(name = "store_code", nullable = false, length = 20, unique=true)
 	private String storeCode;
 
 	/* 지역 코드 */
@@ -68,9 +84,13 @@ public class Store {
 
 	/* 상태 0=폐점, 1=영업 */
 	@Column(name = "state", nullable = false)
-	private boolean state;
+	@Builder.Default
+	private Integer state = 1;
 	
-
+	/* order 엔티티와 OneToMany 매핑 */
+	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+	private List<Order> orderList = new ArrayList<>();
+	
 	@PrePersist
 	protected void onCreate() {
 		contractDate = new Date();

@@ -12,7 +12,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * OrderMenu entity 코드
@@ -23,7 +27,11 @@ import lombok.Data;
 @Entity
 @Table(name = "order_menu")
 @SequenceGenerator(name = "order_menu_seq", sequenceName = "order_menu_seq", allocationSize = 1)
+@ToString(exclude = {"menu", "order"})
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class OrderMenu {
 	
 	/* 주문 항목 번호(pk) */
@@ -33,6 +41,7 @@ public class OrderMenu {
 	
 	/* 수량 */
 	@Column(name = "quantity", nullable = false)
+	@Builder.Default
 	private Integer quantity = 1;
 	
 	/* 메뉴 번호(fk) */
