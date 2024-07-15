@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nagane.franchise.store.domain.Store;
 import com.nagane.franchise.table.domain.StoreTable;
+import com.nagane.franchise.util.enums.OrderCase;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +21,11 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author ljy
@@ -29,7 +35,11 @@ import lombok.Data;
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
+@ToString(exclude = {"orderMenuList", "store", "table"})
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 public class Order {
 	
 	/* 주문(결제) 번호(pk) */
@@ -43,10 +53,12 @@ public class Order {
 	
 	/* 주문 일시 */
 	@Column(name = "order_date", nullable = false)
-	private LocalDateTime orderDate;
+	@Builder.Default
+	private LocalDateTime orderDate = LocalDateTime.now();
 	
 	/* 상태 */
 	@Column(name = "state", nullable = false)
+	@Builder.Default
 	private Integer state = 1;
 	
 	/* 결제 방법 */
@@ -57,10 +69,15 @@ public class Order {
 	@Column(name = "updated_date", nullable = false)
 	private LocalDateTime updatedDate;
 	
+	/* 픽업 여부(DINE_IN 1, TAKEOUT 0) */
+	@Column(name="order_case", nullable = false)
+	@Builder.Default
+	private Integer orderCase = 1;
+	
 	/* 점포 번호(fk) */
-	// @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
-    // @JoinColumn(name = "store_no", nullable = false)
-	// private Store store;
+	 @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+     @JoinColumn(name = "store_no", nullable = false)
+	 private Store store;
 	
 	/* 테이블 번호(fk) */
 	@ManyToOne(targetEntity = StoreTable.class, fetch = FetchType.LAZY)
