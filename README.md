@@ -1,4 +1,4 @@
-[<p align="center">
+<p align="center">
  <img src="https://github.com/user-attachments/assets/c532138c-db7b-4b35-9f3d-10f3a7fccf0d">
 </p>
  <h3> 테이블 오더 & 가맹점 & 본사(인트라넷) 연계 프로젝트 </h3></div>
@@ -9,7 +9,7 @@
 ---
 ### 📌 프로젝트 소개
 - 테이블 오더 & 가맹점 & 본사(인트라넷) 연계 프로젝트
-[<p align="center">
+<p align="center">
  <img src="https://github.com/user-attachments/assets/a0ec6284-c453-464c-8a17-004268c6cd9a">
 </p>
 
@@ -44,22 +44,23 @@
 
 ###### Back-end Stack
 - Java 17
-- Spring Boot 3.2.5
-- Database :MariaDB
+- Spring Boot 3.3.1
+- Database : Oracle 11g
 - Security : Spring Security, JWT
 - JPA
+- springdoc(Swagger) 2.5.0
 
 <br>
 
 ## 🌸 아키텍쳐
 
-<img alt="erd" src="https://github.com/user-attachments/assets/1e4359ca-7a5e-49bf-80da-5d4995a1affb">
+<img alt="arc" src="https://github.com/user-attachments/assets/248430df-d6da-450a-932e-06b1ec1efbf2">
+<img alt="arc" src="https://github.com/user-attachments/assets/f9b22af1-6093-4cd3-a7d5-2e2150fef939">
 <br>
 
 ## ⚙️ ERD
 
-<img alt="erd" src="https://github.com/user-attachments/assets/16572375-ebf6-45c8-910f-6a9b87de3af1">
-<img alt="erd" src="https://github.com/user-attachments/assets/189eea46-a248-4e98-9ad1-837971d770ab">
+<img alt="erd" src="https://github.com/user-attachments/assets/14828cb4-5ad2-4311-bc93-328b0c451167">
 <br>
 
 ## ✔ 주요 기능
