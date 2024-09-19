@@ -12,15 +12,16 @@
 1. [📌 프로젝트 소개](#-프로젝트-소개)
 2. [📰 제작기간 & 팀원 소개](#-제작기간--팀원-소개)
 3. [⛏ 기술 Stack](#-기술-stack)
-4. [🌸 아키텍쳐](#-아키텍쳐)
-5. [⚙️ ERD](#%EF%B8%8F-erd)
-6. [🪡 application.properties](#-applicationproperties)
-7. [🏗️ API 설계](#%EF%B8%8F-api-설계)
-8. [📔 API 명세서](#-api-명세서)
-9. [✔ 주요 기능](#-주요-기능)
-10. [🖼️ 스크린샷](#%EF%B8%8F-스크린샷)
-11. [🌋 트러블 슈팅](#-트러블-슈팅)
-12. [😄 Commit Convention](#-Commit-Convention)
+4. [🏘️ 프로젝트 별 repository](#%EF%B8%8F-프로젝트-별-repository)
+5. [🌸 아키텍쳐](#-아키텍쳐)
+6. [⚙️ ERD](#%EF%B8%8F-erd)
+7. [🪡 application.properties](#-applicationproperties)
+8. [🏗️ API 설계](#%EF%B8%8F-api-설계)
+9. [📔 API 명세서](#-api-명세서)
+10. [✔ 주요 기능](#-주요-기능)
+11. [🖼️ 스크린샷](#%EF%B8%8F-스크린샷)
+12. [🌋 트러블 슈팅](#-트러블-슈팅)
+13. [😄 Commit Convention](#-Commit-Convention)
 
 <br>
 
@@ -40,7 +41,7 @@
 |이름         | 담당 기능 구현                                                                         |
 |------|----------------------------------------------------------------------------------|
 |김예린      | 인트라넷 - 팀장, 가맹점관리(CRUD), 메뉴관리(CRUD), 매출관리(CRUD), 재고관리(CRUD)                |
-|나소림      | 가맹점 - 가맹점 프로젝트 구조 및 데이터베이스 설계, 재고관리(CRUD), 매출관리(CRUD), 메뉴관리(CRUD), 지점장POS(CRUD), 관리자용POS 웹 개발     |
+|나소림      | 가맹점 - 가맹점 프로젝트 구조 및 데이터베이스 설계, 재고관리(CRUD), 매출관리(CRUD), 메뉴관리(CRUD), 지점장POS & 관리자용POS 웹 개발     |
 |문승환      | 인트라넷 - 인사관리(CRUD), 로그인(JWT), 메신저(CRUD) |
 |박민규      | 인트라넷 - 캘린더관리(CRUD), 일정관리(CRUD), 대시보드(CRUD), 디자인 |
 |이윤재      | 인트라넷 - 전자결재(CRUD), 대시보드(CRUD), 알림(CRUD) |
@@ -71,6 +72,24 @@
 - Retrofit2, okthttp3, gson
 - Database : Room
 
+###### Web Stack
+- JavaScript
+- React
+- axios
+- mui
+
+<br>
+
+## 🏘️ 프로젝트 별 repository
+
+###### Back-end Stack
+https://github.com/for-a-day/store-back
+
+###### Mobile
+https://github.com/for-a-day/store-moblie
+
+###### Web
+https://github.com/for-a-day/store-front
 <br>
 
 ## 🌸 아키텍쳐
