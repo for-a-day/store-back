@@ -6,15 +6,29 @@
 
 # 테이블 오더 & 가맹점 개발 프로젝트
 
+<br>
+
+**목차**
+1. [프로젝트 소개](#📌-프로젝트-소개)
+2. [제작기간 & 팀원 소개](#📰-제작기간-&-팀원-소개개)
+3. [⛏ 기술 Stack](#⛏-기술-Stack)
+4. [🌸 아키텍쳐](#🌸-아키텍쳐)
+5. [⚙️ ERD](#⚙️-ERD)
+6. [🌸 API 설계](#🌸-API-설계)
+7. [📔 API 명세서](#📔-API-명세서)
+8. [✔ 주요 기능](#✔-주요-기능)
+9. [🖼️ 스크린샷 (모바일)](#🖼️-스크린샷-(모바일))
+10. [🌋 트러블 슈팅](#🌋-트러블-슈팅)
+
+<br>
+
 ---
 ### 📌 프로젝트 소개
 - 테이블 오더 & 가맹점 & 본사(인트라넷) 연계 프로젝트
+
 <p align="center">
  <img src="https://github.com/user-attachments/assets/a0ec6284-c453-464c-8a17-004268c6cd9a">
 </p>
-
-### 🎞 시연영상 👇
-- 
  
 <br>
 
@@ -32,7 +46,7 @@
 
 <br>
 
-## ⛏ BE 기술 Stack
+## ⛏ 기술 Stack
 
 ###### Dev-Tools
 - Notion
@@ -47,8 +61,14 @@
 - Spring Boot 3.3.1
 - Database : Oracle 11g
 - Security : Spring Security, JWT
-- JPA
+- JPA(Hibernate)
 - springdoc(Swagger) 2.5.0
+
+###### Mobile Stack
+- Kotlin 1.9.0
+- Jetpack Compose
+- Retrofit2, okthttp3, gson
+- Database : Room
 
 <br>
 
@@ -73,6 +93,11 @@
 
 ## 📔 API 명세서
 
+<details>
+<summary>API 목록 (총 36개)</summary>
+<div markdown="1">
+
+ 
 | API 명칭            | HTTP 메서드 | 엔드포인트                | 설명                                |
 |---------------------|-------------|---------------------------|-------------------------------------|
 | 가맹점 로그인     | POST        | /login                      | 가맹점주가 포스기에 로그인하기 위해 사용하는 API입니다.          |
@@ -112,8 +137,15 @@
 | 신규 발주 목록 조회    | GET         | /api/order             | (본사 측에서) 신규 발조 목록을 조회합니다. |
 | 월별 매출 조회        | GET         | /api/sales?year={year}&month={month}       | (본사 측에서) query param으로 입력한 연도, 월별 매출을 조회합니다.                |
 
+</div>
+</details>
+
 ## ✔ 주요 기능
 
+<details>
+<summary>주요 기능 목록</summary>
+<div markdown="1">
+ 
 - 🏬 가맹점관리
   - 가맹점 등록
   - 가맹점 경고 기능
@@ -139,3 +171,77 @@
   - 장바구니 담은 메뉴 주문하기
   - 해당 테이블 현재 주문 내역 확인
   - 홀짝 게임
+    
+</div>
+</details>
+<br>
+
+## 🖼️ 스크린샷 (모바일)
+
+<details>
+<summary>테이블 오더(모바일) 앱 스크린</summary>
+<div markdown="1">
+
+### 테이블 등록
+![3 PNG](https://github.com/user-attachments/assets/9644c5e2-3656-47f2-b24e-b38733025a22)
+
+
+### 메뉴 목록 확인
+![4 PNG](https://github.com/user-attachments/assets/ce3bd04a-196c-495b-af11-effc678325b2)
+![7 PNG](https://github.com/user-attachments/assets/737e7b6c-8394-4213-9891-ac09f45a4519)
+
+
+### 메뉴 상세 확인
+![5 PNG](https://github.com/user-attachments/assets/6cb63bf5-48b9-4e9b-997d-acf6a8afb434)
+
+
+### 장바구니 확인
+![9 PNG](https://github.com/user-attachments/assets/ee18eb17-fac5-45ea-8828-67e9b367c0a9)
+
+
+### 메뉴 주문 (현재 로직 상 '카드 결제'만 가능
+![10 PNG](https://github.com/user-attachments/assets/f0cfce5b-acb7-4383-9ecb-36df9e2bda47)
+
+
+<details>
+<summary>주문 상태 따른 변화</summary>
+<div markdown="1">
+
+### 결제 플로우
+![12 PNG](https://github.com/user-attachments/assets/db9672d0-19f5-4f24-b239-9d820d35402a)
+![15 PNG](https://github.com/user-attachments/assets/fe4627a3-764c-44bf-bd69-85fe9534354c)
+
+
+### 정상적으로 결제 & 서버에 정보 전송 완료
+![16 PNG](https://github.com/user-attachments/assets/6cf3ebe6-0dd8-4984-b191-8426c78bb549)
+
+
+### 재고 부족 시
+![TO_CANT_ORDER PNG](https://github.com/user-attachments/assets/4e96fb39-4622-4fa8-af72-0a71abdca900)
+
+
+### 서버 오류 발생 시
+![TO_FAIL_ORDER PNG](https://github.com/user-attachments/assets/23eef1de-d8d6-48f3-bb0f-9eb9a489c09a)
+
+ 
+</div>
+</details>
+<br>
+
+### 주문 내역 확인
+![17 PNG](https://github.com/user-attachments/assets/63868c8d-778f-4ae2-9ca2-fcab923eaced)
+
+
+### 홀짝 게임 (메뉴 목록 화면에서 테이블 번호 10초 내로 5번 터치하면 플레이 가능)
+![20 PNG](https://github.com/user-attachments/assets/d3fb6732-ee9d-46e0-a8d9-250edab6eb32)
+
+
+### 테이블 등록 해제
+![23 PNG](https://github.com/user-attachments/assets/b194c02e-1716-45ba-a91b-b753b5eb843d)
+
+ 
+</div>
+</details>
+<br>
+
+## 🌋 트러블 슈팅
