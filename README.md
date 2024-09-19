@@ -66,6 +66,8 @@
 <img alt="erd" src="https://github.com/user-attachments/assets/14828cb4-5ad2-4311-bc93-328b0c451167">
 <br>
 
+[ERD CLOUD 설계](https://www.erdcloud.com/d/Jcot8WXsi7yvCXEHL)
+
 ## 🌸 API 설계
 [API 설계 문서](https://www.notion.so/api-73f371e16c1841cd9b23ea6e753eb140)
 
