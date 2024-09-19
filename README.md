@@ -10,15 +10,15 @@
 
 **목차**
 1. [프로젝트 소개](#-프로젝트-소개)
-2. [제작기간 & 팀원 소개](#-제작기간-&-팀원-소개)
-3. [⛏ 기술 Stack](#-기술-Stack)
+2. [제작기간 & 팀원 소개](#-제작기간--팀원-소개)
+3. [⛏ 기술 Stack](#-기술-stack)
 4. [🌸 아키텍쳐](#-아키텍쳐)
-5. [⚙️ ERD](#-ERD)
-6. [🪡 application.properties](#-application.properties)
-7. [🏗️ API 설계](#-API-설계)
-8. [📔 API 명세서](#-API-명세서)
+5. [⚙️ ERD](#%EF%B8%8F-erd)
+6. [🪡 application.properties](#-applicationproperties)
+7. [🏗️ API 설계](#%EF%B8%8F-api-설계)
+8. [📔 API 명세서](#-api-명세서)
 9. [✔ 주요 기능](#-주요-기능)
-10. [🖼️ 스크린샷 (모바일)](#🖼-스크린샷-(모바일))
+10. [🖼️ 스크린샷](#%EF%B8%8F-스크린샷)
 11. [🌋 트러블 슈팅](#-트러블-슈팅)
 
 <br>
@@ -61,6 +61,7 @@
 - Database : Oracle 11g
 - Security : Spring Security, JWT
 - JPA(Hibernate)
+- Maven
 - springdoc(Swagger) 2.5.0
 
 ###### Mobile Stack
@@ -227,10 +228,10 @@ jwt.secret=if_you_want_then_fill_it
 </details>
 <br>
 
-## 🖼️ 스크린샷 (모바일)
+## 🖼️ 스크린샷
 
 <details>
-<summary>테이블 오더(모바일) 앱 스크린</summary>
+<summary>테이블 오더(모바일) 앱 스크린샷</summary>
 <div markdown="1">
 
 ### 테이블 등록
