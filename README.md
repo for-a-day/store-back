@@ -10,15 +10,16 @@
 
 **목차**
 1. [프로젝트 소개](#-프로젝트-소개)
-2. [제작기간 & 팀원 소개](#-제작기간-&-팀원-소개개)
+2. [제작기간 & 팀원 소개](#-제작기간-&-팀원-소개)
 3. [⛏ 기술 Stack](#-기술-Stack)
 4. [🌸 아키텍쳐](#-아키텍쳐)
-5. [⚙️ ERD](#⚙-ERD)
-6. [🌸 API 설계](#-API-설계)
-7. [📔 API 명세서](#-API-명세서)
-8. [✔ 주요 기능](#-주요-기능)
-9. [🖼️ 스크린샷 (모바일)](#🖼-스크린샷-(모바일))
-10. [🌋 트러블 슈팅](#-트러블-슈팅)
+5. [⚙️ ERD](#-ERD)
+6. [🪡 application.properties](#-application.properties)
+7. [🏗️ API 설계](#-API-설계)
+8. [📔 API 명세서](#-API-명세서)
+9. [✔ 주요 기능](#-주요-기능)
+10. [🖼️ 스크린샷 (모바일)](#🖼-스크린샷-(모바일))
+11. [🌋 트러블 슈팅](#-트러블-슈팅)
 
 <br>
 
@@ -54,8 +55,6 @@
 - GitHub
 - Slack
 
-<br>
-
 ###### Back-end Stack
 - Java 17
 - Spring Boot 3.3.1
@@ -88,7 +87,59 @@
 
 [ERD CLOUD 설계](https://www.erdcloud.com/d/Jcot8WXsi7yvCXEHL)
 
-## 🌸 API 설계
+<br>
+
+## 🪡 application.properties
+
+```
+spring.application.name=franchise-back
+server.port=9001
+
+# Encoding : UTF-8
+server.servlet.encoding.charset=UTF-8
+server.servlet.encoding.enabled=true
+server.servlet.encoding.force=true
+
+# DB : Oracle database
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=name
+spring.datasource.password=password
+
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# Thymeleaf
+spring.thymeleaf.cache=false
+spring.thymeleaf.check-template-location=true
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+# springdoc(Swagger)
+springdoc.packages-to-scan=com.nagane.franchise
+springdoc.default-consumes-media-type=application/json;charset=UTF-8
+springdoc.default-produces-media-type=application/json;charset=UTF-8
+springdoc.swagger-ui.path=/swagger-ui
+springdoc.swagger-ui.enabled=true
+springdoc.api-docs.path=/api-docs
+springdoc.api-docs=true
+springdoc.swagger-ui.disable-swagger-default-url=true
+springdoc.swagger-ui.display-request-duration=true
+springdoc.swagger-ui.operations-sorter=alpha
+
+# front server port
+intranet.port=3000
+pos.port=3001
+
+# jwt
+jwt.secret=if_you_want_then_fill_it
+```
+
+<br>
+
+## 🏗️ API 설계
 [API 설계 문서](https://www.notion.so/api-73f371e16c1841cd9b23ea6e753eb140)
 
 ## 📔 API 명세서
@@ -249,7 +300,7 @@
 <summary>임주연(ljy)</summary>
 <div markdown="1">
 
-- jpa repository 쿼리
+- (백엔드) jpa repository 쿼리
     - No property 'no' found for type 'Order'; Traversed path: OrderMenu.order 에러
     - 원인: Order 엔티티에서 no라는 필드를 찾지 못해서 발생한 문제
         - Order 엔티티에서 실제로 사용되는 필드 이름을 사용해야 함
@@ -257,16 +308,14 @@
         - findByOrderNo에서 findByOrder_OrderNo로 수정
     - 특이사항
         - 해당 OrderMenu는 order_no(오라클 기준 컬럼명)를 fk로 가진 엔티티임, 즉 자식 엔티티에서 부모 엔티티 컬럼(예: pk)를 찾기 위해서는 부모 엔티티_부모 엔티티의 해당 컬럼 이름을 명시하는 식으로 jpa 메서드 명을 지정해야 하는 것으로 보임
-- 스웨거 적용
+- (백엔드) 스웨거 적용
+    - 원인: No operations defined in spec! 메시지 표시되며 아무 api도 보이지 않음
+    - 해결: application.proporties에 springdoc.packages-to-scan에 패키지값 제대로 세팅
     
-    원인: No operations defined in spec! 메시지 표시되며 아무 api도 보이지 않음
-    
-    해결: application.proporties에 springdoc.packages-to-scan에 패키지값 제대로 세팅
-    
-- RequestBody null로 돌아오는 에러
+- (백엔드) RequestBody null로 돌아오는 에러
     - 원인: 몰라…. ⇒ RequestBody를 spring이 아니라 swagger 걸 import
     - 해결: 했으면 좋겠다… ⇒ spring에서 제공해주는 걸로 import 문 변경
-- store 정보 수정 뒤, 신규 레코드 생성했을 때 레코드 pk 번호가 수정 횟수만큼 건너뛰어지는 이슈
+- (백엔드) store 정보 수정 뒤, 신규 레코드 생성했을 때 레코드 pk 번호가 수정 횟수만큼 건너뛰어지는 이슈
     - 원인: Builder로 객체 생성해서 해당 객체를 수정용 객체로 사용했는데, jpa의 경우 엔티티를 Builder를 이용해서 객체 생성하면 신규 객체를 생성하는 것이라고 무조건 생각하게 됨
     - 해결: 기존 db의 entity 객체 불러온 다음, setter로 수정
 - (안드로이드) hilt 오류
@@ -279,17 +328,21 @@
     
     위 에러를 비롯한 매우 다양한 오류들이 출몰
     
-    - 문제: kotlin과 hilt의 버전 차이
+    - 원인: kotlin과 hilt의 버전 차이
     - 해결: kotlin version 1.9.0, hilt 2.48로 맞춤
         - 여담: 총 5시간 걸렸습니다 이젠 살의밖에 남아있지 않은 괴물이 되어버렸습니다…
-- 주문 정보 가져오기 실패 : Text '2024-07-09T11:09:35.93592' could not be parsed at index 20
-    - 원인: gson에서 LocalDateTime 형변환 못하는데 형변환 세팅해주니까 발생한 오류
-- 관리자 로그인 시도 시 `서버와의 통신에 실패했습니다. : java.lang.RuntimeException: Unable to create instance of interface retrofit2.Call. Registering an InstanceCreator or a TypeAdapter for this type, or adding a no-args constructor may fix this problem.` 에러 발생
+- (안드로이드) 주문 정보 가져오기 실패 : Text '2024-07-09T11:09:35.93592' could not be parsed at index 20
+    - 원인: gson에서 LocalDateTime 형변환 못하는데 해당 형식으로 저장하라고 세팅해서 발생한 오류
+    - 해결: 일단 string 형태로 room에 저장한 뒤 ui에서 표현할 때는 형변환 util 함수 만들어서 대응 (getTimeDifferenceString)
+- (안드로이드) 가맹점 pos 측에서 테이블 삭제했을 시 & token 만료 시 테이블 오더 앱 대응
+  - 문제: 가맹점 측 pos기에서 테이블 삭제 시 & token 만료 시 테이블 오더 앱 기기가 계속 작동 가능할 시 치명적인 문제가 되리라고 판단되었음
+  - 해결: 401 error return됐을 시 room과 sharePreferences 내에 저장해둔 데이터 전부 삭제한 뒤 앱 강제 종료하도록 조치 (AuthInterceptor)
+- (안드로이드) 관리자 로그인 시도 시 `서버와의 통신에 실패했습니다. : java.lang.RuntimeException: Unable to create instance of interface retrofit2.Call. Registering an InstanceCreator or a TypeAdapter for this type, or adding a no-args constructor may fix this problem.` 에러 발생
     - 원인: retrofit에서 suspend를 사용할 시, Call이 아닌 Response를 사용해야 하기에 발생한 오류
     - 해결: Call ⇒ Response로 고침
-- 카테고리 정보 가져오기 실패 : Reading a state that was created after the snapshot was taken or in a snapshot that has not yet been applied
-    - 상황: 바로 home screen 로드하면 안 뜨는데 로그인해서 넘어갈 때 뜸 share 문제인가?
-    - 원인: 로그인하고 성공 뜬 다음에  `sharedPreferences` 에 데이터 저장하는데 바로 페이지 넘어가버려서 해당 데이터 null로 뜨는 이슈
+- (안드로이드) 카테고리 정보 가져오기 실패 : Reading a state that was created after the snapshot was taken or in a snapshot that has not yet been applied
+    - 상황: 이미 기기 로그인 된 상태로 바로 home screen 접속하면 안 뜨는데 로그인 과정 거쳐서 home screen으로 넘어갈 때 뜸 share 문제인가?
+    - 원인: 로그인하고 성공 뜬 다음에  `sharedPreferences` 에 데이터 저장하는데 바로 페이지 넘어가버려서 table id가 null인 상태로 api 요청해서 404 뜸
     - 해결: delay 걸어서 바로 페이지 넘어가는 게 아니라, 적당한 시간 뒤에 넘어가도록, 그래서 데이터 저장까지 확보하고 home screen으로 넘어감
 
 </div>
